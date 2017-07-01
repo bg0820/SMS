@@ -30,41 +30,41 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="NetworkListener.hpp">
+      <Filter>소스 파일\network socket</Filter>
     </ClInclude>
-    <ClInclude Include="StopWatch.h">
+    <ClInclude Include="NetworkManager.hpp">
+      <Filter>소스 파일\network socket</Filter>
+    </ClInclude>
+    <ClInclude Include="Process.hpp">
+      <Filter>소스 파일\process</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessList.hpp">
+      <Filter>소스 파일\process</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessManager.hpp">
+      <Filter>소스 파일\process</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemCPU.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemDiskIO.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemMemory.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemNetwork.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemOS.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="StopWatch.hpp">
       <Filter>소스 파일\util</Filter>
     </ClInclude>
-    <ClInclude Include="SystemOS.h">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemCPU.h">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemMemory.h">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemNetwork.h">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemDiskIO.h">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkListener.h">
-      <Filter>소스 파일\network socket</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkManager.h">
-      <Filter>소스 파일\network socket</Filter>
-    </ClInclude>
-    <ClInclude Include="Process.h">
-      <Filter>소스 파일\process</Filter>
-    </ClInclude>
-    <ClInclude Include="ProcessList.h">
-      <Filter>소스 파일\process</Filter>
-    </ClInclude>
-    <ClInclude Include="ProcessManager.h">
-      <Filter>소스 파일\process</Filter>
+    <ClInclude Include="main.hpp">
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

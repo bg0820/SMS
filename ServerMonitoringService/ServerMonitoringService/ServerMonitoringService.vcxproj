@@ -111,18 +111,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="main.h" />
-    <ClInclude Include="NetworkListener.h" />
-    <ClInclude Include="NetworkManager.h" />
-    <ClInclude Include="Process.h" />
-    <ClInclude Include="ProcessList.h" />
-    <ClInclude Include="ProcessManager.h" />
-    <ClInclude Include="StopWatch.h" />
-    <ClInclude Include="SystemCPU.h" />
-    <ClInclude Include="SystemDiskIO.h" />
-    <ClInclude Include="SystemMemory.h" />
-    <ClInclude Include="SystemNetwork.h" />
-    <ClInclude Include="SystemOS.h" />
+    <ClInclude Include="main.hpp" />
+    <ClInclude Include="NetworkListener.hpp" />
+    <ClInclude Include="NetworkManager.hpp" />
+    <ClInclude Include="Process.hpp" />
+    <ClInclude Include="ProcessList.hpp" />
+    <ClInclude Include="ProcessManager.hpp" />
+    <ClInclude Include="StopWatch.hpp" />
+    <ClInclude Include="SystemCPU.hpp" />
+    <ClInclude Include="SystemDiskIO.hpp" />
+    <ClInclude Include="SystemMemory.hpp" />
+    <ClInclude Include="SystemNetwork.hpp" />
+    <ClInclude Include="SystemOS.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
