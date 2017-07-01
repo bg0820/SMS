@@ -57,6 +57,15 @@
     <ClInclude Include="NetworkManager.h">
       <Filter>소스 파일\network socket</Filter>
     </ClInclude>
+    <ClInclude Include="Process.h">
+      <Filter>소스 파일\process</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessList.h">
+      <Filter>소스 파일\process</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessManager.h">
+      <Filter>소스 파일\process</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -85,6 +94,15 @@
     </ClCompile>
     <ClCompile Include="NetworkManager.cpp">
       <Filter>소스 파일\network socket</Filter>
+    </ClCompile>
+    <ClCompile Include="Process.cpp">
+      <Filter>소스 파일\process</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessList.cpp">
+      <Filter>소스 파일\process</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessManager.cpp">
+      <Filter>소스 파일\process</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

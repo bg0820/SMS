@@ -114,6 +114,9 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="NetworkListener.h" />
     <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="Process.h" />
+    <ClInclude Include="ProcessList.h" />
+    <ClInclude Include="ProcessManager.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="SystemCPU.h" />
     <ClInclude Include="SystemDiskIO.h" />
@@ -125,6 +128,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NetworkListener.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="Process.cpp" />
+    <ClCompile Include="ProcessList.cpp" />
+    <ClCompile Include="ProcessManager.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="SystemCPU.cpp" />
     <ClCompile Include="SystemDiskIO.cpp" />
