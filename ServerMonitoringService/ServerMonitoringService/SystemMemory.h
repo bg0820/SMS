@@ -3,6 +3,8 @@
 
 #include "windows.h"
 
+typedef unsigned long       DWORD;
+
 class SystemMemory
 {
 private:
