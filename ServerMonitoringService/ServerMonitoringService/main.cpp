@@ -40,61 +40,9 @@ void onShellExecute()
 
 void mainStart()
 {
-	int count = 0;
-	PIP_ADAPTER_INFO parmAdapter = NULL; // delete
-	SystemNetwork net;
-	if (net.getNetworkInterfaces(parmAdapter, count))
-	{
-
-		cout << count << endl;
-		for (int i = 0; i< count; i++)
-		{
-			cout << parmAdapter[i].IpAddressList.IpAddress.String << endl;
-
-			printf("\tAdapter Addr: \t");
-
-			for (UINT i = 0; i < parmAdapter[i].AddressLength; i++) {
-				if (i == (parmAdapter[i].AddressLength - 1))
-					printf("%.2X\n", (int)parmAdapter[i].Address[i]);
-				else
-					printf("%.2X-", (int)parmAdapter[i].Address[i]);
-		}
-
-			switch (parmAdapter[i].Type) {
-			case MIB_IF_TYPE_OTHER:
-				printf("Other\n");
-				break;
-			case MIB_IF_TYPE_ETHERNET:
-				printf("Ethernet\n");
-				break;
-			case MIB_IF_TYPE_TOKENRING:
-				printf("Token Ring\n");
-				break;
-			case MIB_IF_TYPE_FDDI:
-				printf("FDDI\n");
-				break;
-			case MIB_IF_TYPE_PPP:
-				printf("PPP\n");
-				break;
-			case MIB_IF_TYPE_LOOPBACK:
-				printf("Lookback\n");
-				break;
-			case MIB_IF_TYPE_SLIP:
-				printf("Slip\n");
-				break;
-			default:
-				printf("Unknown type %ld\n", parmAdapter[i].Type);
-				break;
-			}
-			//parmAdapter = parmAdapter[i].Next;
-		}
-	}
-
-	//delete parmAdapter;
-
-	system("pause");
+	
 }
-/*
+
 int main(int argc, char* argv[])
 {
 	if (IsUserAnAdmin())
@@ -108,4 +56,3 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
-*/
