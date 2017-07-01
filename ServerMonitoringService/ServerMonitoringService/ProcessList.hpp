@@ -3,7 +3,7 @@
 
 #include <Windows.h>
 #include <Psapi.h>
-#include "Process.h"
+#include "Process.hpp"
 
 #pragma comment(lib, "psapi.lib")
 

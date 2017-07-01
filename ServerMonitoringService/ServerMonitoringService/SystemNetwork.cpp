@@ -1,4 +1,4 @@
-#include "SystemNetwork.h"
+#include "SystemNetwork.hpp"
 
 int SystemNetwork::getNetworkSendBytes()
 {

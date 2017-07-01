@@ -1,7 +1,7 @@
 #ifndef _PROCESSMANAGER_H_
 #define _PROCESSMANAGER_H_
 
-#include "Process.h"
+#include "Process.hpp"
 
 #define TRUE 1
 #define FALSE 0

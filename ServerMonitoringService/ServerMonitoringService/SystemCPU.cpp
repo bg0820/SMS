@@ -1,4 +1,4 @@
-#include "SystemCPU.h"
+#include "SystemCPU.hpp"
 
 int SystemCpu::getUsage(double &val)
 {
