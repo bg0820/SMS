@@ -112,6 +112,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
+    <ClInclude Include="NetworkListener.h" />
+    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="SystemCPU.h" />
     <ClInclude Include="SystemDiskIO.h" />
@@ -121,6 +123,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NetworkListener.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="StopWatch.cpp" />
     <ClCompile Include="SystemCPU.cpp" />
     <ClCompile Include="SystemDiskIO.cpp" />

@@ -51,6 +51,12 @@
     <ClInclude Include="SystemDiskIO.h">
       <Filter>소스 파일\system</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkListener.h">
+      <Filter>소스 파일\network socket</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager.h">
+      <Filter>소스 파일\network socket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,6 +79,12 @@
     </ClCompile>
     <ClCompile Include="SystemDiskIO.cpp">
       <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkListener.cpp">
+      <Filter>소스 파일\network socket</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager.cpp">
+      <Filter>소스 파일\network socket</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
