@@ -33,16 +33,46 @@
     <ClInclude Include="main.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="stopwatch.h">
+    <ClInclude Include="StopWatch.h">
       <Filter>소스 파일\util</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemOS.h">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemCPU.h">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemMemory.h">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemNetwork.h">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemDiskIO.h">
+      <Filter>소스 파일\system</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="stopwatch.cpp">
+    <ClCompile Include="StopWatch.cpp">
       <Filter>소스 파일\util</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemOS.cpp">
+      <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemCPU.cpp">
+      <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemMemory.cpp">
+      <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemNetwork.cpp">
+      <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemDiskIO.cpp">
+      <Filter>소스 파일\system</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -112,11 +112,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
-    <ClInclude Include="stopwatch.h" />
+    <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="SystemCPU.h" />
+    <ClInclude Include="SystemDiskIO.h" />
+    <ClInclude Include="SystemMemory.h" />
+    <ClInclude Include="SystemNetwork.h" />
+    <ClInclude Include="SystemOS.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="stopwatch.cpp" />
+    <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="SystemCPU.cpp" />
+    <ClCompile Include="SystemDiskIO.cpp" />
+    <ClCompile Include="SystemMemory.cpp" />
+    <ClCompile Include="SystemNetwork.cpp" />
+    <ClCompile Include="SystemOS.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
