@@ -1,135 +1,16 @@
 #include "Process.hpp" 
 
-#pragma region GET/SET
-
-DWORD Process::getPID()
+void Process::setPid(const DWORD pid)
 {
-	return pid;
+	Process::pid = pid;
 }
 
 TCHAR* Process::getName()
 {
-	return name;
-}
-
-TCHAR* Process::getPath()
-{
-	return path;
-}
-
-TCHAR* Process::getCommandLine()
-{
-	return commandLine;
-}
-
-int Process::getThreadCount()
-{
-	return threadCount;
-}
-
-int Process::getProcessCount()
-{
-	return processCount;
-}
-
-DWORD Process::getMemoryUsage()
-{
-	return memoryVal;
-}
-
-double Process::getCpuUsage()
-{
-	return cpuVal;
-}
-
-long Process::getIORead()
-{
-	return ioRead;
-}
-
-long Process::getIOWrite()
-{
-	return ioWrite;
-}
-
-long Process::getNetworkSendByte()
-{
-	return networkSendByte;
-}
-
-long Process::getNetworkReceiveByte()
-{
-	return networkReceiveByte;
-}
-
-void Process::setPid(DWORD val)
-{
-	pid = val;
-}
-
-void Process::setName(TCHAR * val)
-{
-	name = val;
-}
-
-void Process::setPath(TCHAR * val)
-{
-	path = val;
-}
-
-void Process::setCommandLine(TCHAR * val)
-{
-	commandLine = val;
-}
-
-void Process::setThreadCount(int val)
-{
-	threadCount = val;
-}
-
-void Process::setProcessCount(int val)
-{
-	processCount = val;
-}
-
-void Process::setMemoryUsage(DWORD val)
-{
-	memoryVal = val;
-}
-
-void Process::setCpuUsage(double val)
-{
-	cpuVal = val;
-}
-
-void Process::setIORead(long val)
-{
-	ioRead = val;
-}
-
-void Process::setIOWrite(long val)
-{
-	ioWrite = val;
-}
-
-void Process::setNetworkSendByte(long val)
-{
-	networkSendByte = val;
-}
-
-void Process::setNetworkReceiveByte(long val)
-{
-	networkReceiveByte = val;
-}
-
-#pragma endregion
-
-const TCHAR* Process::getName(const DWORD processId)
-{
 	int nResult = 1;
 
 	TCHAR szProcessName[MAX_PATH];
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Process::pid);
 
 	if (hProcess != NULL)
 	{
@@ -153,12 +34,12 @@ const TCHAR* Process::getName(const DWORD processId)
 	return szProcessName;
 }
 
-const TCHAR* Process::getPath(const DWORD processId)
+TCHAR* Process::getPath()
 {
 	int nResult = 1;
 
 	TCHAR szProcessPath[MAX_PATH];
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Process::pid);
 
 	if (hProcess != NULL)
 	{
@@ -182,16 +63,17 @@ const TCHAR* Process::getPath(const DWORD processId)
 	return szProcessPath;
 }
 
-const TCHAR* Process::getCommandLine(const DWORD processId)
+TCHAR* Process::getCommandLine()
 {
-
-}
-int Process::getNetworkUsage(const DWORD processId, double &val)
-{
-
+	return "";
 }
 
-int Process::getMemoryUsage(const DWORD processId, DWORD &val)
+int Process::getNetworkUsage(double &val)
+{
+	return 1;
+}
+
+int Process::getMemoryUsage(DWORD &val)
 {
 	int nResult = 1;
 
@@ -201,7 +83,7 @@ int Process::getMemoryUsage(const DWORD processId, DWORD &val)
 	DWORD dPrivatePages = 0;
 	DWORD dPageTablePages = 0;
 
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Process::pid);
 
 	if (hProcess == NULL)
 		nResult = 0;
@@ -260,7 +142,7 @@ int Process::getMemoryUsage(const DWORD processId, DWORD &val)
 
 	return nResult;
 }
-int Process::getCpuUsage(const DWORD processId, double &val)
+int Process::getCpuUsage(double &val)
 {
 	int nResult = 1;
 
@@ -273,7 +155,7 @@ int Process::getCpuUsage(const DWORD processId, double &val)
 	GetSystemInfo(&sysInfo);
 	int numProcessors = sysInfo.dwNumberOfProcessors;
 
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Process::pid);
 
 	if (hProcess == NULL)
 		nResult = 0;

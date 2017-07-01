@@ -1,27 +1,21 @@
 #ifndef _PROCESSLIST_H_
 #define _PROCESSLIST_H_
 
+#include <iostream>
 #include <Windows.h>
 #include <Psapi.h>
 #include "Process.hpp"
 
 #pragma comment(lib, "psapi.lib")
 
+using namespace std;
+
 class ProcessList
 {
 private:
 	DWORD processList[1024];
 	DWORD processListSize = NULL;
-private:
-	ProcessList()
-	{
 
-	}
-
-	~ProcessList()
-	{
-
-	}
 public:
 	int update(); // process list update
 	int getCount(); // update -> return value is processList count

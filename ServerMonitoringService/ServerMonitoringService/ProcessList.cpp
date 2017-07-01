@@ -26,9 +26,9 @@ int ProcessList::getPID(const int i)
 
 Process ProcessList::getProcess(const DWORD processId)
 {
+	// auto variable;
 	Process process;
-	
-	// TODO : Process Obj return
+	process.setPid(processId);
 
 	return process;
 }
