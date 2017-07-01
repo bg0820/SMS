@@ -11,9 +11,24 @@ private:
 	char * userName;
 	char * computerName;
 	char * osName;
+
+	int initUserName(char *& val);
+	int initComputerName(char *& val);
 public:
-	int getUserName(char *& val);
-	int getComputerName(char *& val);
+	SystemOS()
+	{
+		initUserName(userName);
+		initComputerName(computerName);
+	}
+
+	~SystemOS()
+	{
+		delete userName;
+		delete computerName;
+	}
+
+	char* getUserName();
+	char* getComputerName();
 };
 
 #endif // !_SYSTEMOS_H_
