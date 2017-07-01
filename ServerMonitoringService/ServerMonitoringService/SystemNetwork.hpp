@@ -15,6 +15,7 @@ class SystemNetwork
 {
 public:
 	int getNetworkInterfaces(PIP_ADAPTER_INFO &pAdapter, int &outCount);
+	int getNetworkInterfaceType(int type);
 	int getNetworkSendBytes();
 	int getNetworkReceiveBytes();
 
