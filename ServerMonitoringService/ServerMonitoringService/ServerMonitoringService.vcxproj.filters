@@ -13,5 +13,36 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\util">
+      <UniqueIdentifier>{0e63a9e4-da5d-4260-8120-2baba205ff69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\system">
+      <UniqueIdentifier>{cc96d2c1-e5e3-4459-ba4d-fcfd4b0cb017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\process">
+      <UniqueIdentifier>{e828a7fa-2fdd-4a2e-9653-d1d1e75008aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\network socket">
+      <UniqueIdentifier>{5b8614ef-c8cd-46f0-9aca-d210ffa2fd09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\data">
+      <UniqueIdentifier>{c4094345-8e7e-44c4-9bf3-556158e483be}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stopwatch.h">
+      <Filter>소스 파일\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="stopwatch.cpp">
+      <Filter>소스 파일\util</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
