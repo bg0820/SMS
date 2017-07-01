@@ -1,10 +1,5 @@
 #include "Process.hpp" 
 
-void Process::setPid(const DWORD pid)
-{
-	Process::pid = pid;
-}
-
 TCHAR* Process::getName()
 {
 	int nResult = 1;

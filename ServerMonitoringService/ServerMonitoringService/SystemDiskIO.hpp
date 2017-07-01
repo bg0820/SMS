@@ -9,6 +9,8 @@ using namespace std;
 
 void stringReplace(string& subject, const string& search, const string& replace);
 
+
+typedef unsigned long       DWORD;
 typedef struct disk
 {
 	string szVolumePath;

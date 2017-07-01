@@ -10,6 +10,8 @@
 
 using namespace std;
 
+typedef unsigned long       DWORD;
+
 class ProcessList
 {
 private:

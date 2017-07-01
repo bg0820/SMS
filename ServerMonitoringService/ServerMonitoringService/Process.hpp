@@ -6,6 +6,8 @@
 
 #pragma comment(lib, "psapi.lib")
 
+typedef unsigned long       DWORD;
+
 int Compare(const void * val1, const void * val2);
 
 class Process
@@ -18,8 +20,7 @@ public:
 		Process::pid = pid;
 	}
 
-	void setPid(const DWORD pid);
-
+	DWORD getPid();
 	TCHAR* getName();
 	TCHAR* getPath();
 	TCHAR* getCommandLine();

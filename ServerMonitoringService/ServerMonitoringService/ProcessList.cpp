@@ -26,9 +26,23 @@ int ProcessList::getPID(const int i)
 
 Process ProcessList::getProcess(const DWORD processId)
 {
-	// auto variable;
-	Process process;
-	process.setPid(processId);
+	// auto variable
+	Process process = Process(processId);
 
 	return process;
+}
+
+int main()
+{
+	ProcessList pl;
+	pl.update();
+
+	while (true)
+	{
+		Process p = pl.getProcess(7980);
+
+		cout << p.getName() << endl;
+	}
+
+	system("pause");
 }
