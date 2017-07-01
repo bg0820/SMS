@@ -1,7 +1,7 @@
 #include "SystemOS.h"
 
 // you need to delete char *parm 
-int SystemOS::initUserName(char *&val)
+int SystemOS::initUserName(TCHAR *&val)
 {
 	TCHAR charBuf[BUFFER_SIZE];
 	DWORD bufCharSize = BUFFER_SIZE;
@@ -16,7 +16,7 @@ int SystemOS::initUserName(char *&val)
 }
 
 // you need to delete char *parm 
-int SystemOS::initComputerName(char *&val)
+int SystemOS::initComputerName(TCHAR *&val)
 {
 	TCHAR charBuf[BUFFER_SIZE];
 	DWORD bufCharSize = BUFFER_SIZE;

@@ -5,6 +5,9 @@
 
 #define BUFFER_SIZE 32767
 
+typedef unsigned long       DWORD;
+typedef char TCHAR, *PTCHAR;
+
 class SystemOS
 {
 private:
