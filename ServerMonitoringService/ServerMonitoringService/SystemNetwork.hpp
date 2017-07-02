@@ -14,6 +14,7 @@ using namespace std;
 class SystemNetwork
 {
 public:
+	void formatToMacAddress(TCHAR *parm, BYTE addr[]);
 	int getNetworkInterfaces(PIP_ADAPTER_INFO &pAdapter, int &outCount);
 	int getNetworkInterfaceType(int type);
 	int getNetworkSendBytes();

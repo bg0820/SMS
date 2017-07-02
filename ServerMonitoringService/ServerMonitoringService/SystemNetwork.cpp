@@ -88,6 +88,17 @@ int SystemNetwork::getNetworkInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outC
 	return nResult;
 }
 
+void SystemNetwork::formatToMacAddress(TCHAR *parm, BYTE addr[])
+{
+	sprintf(parm, "%.2X-%.2X-%.2X-%.2X-%.2X-%.2X",
+		addr[0],
+		addr[1],
+		addr[2],
+		addr[3],
+		addr[4],
+		addr[5]);
+}
+
 //CString strMacAddr = "";
 //strMacAddr.format("%02x%02x%02x%02x%02x%02x",
 //	parmAdapter->Address[0],
@@ -113,16 +124,16 @@ int main()
 			printf("\tAdapter Name: \t%s\n", parmAdapter[k].AdapterName);
 			printf("\tAdapter Desc: \t%s\n", parmAdapter[k].Description);
 			printf("\tAdapter Addr: \t");
-			for (UINT i = 0; i < parmAdapter[k].AddressLength; i++) {
-				if (i == (parmAdapter[k].AddressLength - 1))
-					printf("%.2X\n", (int)parmAdapter[k].Address[i]);
-				else
-					printf("%.2X-", (int)parmAdapter[k].Address[i]);
-			}
+
+			TCHAR *macAddr = new TCHAR[18];
+			net.formatToMacAddress(macAddr, parmAdapter[k].Address);
+			// TODO change
+			cout << macAddr << endl;
+			
 			printf("\tIndex: \t%d\n", parmAdapter[k].Index);
 			printf("\tType: \t");
 			net.getNetworkInterfaceType(parmAdapter[k].Type);
-			
+
 
 			printf("\tIP Address: \t%s\n",
 				parmAdapter[k].IpAddressList.IpAddress.String);
