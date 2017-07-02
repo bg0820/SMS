@@ -1,47 +1,49 @@
 #include "SystemNetwork.hpp"
 
-int SystemNetwork::getNetworkInterfaceType(int type)
+string SystemNetwork::getNetworkInterfaceType(IP_ADAPTER_INFO parmAdapterInfo)
 {
-	switch (type) {
+	string strType = NULL;
+
+	switch (parmAdapterInfo.Type) {
 	case MIB_IF_TYPE_OTHER:
-		printf("Other\n");
+		strType = "Other";
 		break;
 	case MIB_IF_TYPE_ETHERNET:
-		printf("Ethernet\n");
+		strType = "Ethernet";
 		break;
 	case MIB_IF_TYPE_TOKENRING:
-		printf("Token Ring\n");
+		strType = "Token Ring";
 		break;
 	case MIB_IF_TYPE_FDDI:
-		printf("FDDI\n");
+		strType = "FDDI";
 		break;
 	case MIB_IF_TYPE_PPP:
-		printf("PPP\n");
+		strType = "PPP";
 		break;
 	case MIB_IF_TYPE_LOOPBACK:
-		printf("Lookback\n");
+		strType = "Lookback";
 		break;
 	case MIB_IF_TYPE_SLIP:
-		printf("Slip\n");
+		strType = "Slip";
 		break;
 	case IF_TYPE_ATM:
-		printf("ATM\n");
+		strType = "ATM";
 		break;
 	case IF_TYPE_IEEE80211:
-		printf("IEEE 802.11 Wireless\n");
+		strType = "IEEE 802.11 Wireless";
 		break;
 	case IF_TYPE_TUNNEL:
-		printf("Tunnel type encapsulation\n");
+		strType = "Tunnel type encapsulation";
 		break;
 	case IF_TYPE_IEEE1394:
-		printf("IEEE 1394 Firewire\n");
+		strType = "IEEE 1394 Firewire";
 		break;
 	default:
-		printf("Unknown type %ld\n", type);
+		strType = "Unknown type";
 		break;
 	}
 
-	return 1;
+	return strType;
 }
 
 int SystemNetwork::getNetworkSendBytes()
@@ -90,6 +92,7 @@ int SystemNetwork::getNetworkInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outC
 
 void SystemNetwork::formatToMacAddress(TCHAR *parm, BYTE addr[])
 {
+
 	sprintf(parm, "%.2X-%.2X-%.2X-%.2X-%.2X-%.2X",
 		addr[0],
 		addr[1],
@@ -108,6 +111,7 @@ void SystemNetwork::formatToMacAddress(TCHAR *parm, BYTE addr[])
 //	parmAdapter->Address[4],
 //	parmAdapter->Address[5]);
 
+/*
 int main()
 {
 	int count = 0;
@@ -130,18 +134,7 @@ int main()
 			// TODO change
 			cout << macAddr << endl;
 			
-			printf("\tIndex: \t%d\n", parmAdapter[k].Index);
-			printf("\tType: \t");
-			net.getNetworkInterfaceType(parmAdapter[k].Type);
-
-
-			printf("\tIP Address: \t%s\n",
-				parmAdapter[k].IpAddressList.IpAddress.String);
-			printf("\tIP Mask: \t%s\n", parmAdapter[k].IpAddressList.IpMask.String);
-
-			printf("\tGateway: \t%s\n", parmAdapter[k].GatewayList.IpAddress.String);
-
-			printf("\n");
+			string strType = net.getNetworkInterfaceType(parmAdapter[k]);
 		}
 	}
 
@@ -149,4 +142,279 @@ int main()
 		delete parmAdapter;
 
 	system("pause");
-}
+}*/
+
+/*
+#define _WIN32_DCOM
+
+#include "Process.hpp"
+#include <iostream>
+using namespace std;
+#include <Wbemidl.h>
+
+
+#pragma comment(lib, "wbemuuid.lib")
+
+int __cdecl wmain(int argc, wchar_t* argv[])
+{
+	// To add error checking,
+	// check returned HRESULT below where collected.
+	HRESULT                 hr = S_OK;
+	IWbemRefresher          *pRefresher = NULL;
+	IWbemConfigureRefresher *pConfig = NULL;
+	IWbemHiPerfEnum         *pEnum = NULL;
+	IWbemServices           *pNameSpace = NULL;
+	IWbemLocator            *pWbemLocator = NULL;
+	IWbemObjectAccess       **apEnumAccess = NULL;
+	BSTR                    bstrNameSpace = NULL;
+	long                    lID = 0;
+	long                    lVirtualBytesHandle = 0;
+	long                    lIDProcessHandle = 0;
+	DWORD                   dwVirtualBytes = 0;
+	DWORD                   dwProcessId = 0;
+	DWORD                   dwNumObjects = 0;
+	DWORD                   dwNumReturned = 0;
+	DWORD                   dwIDProcess = 0;
+	DWORD                   i = 0;
+	int                     x = 0;
+
+	if (FAILED(hr = CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+	{
+		goto CLEANUP;
+	}
+
+	if (FAILED(hr = CoInitializeSecurity(
+		NULL,
+		-1,
+		NULL,
+		NULL,
+		RPC_C_AUTHN_LEVEL_NONE,
+		RPC_C_IMP_LEVEL_IMPERSONATE,
+		NULL, EOAC_NONE, 0)))
+	{
+		goto CLEANUP;
+	}
+
+	if (FAILED(hr = CoCreateInstance(
+		CLSID_WbemLocator,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		IID_IWbemLocator,
+		(void**)&pWbemLocator)))
+	{
+		goto CLEANUP;
+	}
+
+	// Connect to the desired namespace.
+	bstrNameSpace = SysAllocString(L"\\\\.\\root\\cimv2");
+	if (NULL == bstrNameSpace)
+	{
+		hr = E_OUTOFMEMORY;
+		goto CLEANUP;
+	}
+	if (FAILED(hr = pWbemLocator->ConnectServer(
+		bstrNameSpace,
+		NULL, // User name
+		NULL, // Password
+		NULL, // Locale
+		0L,   // Security flags
+		NULL, // Authority
+		NULL, // Wbem context
+		&pNameSpace)))
+	{
+		goto CLEANUP;
+	}
+	pWbemLocator->Release();
+	pWbemLocator = NULL;
+	SysFreeString(bstrNameSpace);
+	bstrNameSpace = NULL;
+
+	if (FAILED(hr = CoCreateInstance(
+		CLSID_WbemRefresher,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		IID_IWbemRefresher,
+		(void**)&pRefresher)))
+	{
+		goto CLEANUP;
+	}
+
+	if (FAILED(hr = pRefresher->QueryInterface(
+		IID_IWbemConfigureRefresher,
+		(void **)&pConfig)))
+	{
+		goto CLEANUP;
+	}
+
+	// Add an enumerator to the refresher.
+	if (FAILED(hr = pConfig->AddEnum(
+		pNameSpace,
+		L"Win32_PerfRawData_PerfProc_Process", // Win32_PerfRawData_PerfProc_Process
+		0,
+		NULL,
+		&pEnum,
+		&lID)))
+	{
+		goto CLEANUP;
+	}
+	pConfig->Release();
+	pConfig = NULL;
+
+	// Get a property handle for the VirtualBytes property.
+
+	// Refresh the object ten times and retrieve the value.
+	while(true)
+	{
+		dwNumReturned = 0;
+		dwIDProcess = 0;
+		dwNumObjects = 0;
+
+		if (FAILED(hr = pRefresher->Refresh(0L)))
+		{
+			goto CLEANUP;
+		}
+
+		hr = pEnum->GetObjects(0L,
+			dwNumObjects,
+			apEnumAccess,
+			&dwNumReturned);
+		// If the buffer was not big enough,
+		// allocate a bigger buffer and retry.
+		if (hr == WBEM_E_BUFFER_TOO_SMALL
+			&& dwNumReturned > dwNumObjects)
+		{
+			apEnumAccess = new IWbemObjectAccess*[dwNumReturned];
+			if (NULL == apEnumAccess)
+			{
+				hr = E_OUTOFMEMORY;
+				goto CLEANUP;
+			}
+			SecureZeroMemory(apEnumAccess,
+				dwNumReturned * sizeof(IWbemObjectAccess*));
+			dwNumObjects = dwNumReturned;
+
+			if (FAILED(hr = pEnum->GetObjects(0L,
+				dwNumObjects,
+				apEnumAccess,
+				&dwNumReturned)))
+			{
+				goto CLEANUP;
+			}
+		}
+		else
+		{
+			if (hr == WBEM_S_NO_ERROR)
+			{
+				hr = WBEM_E_NOT_FOUND;
+				goto CLEANUP;
+			}
+		}
+
+		// First time through, get the handles.
+		if (0 == x)
+		{
+			CIMTYPE VirtualBytesType;
+			CIMTYPE ProcessHandleType;
+			if (FAILED(hr = apEnumAccess[0]->GetPropertyHandle(
+				L"IOWriteBytesPerSec",
+				&VirtualBytesType,
+				&lVirtualBytesHandle)))
+			{
+				goto CLEANUP;
+			}
+			if (FAILED(hr = apEnumAccess[0]->GetPropertyHandle(
+				L"IDProcess",
+				&ProcessHandleType,
+				&lIDProcessHandle)))
+			{
+				goto CLEANUP;
+			}
+		}
+
+		for (i = 0; i < dwNumReturned; i++)
+		{
+			if (FAILED(hr = apEnumAccess[i]->ReadDWORD(
+				lVirtualBytesHandle,
+				&dwVirtualBytes)))
+			{
+				goto CLEANUP;
+			}
+			if (FAILED(hr = apEnumAccess[i]->ReadDWORD(
+				lIDProcessHandle,
+				&dwIDProcess)))
+			{
+				goto CLEANUP;
+			}
+
+			Process process = Process(dwIDProcess);
+			TCHAR* tc = process.getName();
+
+			if(dwIDProcess == 20620)
+				printf("Process ID %lu %s is using %.2f Mbyte\n", dwIDProcess, tc, dwVirtualBytes / 1024.0 / 1024.0);
+			//wprintf(L"Process ID %lu %s is using %lu bytes\n",			dwIDProcess, tc,  dwVirtualBytes);
+
+			// Done with the object
+			apEnumAccess[i]->Release();
+			apEnumAccess[i] = NULL;
+		}
+
+		if (NULL != apEnumAccess)
+		{
+			delete[] apEnumAccess;
+			apEnumAccess = NULL;
+		}
+
+		// Sleep for a second.
+		Sleep(1000);
+	}
+	// exit loop here
+CLEANUP:
+
+	if (NULL != bstrNameSpace)
+	{
+		SysFreeString(bstrNameSpace);
+	}
+
+	if (NULL != apEnumAccess)
+	{
+		for (i = 0; i < dwNumReturned; i++)
+		{
+			if (apEnumAccess[i] != NULL)
+			{
+				apEnumAccess[i]->Release();
+				apEnumAccess[i] = NULL;
+			}
+		}
+		delete[] apEnumAccess;
+	}
+	if (NULL != pWbemLocator)
+	{
+		pWbemLocator->Release();
+	}
+	if (NULL != pNameSpace)
+	{
+		pNameSpace->Release();
+	}
+	if (NULL != pEnum)
+	{
+		pEnum->Release();
+	}
+	if (NULL != pConfig)
+	{
+		pConfig->Release();
+	}
+	if (NULL != pRefresher)
+	{
+		pRefresher->Release();
+	}
+
+	CoUninitialize();
+
+	if (FAILED(hr))
+	{
+		wprintf(L"Error status=%08x\n", hr);
+	}
+
+	system("pause");
+	return 1;
+}*/

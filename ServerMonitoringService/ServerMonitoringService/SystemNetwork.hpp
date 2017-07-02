@@ -16,7 +16,7 @@ class SystemNetwork
 public:
 	void formatToMacAddress(TCHAR *parm, BYTE addr[]);
 	int getNetworkInterfaces(PIP_ADAPTER_INFO &pAdapter, int &outCount);
-	int getNetworkInterfaceType(int type);
+	string getNetworkInterfaceType(IP_ADAPTER_INFO parmAdapterInfo);
 	int getNetworkSendBytes();
 	int getNetworkReceiveBytes();
 

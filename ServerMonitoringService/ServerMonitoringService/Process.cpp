@@ -63,6 +63,33 @@ TCHAR* Process::getCommandLine()
 	return "";
 }
 
+// When you are finished with the handle, be sure to close it using the CloseHandle function.
+int Process::getHandleFromPID()
+{
+	HANDLE handle;
+	if ((handle = OpenProcess(MAXIMUM_ALLOWED, false, Process::pid)) == NULL)
+		return 0;
+
+	Process::handle = handle;
+
+	return 1;
+}
+
+int Process::getHandleCount(int &val)
+{
+	int nResult = 1;
+
+	HANDLE ha = Process::handle;
+	DWORD pCount;
+
+	if (GetProcessHandleCount(ha, &pCount) == 0)
+		nResult = 0;
+	
+	val = pCount;
+	
+	return nResult;
+}
+
 int Process::getNetworkUsage(double &val)
 {
 	return 1;
