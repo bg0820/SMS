@@ -75,19 +75,16 @@ int Process::getHandleFromPID()
 	return 1;
 }
 
-int Process::getHandleCount(int &val)
+int Process::getHandleCount(DWORD &val)
 {
-	int nResult = 1;
-
-	HANDLE ha = Process::handle;
 	DWORD pCount;
 
-	if (GetProcessHandleCount(ha, &pCount) == 0)
-		nResult = 0;
+	if (GetProcessHandleCount(Process::handle, &pCount) == 0)
+		return 0;
 	
 	val = pCount;
 	
-	return nResult;
+	return 1;
 }
 
 int Process::getNetworkUsage(double &val)

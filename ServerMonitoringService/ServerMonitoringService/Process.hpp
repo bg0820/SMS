@@ -35,7 +35,7 @@ public:
 	TCHAR* getName();
 	TCHAR* getPath();
 	TCHAR* getCommandLine();
-	int getHandleCount(int &val);
+	int getHandleCount(DWORD &val);
 	int getThreadCount(int &val);
 	int getNetworkUsage(double &val);
 	int getMemoryUsage(DWORD &val);
