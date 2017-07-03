@@ -33,29 +33,31 @@ class SystemDiskIO
 	}DiskPerformance;
 
 private:
-	Disk *diskList;
+	Disk *diskList = NULL;
 	vector<string> strDiskList;
 	DiskPerformance * diskPerformance = NULL;
 	HANDLE timerQueue = NULL;
 private:
 	static void CALLBACK TimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired);
 	int getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList);
+	int getDiskInfo(const TCHAR *volumePath, Disk &disk);
 public:
 	// first : return getDiskPartitionList
 	// second : 
 	// third
 	SystemDiskIO()
 	{
-		getPartitionList(SystemDiskIO::strDiskList, SystemDiskIO::diskList);
+		update();
 
 		diskPerformance = new DiskPerformance;
 	}
 
 	~SystemDiskIO()
 	{
+		cout << "~SystemDiskIO()" << endl;
 		if (diskList)
 		{
-			delete diskList;
+			delete[] diskList;
 			diskList = nullptr;
 		}
 
@@ -73,8 +75,10 @@ public:
 	}
 
 	static int getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerformance);
+	
+	Disk* getDiskList(int &count);
+	int update();
 
-	int getDiskInfo(const TCHAR *volumePath, Disk &disk);
 	int Start();
 	int Stop();
 	int getDiskPerformanceUpdatePerSec();

@@ -3,34 +3,27 @@
 int main()
 {
 	SystemDiskIO system;
+	Disk *disk = NULL;
+	int count;
 
-	vector<string> volumeList;
-	Volume *volume;
-	system.getPartitionList(volumeList, volume);
 
-	for (int i = 0; i < volumeList.size(); i++)
+	int c = 0;
+	while (true)
 	{
-		if (system.getDiskInfo(volumeList[i].c_str(), volume[i]))
-		{
-			cout << volume[i].szVolumePath << endl;
-			cout << volume[i].szVolumeName << endl;
-			cout << volume[i].szFileFormat << endl;
-			cout << endl;
-		}
+		system.update();
+		disk = system.getDiskList(count);
+
+		cout << disk[0].name << endl;
+		c++;
+		Sleep(3);
 	}
-
-
-	if (volume)
-	{
-		delete volume;
-		volume = nullptr;
-	}
-
 	std::system("pause");
 }
 
 int SystemDiskIO::getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList)
 {
+	parmStrDiskList.clear();
+
 	TCHAR szBuffer[MAX_PATH];
 	int count = 0;
 
@@ -53,14 +46,14 @@ int SystemDiskIO::getPartitionList(vector<string> &parmStrDiskList, Disk *&parmD
 int SystemDiskIO::getDiskInfo(const TCHAR *path, Disk &disk)
 {
 	ULONGLONG available = 0, totoalByte = 0, freeByte = 0;
+	DWORD volumeSerialNumber;
 
 	strcpy_s(disk.path, path);
 	// Get Drive Type
 	disk.type = GetDriveType(path);
 
-	// init
-	disk.name[0] = '\0';
-	disk.fileFormat[0] = '\0';
+	ZeroMemory(disk.name, sizeof(disk.name));
+	ZeroMemory(disk.fileFormat, sizeof(disk.fileFormat));
 
 	// GetDiskFreeSpaceEx function is fetched when the drive is connected.
 	if (disk.type != DRIVE_REMOVABLE)
@@ -76,7 +69,7 @@ int SystemDiskIO::getDiskInfo(const TCHAR *path, Disk &disk)
 		disk.totalBytes = totoalByte;
 		disk.freeBytes = freeByte;
 
-		if (!GetVolumeInformation(path, disk.name, sizeof(disk.name) + 1, NULL, NULL, NULL, disk.fileFormat, sizeof(disk.fileFormat)))
+		if (!GetVolumeInformationA(path, disk.name, sizeof(disk.name) + 1, &volumeSerialNumber, NULL, NULL, disk.fileFormat, sizeof(disk.fileFormat) + 1))
 			return -2;
 	}
 
@@ -149,6 +142,38 @@ int SystemDiskIO::getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerform
 	}
 
 	CloseHandle(handle); // Memory Leak : Solution
+
+	return nResult;
+}
+
+Disk * SystemDiskIO::getDiskList(int &count)
+{
+	count = SystemDiskIO::strDiskList.size();
+	return SystemDiskIO::diskList;
+}
+
+// updateDiskList(), updateDiskInfo()
+int SystemDiskIO::update()
+{
+	int nResult = 1;
+
+	if (SystemDiskIO::diskList)
+	{
+		delete[] SystemDiskIO::diskList;
+		SystemDiskIO::diskList = nullptr;
+	}
+
+	nResult = getPartitionList(SystemDiskIO::strDiskList, SystemDiskIO::diskList);
+
+	if (nResult)
+	{
+		for (int i = 0; i < SystemDiskIO::strDiskList.size(); i++)
+		{
+			// nResult = 0; if Then nResult == false 
+			if (!getDiskInfo(SystemDiskIO::strDiskList[i].c_str(), SystemDiskIO::diskList[i]))
+				nResult = 0;
+		}
+	}
 
 	return nResult;
 }
