@@ -11,6 +11,13 @@
 using namespace std;
 
 typedef unsigned long       DWORD;
+typedef NTSTATUS(NTAPI *_NtQueryInformationProcess)(
+	HANDLE ProcessHandle,
+	DWORD ProcessInformationClass,
+	PVOID ProcessInformation,
+	DWORD ProcessInformationLength,
+	PDWORD ReturnLength
+	);
 
 int Compare(const void * val1, const void * val2);
 
@@ -24,9 +31,11 @@ private:
 	TCHAR commandLine[MAX_PATH];
 private:
 	int getHandleFromPID();
+	// TODO initFunc retrun Type TCHAR* > int, initName(TCHAR *val)
 	TCHAR* initName();
-	TCHAR*  initPath();
-	TCHAR*  initCommandLine();
+	TCHAR* initPath();
+	TCHAR* initCommandLine();
+	PVOID GetPebAddress(HANDLE ProcessHandle);
 public:
 	Process(const DWORD pid = 0)
 	{
@@ -52,7 +61,7 @@ public:
 	TCHAR* getCommandLine();
 
 	int getHandleCount(DWORD &val);
-	int getThreadCount(int &val);
+	int getThreadCount(int &parmTotalThreadCount, int &parmCurrentProcessThreadCount);
 	int getNetworkUsage(double &val);
 	int getMemoryUsage(DWORD &val);
 	int getCpuUsage(double &val);
