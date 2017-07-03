@@ -1,18 +1,4 @@
 #include "SystemCPU.hpp"
-#include <iostream>
-
-using namespace std;
-
-int main()
-{
-	while (true)
-	{
-	
-	SystemCpu syscpu;
-	cout << syscpu.getCpuModeInfo() << endl;
-}
-	system("pause");
-}
 
 TCHAR* SystemCpu::getCpuModeInfo()
 {
