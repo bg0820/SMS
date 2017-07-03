@@ -105,7 +105,7 @@ void CALLBACK SystemDiskIO::TimerCallback(PVOID lpParameter, BOOLEAN TimerOrWait
 
 	LONGLONG readSec = diskPerformance->curDiskPerformance.BytesRead.QuadPart - diskPerformance->prevDiskPerformance.BytesRead.QuadPart;
 	LONGLONG writeSec = diskPerformance->curDiskPerformance.BytesWritten.QuadPart - diskPerformance->prevDiskPerformance.BytesWritten.QuadPart;
-	
+
 	if (readSec >= 0 && writeSec >= 0)
 	{
 		cout << readSec / 1024 << "KB/s" << endl;
@@ -139,10 +139,20 @@ int SystemDiskIO::getDiskPerformanceUpdatePerSec()
 
 void SystemDiskIO::destroy(Disk *disk)
 {
-	delete[] disk->szVolumeName;
-	delete[] disk->szFileFormat;
-	delete[] disk;
+	if (disk)
+	{
+		delete[] disk->szVolumeName;
+		disk->szVolumeName = nullptr;
+		delete[] disk->szFileFormat;
+		disk->szFileFormat = nullptr;
+		delete[] disk;
+		disk = nullptr;
+	}
 
-	if (diskPerformance != NULL)
+	if (diskPerformance)
+	{
 		delete diskPerformance;
+		diskPerformance = nullptr;
+	}
+
 }

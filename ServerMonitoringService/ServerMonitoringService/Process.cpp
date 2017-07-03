@@ -81,14 +81,14 @@ TCHAR* Process::initCommandLine()
 	pebAddress = GetPebAddress(Process::handle);
 
 	/* get the address of ProcessParameters */
-	if (!ReadProcessMemory(Process::handle,	&(((_PEB*)pebAddress)->ProcessParameters), &rtlUserProcParamsAddress, sizeof(PVOID), NULL))
+	if (!ReadProcessMemory(Process::handle, &(((_PEB*)pebAddress)->ProcessParameters), &rtlUserProcParamsAddress, sizeof(PVOID), NULL))
 	{
 		printf("Could not read the address of ProcessParameters!\n");
 		GetLastError();
 	}
 
 	/* read the CommandLine UNICODE_STRING structure */
-	if (!ReadProcessMemory(Process::handle,	&(((_RTL_USER_PROCESS_PARAMETERS*)rtlUserProcParamsAddress)->CommandLine), &commandLine, sizeof(commandLine), NULL))
+	if (!ReadProcessMemory(Process::handle, &(((_RTL_USER_PROCESS_PARAMETERS*)rtlUserProcParamsAddress)->CommandLine), &commandLine, sizeof(commandLine), NULL))
 	{
 		printf("Could not read CommandLine!\n");
 		GetLastError();
@@ -109,15 +109,19 @@ TCHAR* Process::initCommandLine()
 	/* a WCHAR is 2 bytes */
 	cout << commandLine.Length / 2 << endl;
 	cout << commandLineContents << endl;
-	for (int i = 0; i <commandLine.Length; i++)
+	for (int i = 0; i < commandLine.Length; i++)
 	{
 		cout << (int)commandLineContents[i] << endl;
 	}
-	
-	cout << commandLineContents<< endl;
+
+	cout << commandLineContents << endl;
 	printf("%.*S\n", commandLine.Length / 2, commandLineContents);
 
-	delete commandLineContents;
+	if (commandLineContents) 
+	{
+		delete commandLineContents;
+		commandLineContents = nullptr;
+	}
 
 	return "";
 }
@@ -353,54 +357,3 @@ int Compare(const void * val1, const void * val2)
 
 	return *(PDWORD)val1 > *(PDWORD)val2 ? 1 : -1;
 }
-
-/*
-//int ProcessData::getProcessData()
-//{
-//	DWORD *pProcesses = NULL;
-//	int pProcessesSize;
-//
-//	// 프로세스 목록 가져오기
-//	getProcessList(&pProcesses, &pProcessesSize);
-//
-//	// 프로세스 정보 객체 생성 프로세스 리스트 개수 만큼
-//	ProcessInfo *processList = new ProcessInfo[pProcessesSize];
-//
-//	for (int i = 0; i < pProcessesSize; i++)
-//	{
-//		processList[i].pid = pProcesses[i];
-//
-//		TCHAR *processInfo = NULL;
-//		if (getProcessInfo(pProcesses[i], &processInfo, 1))
-//		{
-//			processList[i].Name = processInfo;
-//		}
-//
-//		DWORD memoryVal = 0.0;
-//		if (getProcessMemoryUsage(pProcesses[i], &memoryVal))
-//		{
-//			processList[i].memoryVal = memoryVal;
-//
-//		}
-//
-//		double cpuVal = 0.0;
-//		if (getProcessCpuUsage(pProcesses[i], &cpuVal))
-//		{
-//			processList[i].cpuVal = cpuVal;
-//
-//			cout << "=====================" << endl;
-//			cout << "PID : " << processList[i].pid << endl;
-//			//cout << "ProcessName : " << processList[i].Name << endl;
-//			cout << "Memory Usage : " << processList[i].memoryVal / DIV << "MB" << endl;
-//			cout << "CPU : " << processList[i].cpuVal << "%" << endl;
-//			cout << "=====================" << endl << endl;
-//		}
-//
-//		delete processInfo;
-//	}
-//
-//	delete pProcesses; // 힙 에 쌓여있는 DWORD 배열 해제
-//	pProcesses = NULL;
-//	return 1;
-//}
-//*/

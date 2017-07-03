@@ -28,11 +28,20 @@ public:
 	~SystemOS()
 	{
 		if (userName)
+		{
 			delete userName;
+			userName = nullptr;
+		}
 		if (computerName)
+		{
 			delete computerName;
+			computerName = nullptr;
+		}
 		if (osVersionName)
+		{
 			delete osVersionName;
+			osVersionName = nullptr;
+		}
 	}
 
 	TCHAR* getUserName();

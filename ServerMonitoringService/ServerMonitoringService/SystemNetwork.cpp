@@ -71,7 +71,7 @@ int SystemNetwork::getNetworkInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outC
 	if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW)
 	{
 		delete pAdapterInfo;
-		pAdapterInfo = NULL;
+		pAdapterInfo = nullptr;
 
 		outCount = ulOutBufLen / sizeof(IP_ADAPTER_INFO);
 		pAdapterInfo = new IP_ADAPTER_INFO[outCount]; // because (IP_ADAPTER_INFO *) MALLOC(ulOutBufLen);

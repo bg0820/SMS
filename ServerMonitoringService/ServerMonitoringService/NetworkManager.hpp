@@ -21,8 +21,11 @@ public:
 	}
 	~NetworkManager()
 	{
-		delete networkListener;
-		networkListener = NULL;
+		if (networkListener)
+		{
+			delete networkListener;
+			networkListener = nullptr;
+		}
 	}
 public:
 	int Init();
