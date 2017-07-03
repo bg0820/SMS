@@ -13,7 +13,7 @@ using namespace std;
 void onShellExecute()
 {
 	SHELLEXECUTEINFO shExeInfo;
-	char strPath[MAX_PATH] = "";
+	TCHAR strPath[MAX_PATH];
 
 	GetModuleFileName(NULL, strPath, MAX_PATH);
 

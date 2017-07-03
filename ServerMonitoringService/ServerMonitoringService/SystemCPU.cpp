@@ -5,9 +5,12 @@ using namespace std;
 
 int main()
 {
-		SystemCpu syscpu;
-		cout << syscpu.getCpuModeInfo() << endl;
-
+	while (true)
+	{
+	
+	SystemCpu syscpu;
+	cout << syscpu.getCpuModeInfo() << endl;
+}
 	system("pause");
 }
 

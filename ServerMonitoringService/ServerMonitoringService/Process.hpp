@@ -35,9 +35,9 @@ public:
 		getHandleFromPID();
 
 		// strcpy_s(Multi-Byte) -> wcscpy_s(UNICODE)
-		wcscpy_s(name, initName());
-		wcscpy_s(path, initPath());
-		wcscpy_s(commandLine, initCommandLine());
+		strcpy_s(name, initName());
+		strcpy_s(path, initPath());
+		strcpy_s(commandLine, initCommandLine());
 	}
 
 	~Process()

@@ -60,9 +60,9 @@ int SystemDiskIO::getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerform
 
 	// REPLACE
 	TCHAR path_array[MAX_PATH];
-	strcpy_s(path_array, path);	
+	strcpy_s(path_array, path);
 	TCHAR *context = NULL;
-	TCHAR * tc = strtok_s(path_array, ":", &context);
+	TCHAR * tc = strtok_s(path_array, TEXT(":"), &context);
 	string strPath;
 	strPath = "\\\\.\\C:";
 	stringReplace(strPath, "C", tc);
