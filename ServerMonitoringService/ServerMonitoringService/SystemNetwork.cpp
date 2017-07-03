@@ -92,7 +92,6 @@ int SystemNetwork::getNetworkInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outC
 
 void SystemNetwork::formatToMacAddress(TCHAR *parm, BYTE addr[])
 {
-
 	sprintf(parm, "%.2X-%.2X-%.2X-%.2X-%.2X-%.2X",
 		addr[0],
 		addr[1],

@@ -1,44 +1,99 @@
 #include "SystemDiskIO.hpp"
 
-int SystemDiskIO::getDiskPartitionList(vector<string> & volumeList)
+int main()
+{
+	SystemDiskIO system;
+
+	vector<string> volumeList;
+	Volume *volume;
+	system.getPartitionList(volumeList, volume);
+
+	for (int i = 0; i < volumeList.size(); i++)
+	{
+		if (system.getDiskInfo(volumeList[i].c_str(), volume[i]))
+		{
+			cout << volume[i].szVolumePath << endl;
+			cout << volume[i].szVolumeName << endl;
+			cout << volume[i].szFileFormat << endl;
+			cout << endl;
+		}
+	}
+
+
+	if (volume)
+	{
+		delete volume;
+		volume = nullptr;
+	}
+
+	std::system("pause");
+}
+
+int SystemDiskIO::getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList)
 {
 	TCHAR szBuffer[MAX_PATH];
 	int count = 0;
 
+	// If the function fails, the return value is zero.
+	// If the function succeeds, the return value is the length, in characters, of the strings copied to the buffer,
+	// not including the terminating null character. Note that an ANSI-ASCII null character uses one byte, but a Unicode (UTF-16) null character uses two bytes.
 	if ((count = GetLogicalDriveStrings(sizeof(szBuffer), szBuffer)) == 0)
 		return 0;
 
+	// (A:\\B:\\C:\\D:\\)
+	// A:\\, B:\\, C:\\, D:\\ 4byte
 	for (int i = 0; i < count / 4; i++)
-		volumeList.push_back(szBuffer + (i * 4));
+		parmStrDiskList.push_back(szBuffer + (i * 4));
+
+	parmDiskList = new Disk[parmStrDiskList.size()];
 
 	return 1;
 }
 
-int SystemDiskIO::getDiskInformation(const TCHAR *volumePath, Disk &disk)
+int SystemDiskIO::getDiskInfo(const TCHAR *path, Disk &disk)
 {
-	ULONGLONG available, totoalByte, freeByte;
+	ULONGLONG available = 0, totoalByte = 0, freeByte = 0;
 
-	disk.szVolumePath = volumePath;
+	strcpy_s(disk.path, path);
 	// Get Drive Type
-	disk.type = GetDriveType(volumePath);
-	// Success non zero
-	if (!GetDiskFreeSpaceEx(volumePath,
-		(PULARGE_INTEGER)&available,
-		(PULARGE_INTEGER)&totoalByte,
-		(PULARGE_INTEGER)&freeByte))
-		return 0;
+	disk.type = GetDriveType(path);
 
-	disk.usedBytes = totoalByte - freeByte;
-	disk.totalBytes = totoalByte;
-	disk.freeBytes = freeByte;
+	// init
+	disk.name[0] = '\0';
+	disk.fileFormat[0] = '\0';
 
-	disk.szVolumeName = new TCHAR[MAX_PATH];
-	disk.szFileFormat = new TCHAR[MAX_PATH];
+	// GetDiskFreeSpaceEx function is fetched when the drive is connected.
+	if (disk.type != DRIVE_REMOVABLE)
+	{
+		// Success non zero
+		if (!GetDiskFreeSpaceEx(path,
+			(PULARGE_INTEGER)&available,
+			(PULARGE_INTEGER)&totoalByte,
+			(PULARGE_INTEGER)&freeByte))
+			return -1;
 
-	if (!GetVolumeInformation(volumePath, disk.szVolumeName, sizeof(disk.szVolumeName) + 1, NULL, NULL, NULL, disk.szFileFormat, sizeof(disk.szFileFormat)))
-		return 0;
+		disk.usedBytes = totoalByte - freeByte;
+		disk.totalBytes = totoalByte;
+		disk.freeBytes = freeByte;
+
+		if (!GetVolumeInformation(path, disk.name, sizeof(disk.name) + 1, NULL, NULL, NULL, disk.fileFormat, sizeof(disk.fileFormat)))
+			return -2;
+	}
 
 	return 1;
+}
+
+int SystemDiskIO::Start()
+{
+	// TODO :: UpdatePerSec
+	return 0;
+}
+
+int SystemDiskIO::Stop()
+{
+	// TODO :: UpdatePerSec Stop and DeleteTimerQueue
+	//	DeleteTimerQueue(timer);
+	return 0;
 }
 
 void stringReplace(string& subject, const string& search, const string& replace)
@@ -101,7 +156,7 @@ int SystemDiskIO::getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerform
 void CALLBACK SystemDiskIO::TimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
 	DiskPerformance * diskPerformance = (DiskPerformance*)lpParameter;
-	SystemDiskIO::getDiskPerformance("C:", diskPerformance->curDiskPerformance);
+	getDiskPerformance("C:\\", diskPerformance->curDiskPerformance);
 
 	LONGLONG readSec = diskPerformance->curDiskPerformance.BytesRead.QuadPart - diskPerformance->prevDiskPerformance.BytesRead.QuadPart;
 	LONGLONG writeSec = diskPerformance->curDiskPerformance.BytesWritten.QuadPart - diskPerformance->prevDiskPerformance.BytesWritten.QuadPart;
@@ -129,30 +184,18 @@ int SystemDiskIO::getDiskPerformanceUpdatePerSec()
 	HANDLE timerQueue = CreateTimerQueue();
 	HANDLE timer;
 
+	// TODO : ~
 	// for(int i = 0; i< diskcount; i++){ 
 	// diskPerformance->path = "C:\\";
 	if (!CreateTimerQueueTimer(&timer, timerQueue, SystemDiskIO::TimerCallback, diskPerformance, 1000, 1000, WT_EXECUTEDEFAULT))
 		nResult = 0;
 	// }
+
+	if (timerQueue)
+	{
+		CloseHandle(timerQueue);
+		timerQueue = NULL;
+	}
+
 	return nResult;
-}
-
-void SystemDiskIO::destroy(Disk *disk)
-{
-	if (disk)
-	{
-		delete[] disk->szVolumeName;
-		disk->szVolumeName = nullptr;
-		delete[] disk->szFileFormat;
-		disk->szFileFormat = nullptr;
-		delete[] disk;
-		disk = nullptr;
-	}
-
-	if (diskPerformance)
-	{
-		delete diskPerformance;
-		diskPerformance = nullptr;
-	}
-
 }

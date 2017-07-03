@@ -5,22 +5,23 @@
 #include <Windows.h>
 #include <vector>
 
+#define INTERVAL 500
+
 using namespace std;
-
-void stringReplace(string& subject, const string& search, const string& replace);
-
 
 typedef unsigned long       DWORD;
 typedef struct disk
 {
-	string szVolumePath;
-	TCHAR * szVolumeName = NULL;
-	TCHAR * szFileFormat = NULL;
-	ULONGLONG usedBytes;
-	ULONGLONG totalBytes;
-	ULONGLONG freeBytes;
+	TCHAR path[MAX_PATH];
+	TCHAR name[MAX_PATH];
+	TCHAR fileFormat[MAX_PATH];
+	ULONGLONG usedBytes = 0;
+	ULONGLONG totalBytes = 0;
+	ULONGLONG freeBytes = 0;
 	int type;
 }Disk;
+
+void stringReplace(string& subject, const string& search, const string& replace);
 
 class SystemDiskIO
 {
@@ -32,22 +33,51 @@ class SystemDiskIO
 	}DiskPerformance;
 
 private:
+	Disk *diskList;
+	vector<string> strDiskList;
 	DiskPerformance * diskPerformance = NULL;
+	HANDLE timerQueue = NULL;
 private:
 	static void CALLBACK TimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired);
+	int getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList);
 public:
+	// first : return getDiskPartitionList
+	// second : 
+	// third
 	SystemDiskIO()
 	{
+		getPartitionList(SystemDiskIO::strDiskList, SystemDiskIO::diskList);
+
 		diskPerformance = new DiskPerformance;
 	}
+
+	~SystemDiskIO()
+	{
+		if (diskList)
+		{
+			delete diskList;
+			diskList = nullptr;
+		}
+
+		if (timerQueue)
+		{
+			CloseHandle(timerQueue);
+			timerQueue = NULL;
+		}
+
+		if (diskPerformance)
+		{
+			delete diskPerformance;
+			diskPerformance = nullptr;
+		}
+	}
+
 	static int getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerformance);
 
-	int getDiskPartitionList(vector<string> & volumeList);
-	int getDiskInformation(const TCHAR *volumePath, Disk &disk);
+	int getDiskInfo(const TCHAR *volumePath, Disk &disk);
 	int Start();
 	int Stop();
 	int getDiskPerformanceUpdatePerSec();
-	void destroy(Disk *disk);
 };
 
 #endif
