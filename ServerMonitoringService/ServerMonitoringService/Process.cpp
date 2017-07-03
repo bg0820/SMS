@@ -71,20 +71,6 @@ PVOID Process::GetPebAddress(HANDLE ProcessHandle)
 	return pbi.PebBaseAddress;
 }
 
-int main()
-{
-	Process pr = Process(7060);
-	pr.getCommandLine();
-	int parmTotal;
-	int curTotal;
-	pr.getThreadCount(parmTotal, curTotal);
-
-	cout << parmTotal << endl;
-	cout << curTotal << endl;
-
-	system("pause");
-}
-
 TCHAR* Process::initCommandLine()
 {
 	PVOID pebAddress;
@@ -128,7 +114,7 @@ TCHAR* Process::initCommandLine()
 		cout << (int)commandLineContents[i] << endl;
 	}
 	
-	cout << endl;
+	cout << commandLineContents<< endl;
 	printf("%.*S\n", commandLine.Length / 2, commandLineContents);
 
 	delete commandLineContents;
@@ -302,6 +288,7 @@ int Process::getMemoryUsage(DWORD &val)
 
 	return nResult;
 }
+
 int Process::getCpuUsage(double &val)
 {
 	int nResult = 1;
@@ -349,7 +336,8 @@ int Process::getCpuUsage(double &val)
 			break;
 		}
 
-		Sleep(3);
+		Sleep(1); // QueryPerformanceCounter Function Resolution is 1 microsecond
+
 		count++;
 	}
 

@@ -10,27 +10,34 @@ typedef unsigned long       DWORD;
 class SystemOS
 {
 private:
-	char * userName;
-	char * computerName;
-	char * osName;
+	TCHAR* userName;
+	TCHAR* computerName;
+	TCHAR* osVersionName;
 
-	int initUserName(TCHAR *& val);
-	int initComputerName(TCHAR *& val);
+	int initUserName(TCHAR *&val);
+	int initComputerName(TCHAR *&val);
+	int initOSVersionName(TCHAR *&val);
 public:
 	SystemOS()
 	{
 		initUserName(userName);
 		initComputerName(computerName);
+		initOSVersionName(osVersionName);
 	}
 
 	~SystemOS()
 	{
-		delete userName;
-		delete computerName;
+		if (userName)
+			delete userName;
+		if (computerName)
+			delete computerName;
+		if (osVersionName)
+			delete osVersionName;
 	}
 
-	char* getUserName();
-	char* getComputerName();
+	TCHAR* getUserName();
+	TCHAR* getComputerName();
+	TCHAR* getOSVersionName();
 };
 
 #endif // !_SYSTEMOS_H_
