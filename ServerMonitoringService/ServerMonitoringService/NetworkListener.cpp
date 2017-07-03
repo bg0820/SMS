@@ -15,7 +15,7 @@ int NetworkListener::Init(SOCKET * pSocket)
 	return 1;
 }
 
-void NetworkListener::initSocketAddr(u_short port, const TCHAR * ip)
+void NetworkListener::initSocketAddr(u_short port, const char * ip)
 {
 	// Socket Init
 	addr.sin_family = AF_INET; // IPv4

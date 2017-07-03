@@ -20,7 +20,7 @@ private:
 public:
 	int Init(SOCKET * pSocket);
 	int Connect(SOCKET socket);
-	void initSocketAddr(u_short port, const TCHAR * ip);
+	void initSocketAddr(u_short port, const char * ip);
 	static int Send(SOCKET socket, char * buf, int bufSize);
 	static int Recv(SOCKET socket, char * buf, int bufSize);
 	int Disconnect(SOCKET socket);

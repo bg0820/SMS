@@ -1,4 +1,33 @@
 #include "SystemCPU.hpp"
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+		SystemCpu syscpu;
+		cout << syscpu.getCpuModeInfo() << endl;
+
+	system("pause");
+}
+
+TCHAR* SystemCpu::getCpuModeInfo()
+{
+    HKEY key;
+    TCHAR data[1024];
+	DWORD dwSize;
+	dwSize = sizeof(data) / sizeof(TCHAR);
+
+	if (RegOpenKey(HKEY_LOCAL_MACHINE, TEXT("HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0"), &key) != ERROR_SUCCESS)
+		throw -1;    
+
+	if (RegQueryValueEx(key, TEXT("ProcessorNameString"), NULL, NULL, (LPBYTE)data, &dwSize) != ERROR_SUCCESS)
+		throw -2;
+
+    RegCloseKey(key);
+
+	return data;
+}
 
 int SystemCpu::getUsage(double &val)
 {

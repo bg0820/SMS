@@ -13,6 +13,8 @@ private:
 public:
 	int getUsage(double &val);
 	int getIdleUsage(double &val);
+	TCHAR* getCpuModeInfo();
+	int getCpuHz(int &val);
 	//int getSysUsage(double &val);
 };
 

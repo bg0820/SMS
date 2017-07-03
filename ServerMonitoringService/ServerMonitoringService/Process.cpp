@@ -1,6 +1,9 @@
 #include "Process.hpp" 
+#include <windows.h>
+#include <stdio.h>
+#include "Winternl.h"
 
-TCHAR* Process::getName()
+TCHAR* Process::initName()
 {
 	int nResult = 1;
 
@@ -29,7 +32,7 @@ TCHAR* Process::getName()
 	return szProcessName;
 }
 
-TCHAR* Process::getPath()
+TCHAR* Process::initPath()
 {
 	int nResult = 1;
 
@@ -44,7 +47,6 @@ TCHAR* Process::getPath()
 		if (!EnumProcessModulesEx(hProcess, &hMod, sizeof(hMod), &cbNeeded, LIST_MODULES_ALL))
 			nResult = 0;
 
-
 		if (GetModuleFileNameEx(hProcess, hMod, szProcessPath, sizeof(szProcessPath) / sizeof(TCHAR)) == 0)
 			nResult = 0;
 	}
@@ -58,9 +60,133 @@ TCHAR* Process::getPath()
 	return szProcessPath;
 }
 
-TCHAR* Process::getCommandLine()
+typedef NTSTATUS(NTAPI *_NtQueryInformationProcess)(
+	HANDLE ProcessHandle,
+	DWORD ProcessInformationClass,
+	PVOID ProcessInformation,
+	DWORD ProcessInformationLength,
+	PDWORD ReturnLength
+	);
+
+PVOID GetPebAddress(HANDLE ProcessHandle)
 {
-	return "";
+	_NtQueryInformationProcess NtQueryInformationProcess =
+		(_NtQueryInformationProcess)GetProcAddress(
+			GetModuleHandleA("ntdll.dll"), "NtQueryInformationProcess");
+	PROCESS_BASIC_INFORMATION pbi;
+
+	NtQueryInformationProcess(ProcessHandle, 0, &pbi, sizeof(pbi), NULL);
+
+	return pbi.PebBaseAddress;
+}
+
+
+TCHAR* Process::initCommandLine()
+{
+	int pid;
+	HANDLE processHandle;
+	PVOID pebAddress;
+	PVOID rtlUserProcParamsAddress;
+	UNICODE_STRING commandLine;
+	WCHAR *commandLineContents;
+
+	pid = 7060;
+
+	if ((processHandle = OpenProcess(
+		PROCESS_QUERY_INFORMATION | /* required for NtQueryInformationProcess */
+		PROCESS_VM_READ, /* required for ReadProcessMemory */
+		FALSE, pid)) == 0)
+	{
+		cout << TEXT("Could not open process!\n") << endl;
+		GetLastError();
+	}
+
+	pebAddress = GetPebAddress(processHandle);
+
+	/* get the address of ProcessParameters */
+	if (!ReadProcessMemory(processHandle,
+		&(((_PEB*)pebAddress)->ProcessParameters),
+		&rtlUserProcParamsAddress,
+		sizeof(PVOID), NULL))
+	{
+		printf("Could not read the address of ProcessParameters!\n");
+		GetLastError();
+	}
+
+	/* read the CommandLine UNICODE_STRING structure */
+	if (!ReadProcessMemory(processHandle,
+		&(((_RTL_USER_PROCESS_PARAMETERS*)rtlUserProcParamsAddress)->CommandLine),
+		&commandLine, sizeof(commandLine), NULL))
+	{
+		printf("Could not read CommandLine!\n");
+		GetLastError();
+	}
+
+	/* allocate memory to hold the command line */
+	commandLineContents = (WCHAR *)malloc(commandLine.Length);
+
+	/* read the command line */
+	if (!ReadProcessMemory(processHandle, commandLine.Buffer,
+		commandLineContents, commandLine.Length, NULL))
+	{
+		printf("Could not read the command line string!\n");
+		GetLastError();
+	}
+
+	/* print it */
+	/* the length specifier is in characters, but commandLine.Length is in bytes */
+	/* a WCHAR is 2 bytes */
+	printf("1 %.*S\n", commandLine.Length / 2, commandLineContents);
+	CloseHandle(processHandle);
+	free(commandLineContents);
+
+	return TEXT("");
+}
+
+BOOL ListProcessThreads(DWORD dwOwnerPID)
+{
+	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
+	THREADENTRY32 te32;
+
+	// Take a snapshot of all running threads  
+	hThreadSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+	if (hThreadSnap == INVALID_HANDLE_VALUE)
+		return(FALSE);
+
+	// Fill in the size of the structure before using it. 
+	te32.dwSize = sizeof(THREADENTRY32);
+
+	// Retrieve information about the first thread,
+	// and exit if unsuccessful
+	if (!Thread32First(hThreadSnap, &te32))
+	{
+		CloseHandle(hThreadSnap);     // Must clean up the snapshot object!
+		return(FALSE);
+	}
+
+	// Now walk the thread list of the system,
+	// and display information about each thread
+	// associated with the specified process
+	int count = 0;
+	int processCount = 0;
+	do // Thread32First
+	{
+		count++;
+		if (te32.th32OwnerProcessID == dwOwnerPID)
+		{
+			processCount++;
+			//printf(TEXT("\n     THREAD ID      = 0x%08X"), te32.th32ThreadID);
+			//printf(TEXT("\n     base priority  = %d"), te32.tpBasePri);
+			//printf(TEXT("\n     delta priority = %d"), te32.tpDeltaPri);
+		}
+	} while (Thread32Next(hThreadSnap, &te32));
+
+	cout << endl;
+	cout << "Total Thread Count : " << count << endl;
+	cout << "PID : " << dwOwnerPID << ", Thread Count : " << processCount << endl;
+	//  Don't forget to clean up the snapshot object.
+	CloseHandle(hThreadSnap);
+	return(TRUE);
 }
 
 // When you are finished with the handle, be sure to close it using the CloseHandle function.
@@ -75,15 +201,35 @@ int Process::getHandleFromPID()
 	return 1;
 }
 
+DWORD Process::getPid()
+{
+	return Process::pid;
+}
+
+TCHAR * Process::getName()
+{
+	return Process::name;
+}
+
+TCHAR * Process::getPath()
+{
+	return Process::path;
+}
+
+TCHAR * Process::getCommandLine()
+{
+	return Process::commandLine;
+}
+
 int Process::getHandleCount(DWORD &val)
 {
 	DWORD pCount;
 
 	if (GetProcessHandleCount(Process::handle, &pCount) == 0)
 		return 0;
-	
+
 	val = pCount;
-	
+
 	return 1;
 }
 

@@ -6,7 +6,6 @@
 #define BUFFER_SIZE 32767
 
 typedef unsigned long       DWORD;
-typedef char TCHAR, *PTCHAR;
 
 class SystemOS
 {
@@ -15,8 +14,8 @@ private:
 	char * computerName;
 	char * osName;
 
-	int initUserName(char *& val);
-	int initComputerName(char *& val);
+	int initUserName(TCHAR *& val);
+	int initComputerName(TCHAR *& val);
 public:
 	SystemOS()
 	{
