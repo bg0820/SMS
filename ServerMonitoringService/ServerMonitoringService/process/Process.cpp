@@ -1,7 +1,150 @@
 #include "Process.hpp" 
-#include <windows.h>
-#include <stdio.h>
-#include "Winternl.h"
+#include <olectl.h>
+#pragma comment(lib, "oleaut32.lib")
+
+#include <atlbase.h>
+
+void SaveIconToFile(HICON hico, LPCTSTR szFileName, BOOL bAutoDelete = FALSE)
+{
+	PICTDESC pd = { sizeof(pd), PICTYPE_ICON };
+	pd.icon.hicon = hico;
+
+	CComPtr<IPicture> pPict = NULL;
+	CComPtr<IStream>  pStrm = NULL;
+	LONG cbSize = 0;
+
+	BOOL res = FALSE;
+
+	res = SUCCEEDED(::CreateStreamOnHGlobal(NULL, TRUE, &pStrm));
+	res = SUCCEEDED(::OleCreatePictureIndirect(&pd, IID_IPicture, bAutoDelete, (void**)&pPict));
+	res = SUCCEEDED(pPict->SaveAsFile(pStrm, TRUE, &cbSize));
+
+	if (res)
+	{
+		// rewind stream to the beginning
+		LARGE_INTEGER li = { 0 };
+		pStrm->Seek(li, STREAM_SEEK_SET, NULL);
+
+		// write to file
+		HANDLE hFile = ::CreateFile(szFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 0, NULL);
+		if (INVALID_HANDLE_VALUE != hFile)
+		{
+			DWORD dwWritten = 0, dwRead = 0, dwDone = 0;
+			BYTE  buf[4096];
+			while (dwDone < cbSize)
+			{
+				if (SUCCEEDED(pStrm->Read(buf, sizeof(buf), &dwRead)))
+				{
+					::WriteFile(hFile, buf, dwRead, &dwWritten, NULL);
+					if (dwWritten != dwRead)
+						break;
+					dwDone += dwRead;
+				}
+				else
+					break;
+			}
+
+			_ASSERTE(dwDone == cbSize);
+			::CloseHandle(hFile);
+		}
+	}
+}
+
+int main()
+{
+	Process prc = Process(58428);
+	HICON hIcon = prc.getIcon();
+	cout << hIcon << endl;
+	cout << prc.getName() << endl;
+	SaveIconToFile(hIcon, "C:\\Users\\±èº¸±Ô\\Desktop\\ÀÛ¾÷\\VS Local Git Repositories\\SMS\\SMS\\ServerMonitoringService\\dd.ico");
+	system("pause");
+}
+
+HICON Process::getIcon()
+{
+	return Process::icon;
+}
+
+PVOID Process::GetPebAddress(HANDLE processHandle)
+{
+	_NtQueryInformationProcess NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationProcess");
+	PROCESS_BASIC_INFORMATION pbi;
+
+	NtQueryInformationProcess(processHandle, 0, &pbi, sizeof(pbi), NULL);
+
+	return pbi.PebBaseAddress;
+}
+
+TCHAR* Process::initCommandLine()
+{
+	PVOID pebAddress;
+	PVOID rtlUserProcParamsAddress;
+	UNICODE_STRING commandLine;
+	TCHAR *commandLineContents;
+
+	pebAddress = GetPebAddress(Process::handle);
+
+	/* get the address of ProcessParameters */
+	if (!ReadProcessMemory(Process::handle, &(((_PEB*)pebAddress)->ProcessParameters), &rtlUserProcParamsAddress, sizeof(PVOID), NULL))
+	{
+		printf("Could not read the address of ProcessParameters!\n");
+		GetLastError();
+	}
+
+	/* read the CommandLine UNICODE_STRING structure */
+	if (!ReadProcessMemory(Process::handle, &(((_RTL_USER_PROCESS_PARAMETERS*)rtlUserProcParamsAddress)->CommandLine), &commandLine, sizeof(commandLine), NULL))
+	{
+		printf("Could not read CommandLine!\n");
+		GetLastError();
+	}
+
+	/* allocate memory to hold the command line */
+	commandLineContents = new TCHAR[commandLine.Length];
+
+	/* read the command line */
+	if (!ReadProcessMemory(Process::handle, commandLine.Buffer, commandLineContents, commandLine.Length, NULL))
+	{
+		printf("Could not read the command line string!\n");
+		GetLastError();
+	}
+
+	/* print it */
+	/* the length specifier is in characters, but commandLine.Length is in bytes */
+	/* a WCHAR is 2 bytes */
+	/*cout << commandLine.Length / 2 << endl;
+	cout << commandLineContents << endl;
+	for (int i = 0; i < commandLine.Length; i++)
+	{
+		cout << (int)commandLineContents[i] << endl;
+	}*/
+
+	//cout << commandLineContents << endl;
+	printf("%.*S\n", commandLine.Length / 2, commandLineContents);
+
+	if (commandLineContents)
+	{
+		delete commandLineContents;
+		commandLineContents = nullptr;
+	}
+
+	return "";
+}
+
+
+HICON Process::initIcon(BOOLEAN LargeIcon)
+{
+	SHFILEINFO shFileInfo;
+
+	ZeroMemory(&shFileInfo, sizeof(SHFILEINFO));
+
+	ULONG iconFlag;
+	iconFlag = LargeIcon ? SHGFI_LARGEICON : SHGFI_SMALLICON;
+
+	if (!SHGetFileInfo(Process::path, 0, &shFileInfo, sizeof(SHFILEINFO), SHGFI_ICON | iconFlag))
+		return NULL;
+
+	return shFileInfo.hIcon;
+}
 
 TCHAR* Process::initName()
 {
@@ -62,82 +205,35 @@ TCHAR* Process::initPath()
 	return szProcessPath;
 }
 
-
-PVOID Process::GetPebAddress(HANDLE ProcessHandle)
-{
-	_NtQueryInformationProcess NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationProcess");
-	PROCESS_BASIC_INFORMATION pbi;
-
-	NtQueryInformationProcess(ProcessHandle, 0, &pbi, sizeof(pbi), NULL);
-
-	return pbi.PebBaseAddress;
-}
-
-TCHAR* Process::initCommandLine()
-{
-	PVOID pebAddress;
-	PVOID rtlUserProcParamsAddress;
-	UNICODE_STRING commandLine;
-	TCHAR *commandLineContents;
-
-	pebAddress = GetPebAddress(Process::handle);
-
-	/* get the address of ProcessParameters */
-	if (!ReadProcessMemory(Process::handle, &(((_PEB*)pebAddress)->ProcessParameters), &rtlUserProcParamsAddress, sizeof(PVOID), NULL))
-	{
-		printf("Could not read the address of ProcessParameters!\n");
-		GetLastError();
-	}
-
-	/* read the CommandLine UNICODE_STRING structure */
-	if (!ReadProcessMemory(Process::handle, &(((_RTL_USER_PROCESS_PARAMETERS*)rtlUserProcParamsAddress)->CommandLine), &commandLine, sizeof(commandLine), NULL))
-	{
-		printf("Could not read CommandLine!\n");
-		GetLastError();
-	}
-
-	/* allocate memory to hold the command line */
-	commandLineContents = new TCHAR[commandLine.Length];
-
-	/* read the command line */
-	if (!ReadProcessMemory(Process::handle, commandLine.Buffer, commandLineContents, commandLine.Length, NULL))
-	{
-		printf("Could not read the command line string!\n");
-		GetLastError();
-	}
-
-	/* print it */
-	/* the length specifier is in characters, but commandLine.Length is in bytes */
-	/* a WCHAR is 2 bytes */
-	cout << commandLine.Length / 2 << endl;
-	cout << commandLineContents << endl;
-	for (int i = 0; i < commandLine.Length; i++)
-	{
-		cout << (int)commandLineContents[i] << endl;
-	}
-
-	cout << commandLineContents << endl;
-	printf("%.*S\n", commandLine.Length / 2, commandLineContents);
-
-	if (commandLineContents)
-	{
-		delete commandLineContents;
-		commandLineContents = nullptr;
-	}
-
-	return "";
-}
-
 // When you are finished with the handle, be sure to close it using the CloseHandle function.
-int Process::getHandleFromPID()
+HANDLE Process::handleFromPid()
 {
 	HANDLE handle;
 	if ((handle = OpenProcess(MAXIMUM_ALLOWED, false, Process::pid)) == NULL)
-		return 0;
+		return NULL;
 
-	Process::handle = handle;
+	return handle;
+}
 
-	return 1;
+ULONG Process::procIdFromHwnd(HWND hwnd)
+{
+	ULONG idProc;
+	GetWindowThreadProcessId(hwnd, &idProc);
+	return idProc;
+}
+
+HWND Process::hWndFromPid()
+{
+	HWND hwnd = FindWindow(NULL, NULL);
+
+	while (hwnd != NULL)
+	{
+		if (GetParent(hwnd) == NULL)
+			if (Process::pid == procIdFromHwnd(hwnd))
+				return hwnd;
+		hwnd = GetWindow(hwnd, GW_HWNDNEXT); // Next Window Handle
+	}
+	return NULL;
 }
 
 DWORD Process::getPid()

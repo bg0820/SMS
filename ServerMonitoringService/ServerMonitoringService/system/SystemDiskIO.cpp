@@ -22,27 +22,27 @@ void SystemDiskIO::CallbackProc()
 		}
 	}
 }
-
-int main()
-{
-	SystemDiskIO systemdiskIO;
-	systemdiskIO.Start();
-	int count = 0;
-	Disk *disk = NULL;
-	disk = systemdiskIO.getDiskList(count);
-
-	while (true)
-	{
-		for (int i = 0; i < count; i++)
-		{
-			cout << "Read/sec : " << disk[i].readSec / 1024.0 << "kb/s" << endl;
-			cout << "Write/sec : " << disk[i].writeSec / 1024.0 << "kb/s" << endl;
-		}
-		Sleep(1000);
-	}
-
-	system("pause");
-}
+//
+//int main()
+//{
+//	SystemDiskIO systemdiskIO;
+//	systemdiskIO.Start();
+//	int count = 0;
+//	Disk *disk = NULL;
+//	disk = systemdiskIO.getDiskList(count);
+//
+//	while (true)
+//	{
+//		for (int i = 0; i < count; i++)
+//		{
+//			cout << "Read/sec : " << disk[i].readSec / 1024.0 << "kb/s" << endl;
+//			cout << "Write/sec : " << disk[i].writeSec / 1024.0 << "kb/s" << endl;
+//		}
+//		Sleep(1000);
+//	}
+//
+//	system("pause");
+//}
 
 int SystemDiskIO::getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList)
 {
@@ -97,6 +97,18 @@ int SystemDiskIO::getDiskInfo(const TCHAR *path, Disk &disk)
 		if (!GetVolumeInformationA(path, disk.name, sizeof(disk.name) + 1, &volumeSerialNumber, NULL, NULL, disk.fileFormat, sizeof(disk.fileFormat) + 1))
 			return -2;
 	}
+	/*
+	DEVICE_TRIM_DESCRIPTOR dtr;
+	memset(&dtr, 0, sizeof(DEVICE_TRIM_DESCRIPTOR));
+	memset(&spq, 0, sizeof(STORAGE_PROPERTY_QUERY));
+	spq.PropertyId = StorageDeviceTrimProperty;
+	spq.QueryType = PropertyStandardQuery;
+
+	BOOL ret = DeviceIoControl(volhand, IOCTL_STORAGE_QUERY_PROPERTY,
+		&spq, sizeof(spq),
+		&dtr, sizeof(dtr),
+		&dwBytesReturned, FALSE);
+	*/
 
 	return 1;
 }
