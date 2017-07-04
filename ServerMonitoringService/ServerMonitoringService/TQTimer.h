@@ -1,11 +1,8 @@
 #ifndef _TQTIMER_H_
 #define _TQTIMER_H_
 
-#include <iostream>
 #include <Windows.h>
 #include <functional>
-
-class SystemDiskIO;
 
 #define FAILED_CREATE_TIMER -10
 

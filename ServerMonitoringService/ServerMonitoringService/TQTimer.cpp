@@ -18,6 +18,7 @@ void TQTimer::Start()
 
 	TQTimer::timerQueue = CreateTimerQueue();
 
+	// cast reinterpret_cast<PVOID>(this);
 	if (CreateTimerQueueTimer(&(TQTimer::timerHandle), TQTimer::timerQueue, TQTimer::TimerProc, (PVOID)this, 0, (DWORD)TQTimer::interval, WT_EXECUTEINTIMERTHREAD) == 0)
 		throw FAILED_CREATE_TIMER;
 
