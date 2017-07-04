@@ -26,7 +26,6 @@ void SystemDiskIO::CallbackProc()
 int main()
 {
 	SystemDiskIO systemdiskIO;
-
 	systemdiskIO.Start();
 	int count = 0;
 	Disk *disk = NULL;
@@ -41,26 +40,6 @@ int main()
 		}
 		Sleep(1000);
 	}
-
-	/*Sleep(50000);
-	systemdiskIO.Stop();*/
-	//Sleep(5000);
-	//timer.Stop();
-	/*
-	Disk *disk = NULL;
-	int count = 0;
-
-	disk = system.getDiskList(count);
-	int c = 0;
-
-	for(int i = 0; i< count; i++)
-	{
-		system.update();
-		disk = system.getDiskList(count);
-
-		cout << disk[i].name << endl;
-
-	}*/
 
 	system("pause");
 }

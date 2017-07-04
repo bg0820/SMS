@@ -1,6 +1,6 @@
 #include "ProcessList.hpp"
 
-int ProcessList::update()
+int ProcessList::Update()
 {
 	if (EnumProcesses(processList, sizeof(processList), &processListSize) == 0) // EnumProcesses func FAILED return value is zero;
 		return 0;

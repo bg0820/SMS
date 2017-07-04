@@ -4,7 +4,8 @@ UINT TQTimer::timerCount = 0;
 
 void CALLBACK TQTimer::TimerProc(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
-	TQTimer* obj = reinterpret_cast<TQTimer*>(lpParameter);
+	// copy
+	TQTimer* obj = (TQTimer*)lpParameter;
 
 	if (obj->func)
 		obj->func();
@@ -17,7 +18,7 @@ void TQTimer::Start()
 
 	TQTimer::timerQueue = CreateTimerQueue();
 
-	if (CreateTimerQueueTimer(&(TQTimer::timerHandle), TQTimer::timerQueue, TQTimer::TimerProc, reinterpret_cast<PVOID>(this), 0, (DWORD)TQTimer::interval, WT_EXECUTEINTIMERTHREAD) == 0)
+	if (CreateTimerQueueTimer(&(TQTimer::timerHandle), TQTimer::timerQueue, TQTimer::TimerProc, (PVOID)this, 0, (DWORD)TQTimer::interval, WT_EXECUTEINTIMERTHREAD) == 0)
 		throw FAILED_CREATE_TIMER;
 
 }
