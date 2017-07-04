@@ -4,6 +4,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <vector>
+#include "TQTimer.h"
 
 #define INTERVAL 500
 
@@ -19,37 +20,35 @@ typedef struct disk
 	ULONGLONG totalBytes = 0;
 	ULONGLONG freeBytes = 0;
 	int type;
+	DISK_PERFORMANCE curDiskPerformance;
+	DISK_PERFORMANCE prevDiskPerformance;
+	LONGLONG readSec = 0;
+	LONGLONG writeSec = 0;
 }Disk;
 
 void stringReplace(string& subject, const string& search, const string& replace);
 
 class SystemDiskIO
 {
-	typedef struct diskPerf
-	{
-		TCHAR * path;
-		DISK_PERFORMANCE prevDiskPerformance;
-		DISK_PERFORMANCE curDiskPerformance;
-	}DiskPerformance;
-
 private:
+	UINT diskCount = 0;
 	Disk *diskList = NULL;
 	vector<string> strDiskList;
-	//DiskPerformance * diskPerformance = NULL;
-	HANDLE timerQueue = NULL;
+	TQTimer *tqTimer = NULL;
 private:
-	void CALLBACK TimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired);
 	int getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList);
 	int getDiskInfo(const TCHAR *volumePath, Disk &disk);
+	int getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerformance);
+	void CallbackProc();
 public:
-	// first : return getDiskPartitionList
-	// second : 
-	// third
+
+	// first : return count for getDiskList()
+	// second : update()
+	// third : start();
+	// fourth : stop();
 	SystemDiskIO()
 	{
-		update();
-
-		//diskPerformance = new DiskPerformance;
+		Update();
 	}
 
 	~SystemDiskIO()
@@ -60,25 +59,13 @@ public:
 			delete[] diskList;
 			diskList = nullptr;
 		}
-
-		if (timerQueue != INVALID_HANDLE_VALUE)
-			CloseHandle(timerQueue);
-
-		/*if (diskPerformance)
-		{
-			delete diskPerformance;
-			diskPerformance = nullptr;
-		}*/
 	}
 
-	int getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerformance);
-
 	Disk* getDiskList(int &count);
-	int update();
-
-	int start();
-	int stop();
-	int getDiskPerformanceUpdatePerSec();
+	int Update();
+	int Start();
+	int Stop();
+	int getListCount();
 };
 
 #endif

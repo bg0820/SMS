@@ -5,6 +5,7 @@ UINT TQTimer::timerCount = 0;
 void CALLBACK TQTimer::TimerProc(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
 	TQTimer* obj = reinterpret_cast<TQTimer*>(lpParameter);
+
 	if (obj->func)
 		obj->func();
 }
@@ -23,7 +24,12 @@ void TQTimer::Start()
 
 void TQTimer::Stop()
 {
-	DeleteTimerQueueTimer(TQTimer::timerQueue, TQTimer::timerHandle, NULL);
+	// DeleteTimerQueueTimer function does CloseHandle() timerQueue, timerHandle That You don't need to call a CloseHandle() function
+	if (TQTimer::timerQueue || TQTimer::timerHandle)
+		DeleteTimerQueueTimer(TQTimer::timerQueue, TQTimer::timerHandle, NULL);
+
+	TQTimer::timerQueue = nullptr;
+	TQTimer::timerHandle = nullptr;
 }
 
 UINT TQTimer::getInterval()

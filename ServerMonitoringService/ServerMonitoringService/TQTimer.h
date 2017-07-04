@@ -1,11 +1,15 @@
 #ifndef _TQTIMER_H_
 #define _TQTIMER_H_
 
+#include <iostream>
 #include <Windows.h>
 #include <functional>
-using namespace std;
+
+class SystemDiskIO;
 
 #define FAILED_CREATE_TIMER -10
+
+using namespace std;
 
 class TQTimer
 {
@@ -15,12 +19,11 @@ private:
 	HANDLE timerQueue = NULL;
 	UINT timerID = 0;
 	UINT interval = 0;
-
 	static void CALLBACK TimerProc(PVOID lpParameter, BOOLEAN TimerOrWaitFired);
 public:
-	function<void()> func = NULL;
+	function<void(void)> func = NULL;
 public:
-	TQTimer(function<void()> parmFunc)
+	TQTimer(function<void(void)> parmFunc)
 	{
 		timerCount++;
 		timerID = timerCount - 1;
@@ -29,7 +32,7 @@ public:
 
 	~TQTimer()
 	{
-		if (timerQueue)
+		if (timerQueue || timerHandle)
 			Stop();
 	}
 

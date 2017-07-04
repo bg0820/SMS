@@ -138,8 +138,10 @@ int main()
 	}
 
 	if (parmAdapter)
-		delete parmAdapter;
-
+	{
+		delete[] parmAdapter;
+		parmAdapater = nullptr;
+	}
 	system("pause");
 }*/
 

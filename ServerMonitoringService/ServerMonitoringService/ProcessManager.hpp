@@ -23,7 +23,11 @@ public:
 	}
 
 	~ProcessManager() {
-		delete process;
+		if (process)
+		{
+			delete[] process;
+			process = nullptr;
+		}
 	}
 
 	int insert(Process process); // Insert
