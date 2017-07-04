@@ -66,6 +66,9 @@
     <ClInclude Include="main.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="TQTimer.h">
+      <Filter>소스 파일\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -103,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="ProcessManager.cpp">
       <Filter>소스 파일\process</Filter>
+    </ClCompile>
+    <ClCompile Include="TQTimer.cpp">
+      <Filter>소스 파일\util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

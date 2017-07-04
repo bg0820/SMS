@@ -1,23 +1,41 @@
 #include "SystemDiskIO.hpp"
+#include "TQTimer.h"
+
+static int counts = 0;
+void timerProc()
+{
+	cout << counts++ << endl;
+}
+
 
 int main()
 {
-	SystemDiskIO system;
+	SystemDiskIO systemdiskIO;
+	TQTimer timer = TQTimer(timerProc);
+	timer.setInterval(1000); // 1Sec
+	timer.Start();
+
+	Sleep(5000);
+	timer.Stop();
+	//Sleep(5000);
+	//timer.Stop();
+	/*
 	Disk *disk = NULL;
-	int count;
+	int count = 0;
 
-
+	disk = system.getDiskList(count);
 	int c = 0;
-	while (true)
+
+	for(int i = 0; i< count; i++)
 	{
 		system.update();
 		disk = system.getDiskList(count);
 
-		cout << disk[0].name << endl;
-		c++;
-		Sleep(3);
-	}
-	std::system("pause");
+		cout << disk[i].name << endl;
+
+	}*/
+
+	system("pause");
 }
 
 int SystemDiskIO::getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList)
@@ -52,6 +70,7 @@ int SystemDiskIO::getDiskInfo(const TCHAR *path, Disk &disk)
 	// Get Drive Type
 	disk.type = GetDriveType(path);
 
+	// init DriveType == DRIVE_REMOVABLE
 	ZeroMemory(disk.name, sizeof(disk.name));
 	ZeroMemory(disk.fileFormat, sizeof(disk.fileFormat));
 
@@ -76,17 +95,66 @@ int SystemDiskIO::getDiskInfo(const TCHAR *path, Disk &disk)
 	return 1;
 }
 
-int SystemDiskIO::Start()
+
+
+void CALLBACK SystemDiskIO::TimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 {
-	// TODO :: UpdatePerSec
-	return 0;
+	/*
+	getDiskPerformance("C:\\", diskPerformance->curDiskPerformance);
+
+	LONGLONG readSec = diskPerformance->curDiskPerformance.BytesRead.QuadPart - diskPerformance->prevDiskPerformance.BytesRead.QuadPart;
+	LONGLONG writeSec = diskPerformance->curDiskPerformance.BytesWritten.QuadPart - diskPerformance->prevDiskPerformance.BytesWritten.QuadPart;
+
+	if (readSec >= 0 && writeSec >= 0)
+	{
+		cout << readSec / 1024 << "KB/s" << endl;
+		cout << writeSec / 1024 << "KB/s" << endl;
+		// varReadSec = readSec;
+		// varWriteSec = writeSec;
+	}
+
+	// Prev DiskPerformance Data Change
+	diskPerformance->prevDiskPerformance = diskPerformance->curDiskPerformance;*/
 }
 
-int SystemDiskIO::Stop()
+int SystemDiskIO::start()
+{
+	// TODO :: UpdatePerSec
+
+	int nResult = 1;
+
+	//nResult = 1; // getDiskPerformance(prevDiskPerformance);
+
+
+	// TODO : ~
+	// for(int i = 0; i< diskcount; i++){ 
+	// diskPerformance->path = "C:\\";
+	//if (!CreateTimerQueueTimer(&timer, createTimerQueue, TimerCallback, NULL, 1000, 1000, WT_EXECUTEDEFAULT))
+	//	nResult = 0;
+	// }
+
+/*	if (createTimerQueue != INVALID_HANDLE_VALUE))
+		CloseHandle(createTimerQueue);
+	*/
+
+	//SystemDiskIO::timerQueue = timer;
+
+	return nResult;
+}
+
+int SystemDiskIO::stop()
 {
 	// TODO :: UpdatePerSec Stop and DeleteTimerQueue
-	//	DeleteTimerQueue(timer);
-	return 0;
+
+	// If the function succeeds, the return value is nonzero.
+	// If the function fails, the return value is zero.To get extended error information, call GetLastError.
+	if (DeleteTimerQueue(timerQueue) == 0)
+		return 0;
+
+	if (timerQueue != INVALID_HANDLE_VALUE)
+		CloseHandle(timerQueue);
+
+	return 1;
 }
 
 void stringReplace(string& subject, const string& search, const string& replace)
@@ -141,7 +209,8 @@ int SystemDiskIO::getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerform
 		nResult = 0;
 	}
 
-	CloseHandle(handle); // Memory Leak : Solution
+	if (handle != INVALID_HANDLE_VALUE)
+		CloseHandle(handle); // Memory Leak : Solution
 
 	return nResult;
 }
@@ -152,7 +221,7 @@ Disk * SystemDiskIO::getDiskList(int &count)
 	return SystemDiskIO::diskList;
 }
 
-// updateDiskList(), updateDiskInfo()
+// call update function after recall getDiskList() function
 int SystemDiskIO::update()
 {
 	int nResult = 1;
@@ -178,33 +247,11 @@ int SystemDiskIO::update()
 	return nResult;
 }
 
-void CALLBACK SystemDiskIO::TimerCallback(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
-{
-	DiskPerformance * diskPerformance = (DiskPerformance*)lpParameter;
-	getDiskPerformance("C:\\", diskPerformance->curDiskPerformance);
-
-	LONGLONG readSec = diskPerformance->curDiskPerformance.BytesRead.QuadPart - diskPerformance->prevDiskPerformance.BytesRead.QuadPart;
-	LONGLONG writeSec = diskPerformance->curDiskPerformance.BytesWritten.QuadPart - diskPerformance->prevDiskPerformance.BytesWritten.QuadPart;
-
-	if (readSec >= 0 && writeSec >= 0)
-	{
-		cout << readSec / 1024 << "KB/s" << endl;
-		cout << writeSec / 1024 << "KB/s" << endl;
-		// varReadSec = readSec;
-		// varWriteSec = writeSec;
-	}
-
-	// Prev DiskPerformance Data Change
-	diskPerformance->prevDiskPerformance = diskPerformance->curDiskPerformance;
-
-}
-
-
 int SystemDiskIO::getDiskPerformanceUpdatePerSec()
 {
 	int nResult = 1;
 
-	nResult = 1; // getDiskPerformance(prevDiskPerformance);
+	//nResult = 1; // getDiskPerformance(prevDiskPerformance);
 
 	HANDLE timerQueue = CreateTimerQueue();
 	HANDLE timer;
@@ -212,15 +259,12 @@ int SystemDiskIO::getDiskPerformanceUpdatePerSec()
 	// TODO : ~
 	// for(int i = 0; i< diskcount; i++){ 
 	// diskPerformance->path = "C:\\";
-	if (!CreateTimerQueueTimer(&timer, timerQueue, SystemDiskIO::TimerCallback, diskPerformance, 1000, 1000, WT_EXECUTEDEFAULT))
-		nResult = 0;
+//	if (!CreateTimerQueueTimer(&timer, timerQueue, SystemDiskIO::TimerCallback, diskPerformance, 1000, 1000, WT_EXECUTEDEFAULT))
+//		nResult = 0;
 	// }
 
-	if (timerQueue)
-	{
+	if (timerQueue != INVALID_HANDLE_VALUE)
 		CloseHandle(timerQueue);
-		timerQueue = NULL;
-	}
 
 	return nResult;
 }

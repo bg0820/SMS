@@ -127,6 +127,7 @@
     <ClInclude Include="SystemMemory.hpp" />
     <ClInclude Include="SystemNetwork.hpp" />
     <ClInclude Include="SystemOS.hpp" />
+    <ClInclude Include="TQTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="SystemMemory.cpp" />
     <ClCompile Include="SystemNetwork.cpp" />
     <ClCompile Include="SystemOS.cpp" />
+    <ClCompile Include="TQTimer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -27,7 +27,8 @@ TCHAR* Process::initName()
 		nResult = 0;
 	}
 
-	CloseHandle(hProcess);
+	if (hProcess != INVALID_HANDLE_VALUE)
+		CloseHandle(hProcess);
 
 	return szProcessName;
 }
@@ -55,7 +56,8 @@ TCHAR* Process::initPath()
 		nResult = 0;
 	}
 
-	CloseHandle(hProcess);
+	if (hProcess != INVALID_HANDLE_VALUE)
+		CloseHandle(hProcess);
 
 	return szProcessPath;
 }
@@ -117,7 +119,7 @@ TCHAR* Process::initCommandLine()
 	cout << commandLineContents << endl;
 	printf("%.*S\n", commandLine.Length / 2, commandLineContents);
 
-	if (commandLineContents) 
+	if (commandLineContents)
 	{
 		delete commandLineContents;
 		commandLineContents = nullptr;
@@ -190,7 +192,8 @@ int Process::getThreadCount(int &parmTotalThreadCount, int &parmCurrentProcessTh
 	// and exit if unsuccessful
 	if (!Thread32First(hThreadSnap, &te32))
 	{
-		CloseHandle(hThreadSnap);     // Must clean up the snapshot object!
+		if (hThreadSnap != INVALID_HANDLE_VALUE)
+			CloseHandle(hThreadSnap);     // Must clean up the snapshot object!
 		return 0;
 	}
 
@@ -210,7 +213,8 @@ int Process::getThreadCount(int &parmTotalThreadCount, int &parmCurrentProcessTh
 	} while (Thread32Next(hThreadSnap, &te32));
 
 	//  Don't forget to clean up the snapshot object.
-	CloseHandle(hThreadSnap);
+	if (hThreadSnap != INVALID_HANDLE_VALUE)
+		CloseHandle(hThreadSnap);
 
 	parmTotalThreadCount = totalThreadCount;
 	parmCurrentProcessThreadCount = processThreadCount;
@@ -288,7 +292,8 @@ int Process::getMemoryUsage(DWORD &val)
 
 	val = (dTotal - dShared) * 4; //ref
 
-	CloseHandle(hProcess);
+	if (hProcess != INVALID_HANDLE_VALUE)
+		CloseHandle(hProcess);
 
 	return nResult;
 }
@@ -345,7 +350,8 @@ int Process::getCpuUsage(double &val)
 		count++;
 	}
 
-	CloseHandle(hProcess);
+	if (hProcess != INVALID_HANDLE_VALUE)
+		CloseHandle(hProcess);
 
 	return nResult;
 }
