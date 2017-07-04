@@ -1,4 +1,4 @@
-#include "TQTimer.h"
+#include "TQTimer.hpp"
 
 UINT TQTimer::timerCount = 0;
 

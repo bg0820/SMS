@@ -1,7 +1,7 @@
 #include <iostream>
 #include <windows.h>	
 #include <Shlobj.h>
-#include "SystemNetwork.hpp"
+#include "system/SystemNetwork.hpp"
 
 #define DIV				1024						// KB
 #define DIV_TWO			1024 / 1024					// MB

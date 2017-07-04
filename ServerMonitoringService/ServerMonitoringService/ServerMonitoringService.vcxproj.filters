@@ -30,43 +30,43 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NetworkListener.hpp">
-      <Filter>소스 파일\network socket</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkManager.hpp">
-      <Filter>소스 파일\network socket</Filter>
-    </ClInclude>
-    <ClInclude Include="Process.hpp">
-      <Filter>소스 파일\process</Filter>
-    </ClInclude>
-    <ClInclude Include="ProcessList.hpp">
-      <Filter>소스 파일\process</Filter>
-    </ClInclude>
-    <ClInclude Include="ProcessManager.hpp">
-      <Filter>소스 파일\process</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemCPU.hpp">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemDiskIO.hpp">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemMemory.hpp">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemNetwork.hpp">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemOS.hpp">
-      <Filter>소스 파일\system</Filter>
-    </ClInclude>
-    <ClInclude Include="StopWatch.hpp">
-      <Filter>소스 파일\util</Filter>
-    </ClInclude>
     <ClInclude Include="main.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TQTimer.h">
+    <ClInclude Include="system\SystemCPU.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="system\SystemDiskIO.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="system\SystemMemory.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="system\SystemNetwork.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="system\SystemOS.hpp">
+      <Filter>소스 파일\system</Filter>
+    </ClInclude>
+    <ClInclude Include="network socket\NetworkListener.hpp">
+      <Filter>소스 파일\network socket</Filter>
+    </ClInclude>
+    <ClInclude Include="network socket\NetworkManager.hpp">
+      <Filter>소스 파일\network socket</Filter>
+    </ClInclude>
+    <ClInclude Include="process\Process.hpp">
+      <Filter>소스 파일\process</Filter>
+    </ClInclude>
+    <ClInclude Include="process\ProcessList.hpp">
+      <Filter>소스 파일\process</Filter>
+    </ClInclude>
+    <ClInclude Include="process\ProcessManager.hpp">
+      <Filter>소스 파일\process</Filter>
+    </ClInclude>
+    <ClInclude Include="util\StopWatch.hpp">
+      <Filter>소스 파일\util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\TQTimer.hpp">
       <Filter>소스 파일\util</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,40 +74,40 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="StopWatch.cpp">
+    <ClCompile Include="system\SystemCPU.cpp">
+      <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="system\SystemDiskIO.cpp">
+      <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="system\SystemMemory.cpp">
+      <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="system\SystemNetwork.cpp">
+      <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="system\SystemOS.cpp">
+      <Filter>소스 파일\system</Filter>
+    </ClCompile>
+    <ClCompile Include="network socket\NetworkListener.cpp">
+      <Filter>소스 파일\network socket</Filter>
+    </ClCompile>
+    <ClCompile Include="network socket\NetworkManager.cpp">
+      <Filter>소스 파일\network socket</Filter>
+    </ClCompile>
+    <ClCompile Include="process\Process.cpp">
+      <Filter>소스 파일\process</Filter>
+    </ClCompile>
+    <ClCompile Include="process\ProcessList.cpp">
+      <Filter>소스 파일\process</Filter>
+    </ClCompile>
+    <ClCompile Include="process\ProcessManager.cpp">
+      <Filter>소스 파일\process</Filter>
+    </ClCompile>
+    <ClCompile Include="util\StopWatch.cpp">
       <Filter>소스 파일\util</Filter>
     </ClCompile>
-    <ClCompile Include="SystemOS.cpp">
-      <Filter>소스 파일\system</Filter>
-    </ClCompile>
-    <ClCompile Include="SystemCPU.cpp">
-      <Filter>소스 파일\system</Filter>
-    </ClCompile>
-    <ClCompile Include="SystemMemory.cpp">
-      <Filter>소스 파일\system</Filter>
-    </ClCompile>
-    <ClCompile Include="SystemNetwork.cpp">
-      <Filter>소스 파일\system</Filter>
-    </ClCompile>
-    <ClCompile Include="SystemDiskIO.cpp">
-      <Filter>소스 파일\system</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkListener.cpp">
-      <Filter>소스 파일\network socket</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkManager.cpp">
-      <Filter>소스 파일\network socket</Filter>
-    </ClCompile>
-    <ClCompile Include="Process.cpp">
-      <Filter>소스 파일\process</Filter>
-    </ClCompile>
-    <ClCompile Include="ProcessList.cpp">
-      <Filter>소스 파일\process</Filter>
-    </ClCompile>
-    <ClCompile Include="ProcessManager.cpp">
-      <Filter>소스 파일\process</Filter>
-    </ClCompile>
-    <ClCompile Include="TQTimer.cpp">
+    <ClCompile Include="util\TQTimer.cpp">
       <Filter>소스 파일\util</Filter>
     </ClCompile>
   </ItemGroup>

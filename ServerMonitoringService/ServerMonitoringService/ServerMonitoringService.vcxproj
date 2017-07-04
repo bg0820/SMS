@@ -116,33 +116,33 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="main.hpp" />
-    <ClInclude Include="NetworkListener.hpp" />
-    <ClInclude Include="NetworkManager.hpp" />
-    <ClInclude Include="Process.hpp" />
-    <ClInclude Include="ProcessList.hpp" />
-    <ClInclude Include="ProcessManager.hpp" />
-    <ClInclude Include="StopWatch.hpp" />
-    <ClInclude Include="SystemCPU.hpp" />
-    <ClInclude Include="SystemDiskIO.hpp" />
-    <ClInclude Include="SystemMemory.hpp" />
-    <ClInclude Include="SystemNetwork.hpp" />
-    <ClInclude Include="SystemOS.hpp" />
-    <ClInclude Include="TQTimer.h" />
+    <ClInclude Include="network socket\NetworkListener.hpp" />
+    <ClInclude Include="network socket\NetworkManager.hpp" />
+    <ClInclude Include="process\Process.hpp" />
+    <ClInclude Include="process\ProcessList.hpp" />
+    <ClInclude Include="process\ProcessManager.hpp" />
+    <ClInclude Include="util\StopWatch.hpp" />
+    <ClInclude Include="system\SystemCPU.hpp" />
+    <ClInclude Include="system\SystemDiskIO.hpp" />
+    <ClInclude Include="system\SystemMemory.hpp" />
+    <ClInclude Include="system\SystemNetwork.hpp" />
+    <ClInclude Include="system\SystemOS.hpp" />
+    <ClInclude Include="util\TQTimer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NetworkListener.cpp" />
-    <ClCompile Include="NetworkManager.cpp" />
-    <ClCompile Include="Process.cpp" />
-    <ClCompile Include="ProcessList.cpp" />
-    <ClCompile Include="ProcessManager.cpp" />
-    <ClCompile Include="StopWatch.cpp" />
-    <ClCompile Include="SystemCPU.cpp" />
-    <ClCompile Include="SystemDiskIO.cpp" />
-    <ClCompile Include="SystemMemory.cpp" />
-    <ClCompile Include="SystemNetwork.cpp" />
-    <ClCompile Include="SystemOS.cpp" />
-    <ClCompile Include="TQTimer.cpp" />
+    <ClCompile Include="network socket\NetworkListener.cpp" />
+    <ClCompile Include="network socket\NetworkManager.cpp" />
+    <ClCompile Include="process\Process.cpp" />
+    <ClCompile Include="process\ProcessList.cpp" />
+    <ClCompile Include="process\ProcessManager.cpp" />
+    <ClCompile Include="util\StopWatch.cpp" />
+    <ClCompile Include="system\SystemCPU.cpp" />
+    <ClCompile Include="system\SystemDiskIO.cpp" />
+    <ClCompile Include="system\SystemMemory.cpp" />
+    <ClCompile Include="system\SystemNetwork.cpp" />
+    <ClCompile Include="system\SystemOS.cpp" />
+    <ClCompile Include="util\TQTimer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
