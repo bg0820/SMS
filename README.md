@@ -1,7 +1,7 @@
 # SMS - Server Monitoring Service
 
 ### Server Monitoring Service
-#### > SMS Agent - Currently in progress
+#### > SMS Agent - Currently under development
 #### > Data Server
 #### > Web Server (Visualization)
 ###
