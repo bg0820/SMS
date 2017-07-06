@@ -5,12 +5,8 @@
 #include <Psapi.h>
 #include <tlhelp32.h>
 #include <iostream>
-#include <Winuser.h>
-#include "Winternl.h"
 
 #pragma comment(lib, "psapi.lib")
-
-#define GCL_HICON (-14)
 
 using namespace std;
 
@@ -29,51 +25,40 @@ class Process
 {
 private:
 	DWORD pid;
-	HICON icon;
-	HANDLE handle = NULL;
-	HWND hWnd = NULL;
+	HANDLE handle;
 	TCHAR name[MAX_PATH];
 	TCHAR path[MAX_PATH];
 	TCHAR commandLine[MAX_PATH];
 private:
-	HANDLE handleFromPid();
-	HWND hWndFromPid();
+	int getHandleFromPID();
 	// TODO initFunc retrun Type TCHAR* > int, initName(TCHAR *val)
 	TCHAR* initName();
 	TCHAR* initPath();
 	TCHAR* initCommandLine();
-	PVOID GetPebAddress(HANDLE processHandle);
-	ULONG procIdFromHwnd(HWND hwnd);
-	HICON initIcon(BOOLEAN LargeIcon = FALSE);
+	PVOID GetPebAddress(HANDLE ProcessHandle);
 public:
 	Process(const DWORD pid = 0)
 	{
 		// fixed value Init
 		Process::pid = pid;
-		handle = handleFromPid();
-		hWnd = hWndFromPid();
+		getHandleFromPID();
+
+		// strcpy_s(Multi-Byte) -> wcscpy_s(UNICODE)
 		strcpy_s(name, initName());
 		strcpy_s(path, initPath());
 		strcpy_s(commandLine, initCommandLine());
-		icon = initIcon(TRUE);
 	}
 
 	~Process()
 	{
-		cout << "call ~Process()" << endl;
-
 		if (handle != INVALID_HANDLE_VALUE)
 			CloseHandle(handle);
-
-		if (icon)
-			DestroyIcon(icon);
 	}
 
 	DWORD getPid();
 	TCHAR* getName();
 	TCHAR* getPath();
 	TCHAR* getCommandLine();
-	HICON getIcon();
 
 	int getHandleCount(DWORD &val);
 	int getThreadCount(int &parmTotalThreadCount, int &parmCurrentProcessThreadCount);
