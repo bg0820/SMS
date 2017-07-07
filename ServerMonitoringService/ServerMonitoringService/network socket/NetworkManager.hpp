@@ -3,7 +3,7 @@
 
 //#include <iostream>
 #include "NetworkListener.hpp"
-#ifndef _WINSOCK2API_
+#ifndef _WINDOWS_
 #include <WinSock2.h>
 #include <Windows.h>
 #endif
