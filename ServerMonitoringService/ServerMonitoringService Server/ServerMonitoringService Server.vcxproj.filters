@@ -35,13 +35,13 @@
     <ClInclude Include="util\StopWatch.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="util\Util.h">
+    <ClInclude Include="network socket\NetworkListener.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="network socket\NetworkListener.h">
+    <ClInclude Include="network socket\NetworkManager.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="network socket\NetworkManager.h">
+    <ClInclude Include="util\Util.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

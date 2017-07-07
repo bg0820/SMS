@@ -118,10 +118,10 @@
     <ClCompile Include="util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="network socket\NetworkListener.h" />
-    <ClInclude Include="network socket\NetworkManager.h" />
+    <ClInclude Include="network socket\NetworkListener.hpp" />
+    <ClInclude Include="network socket\NetworkManager.hpp" />
     <ClInclude Include="util\StopWatch.hpp" />
-    <ClInclude Include="util\Util.h" />
+    <ClInclude Include="util\Util.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

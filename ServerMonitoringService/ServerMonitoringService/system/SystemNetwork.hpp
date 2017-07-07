@@ -2,15 +2,11 @@
 #define _SYSTEMNETWORK_H_
 
 #include <iostream>
-
 #ifndef _WINDOWS_
 #include <ws2tcpip.h>
 #include <windows.h>
 #endif
-
 #include <iphlpapi.h>
-
-
 #pragma comment(lib, "IPHLPAPI.lib")
 
 #define KBPS  8 / 1000
