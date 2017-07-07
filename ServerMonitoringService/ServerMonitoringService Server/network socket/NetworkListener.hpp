@@ -34,11 +34,12 @@ public:
 	{
 		WSACleanup();
 	}
-
+	void clientProc(SOCKET client, SOCKADDR_IN paramAddr);
+	void networkProc(SOCKET serverSocket, SOCKADDR_IN paramAddr);
 	int Init(SOCKET &pSocket);
 	int Bind(SOCKET socket);
 	int Listen(SOCKET socket);
-	void initSocketAddr(SOCKADDR_IN parmAddr, u_short port, const TCHAR *ip);
+	void initSocketAddr(SOCKADDR_IN &paramAddr, u_short port, const TCHAR *ip);
 	static int Send(SOCKET socket, TCHAR *buf, int bufSize);
 	static int Recv(SOCKET socket, TCHAR *buf, int bufSize);
 	int Disconnect(SOCKET socket);

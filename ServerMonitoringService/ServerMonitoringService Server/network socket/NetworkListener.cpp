@@ -1,15 +1,15 @@
 #include "NetworkListener.hpp"
 
-int NetworkListener::Init(SOCKET &parmSocket)
+int NetworkListener::Init(SOCKET &paramSocket)
 {
 	//WinSock Init
 	if (WSAStartup(DllVersion, &wsa) != 0)
 		return 0;
 
 	// Socket Create
-	parmSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	paramSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	if (parmSocket == INVALID_SOCKET) // FAILED
+	if (paramSocket == INVALID_SOCKET) // FAILED
 		return 0;
 
 	return 1;
@@ -31,13 +31,13 @@ int NetworkListener::Listen(SOCKET socket)
 	return 1;
 }
 
-void NetworkListener::initSocketAddr(SOCKADDR_IN parmAddr, u_short port, const TCHAR *ip)
+void NetworkListener::initSocketAddr(SOCKADDR_IN &paramAddr, u_short port, const TCHAR *ip)
 {
 	// Socket Init
 	addr.sin_family = AF_INET; // IPv4
 	addr.sin_port = htons(port); // Port
 	addr.sin_addr.S_un.S_addr = inet_addr(ip); // Broadcast
-	parmAddr = addr;
+	paramAddr = addr;
 }
 
 int NetworkListener::Send(SOCKET socket, TCHAR *buf, int bufSize)
@@ -66,9 +66,9 @@ int NetworkListener::Disconnect(SOCKET socket)
 	return 1;
 }
 
-void clientProc(SOCKET client, SOCKADDR_IN parmAddr)
+void NetworkListener::clientProc(SOCKET client, SOCKADDR_IN paramAddr)
 {
-	cout << "Client Conneced IP : " << inet_ntoa(parmAddr.sin_addr) << endl;
+	cout << "Client Conneced IP : " << inet_ntoa(paramAddr.sin_addr) << endl;
 
 	char buf[BUFFER_SIZE + 1];
 
@@ -81,21 +81,21 @@ void clientProc(SOCKET client, SOCKADDR_IN parmAddr)
 
 		buf[BUFFER_SIZE] = '\0';
 
-		printf("[TCP/%s:%d] %s\n", inet_ntoa(parmAddr.sin_addr), ntohs(parmAddr.sin_port), buf);
+		printf("[TCP/%s:%d] %s\n", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port), buf);
 	}
 
-	cout << "DisConnected IP : " << inet_ntoa(parmAddr.sin_addr) << endl;
+	cout << "DisConnected IP : " << inet_ntoa(paramAddr.sin_addr) << endl;
 }
 
-void networkProc(SOCKET serverSocket, SOCKADDR_IN parmAddr)
+void NetworkListener::networkProc(SOCKET serverSocket, SOCKADDR_IN paramAddr)
 {
 	while (true)
 	{
 		cout << "Client Connect Wating..." << endl;
-		int size = sizeof(parmAddr);
-		SOCKET client = accept(serverSocket, (SOCKADDR*)&parmAddr, &size);
+		int size = sizeof(paramAddr);
+		SOCKET client = accept(serverSocket, (SOCKADDR*)&paramAddr, &size);
 
-		thread clientThread(&clientProc, client, parmAddr);
+		thread clientThread(&clientProc, client, paramAddr);
 		clientThread.join();
 	}
 }
@@ -105,7 +105,6 @@ int main()
 	cout << "Server Start" << endl;
 	cout << "Network Listener..." << endl;
 	NetworkListener networkListener;
-	//NetworkListener *networkListener = new NetworkListener;
 
 	SOCKET socket;
 	cout << "Network Listener Initializing..." << endl;
@@ -121,7 +120,7 @@ int main()
 	networkListener.Listen(socket);
 
 	cout << "Network Thread Create..." << endl;
-	thread networkThread(&networkProc, socket, addr);
+	thread networkThread(std::bind(&networkListener.networkProc, networkListener));
 	networkThread.join();
 
 	system("pause");

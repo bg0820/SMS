@@ -57,10 +57,10 @@ typedef struct network_connection
 class SystemNetwork
 {
 public:
-	void formatToMacAddress(TCHAR *parm, BYTE addr[]);
+	void formatToMacAddress(TCHAR *param, BYTE addr[]);
 	int getInterfaces(PIP_ADAPTER_INFO &pAdapter, int &outCount);
-	TCHAR* getInterfaceTypeName(IP_ADAPTER_INFO parmAdapterInfo);
-	int getConnectionTable(NetworkConnection *&parmConnection, ULONG &parmCount);
+	TCHAR* getInterfaceTypeName(IP_ADAPTER_INFO paramAdapterInfo);
+	int getConnectionTable(NetworkConnection *&paramConnection, ULONG &paramCount);
 	TCHAR* getProtocolTypeName(ULONG protocolType);
 	TCHAR* getStateName(ULONG state);
 	int getNetworkSendBytes();

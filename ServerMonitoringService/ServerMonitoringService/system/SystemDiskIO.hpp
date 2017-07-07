@@ -36,7 +36,7 @@ private:
 	vector<string> strDiskList;
 	TQTimer *tqTimer = NULL;
 private:
-	int getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList);
+	int getPartitionList(vector<string> &paramStrDiskList, Disk *&paramDiskList);
 	int getDiskInfo(const TCHAR *volumePath, Disk &disk);
 	int getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerformance);
 	void CallbackProc();

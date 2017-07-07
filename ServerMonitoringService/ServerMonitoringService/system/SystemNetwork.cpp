@@ -17,9 +17,9 @@ int main()
 }
 */
 
-TCHAR* SystemNetwork::getInterfaceTypeName(IP_ADAPTER_INFO parmAdapterInfo)
+TCHAR* SystemNetwork::getInterfaceTypeName(IP_ADAPTER_INFO paramAdapterInfo)
 {
-	switch (parmAdapterInfo.Type) {
+	switch (paramAdapterInfo.Type) {
 	case MIB_IF_TYPE_OTHER:
 		return TEXT("Other");
 		break;
@@ -110,7 +110,7 @@ TCHAR * SystemNetwork::getStateName(ULONG state)
 	}
 }
 
-int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG &parmCount)
+int SystemNetwork::getConnectionTable(NetworkConnection *&paramConnection, ULONG &paramCount)
 {
 	int nResult = 1;
 
@@ -314,8 +314,8 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 	else
 		nResult = 0;
 
-	parmConnection = connections;
-	parmCount = totalCount;
+	paramConnection = connections;
+	paramCount = totalCount;
 
 	return nResult;
 }
@@ -326,8 +326,8 @@ int SystemNetwork::getNetworkSendBytes()
 	return 1;
 }
 
-// you should parm PIP_ADAPTER_INFO obj delete
-int SystemNetwork::getInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outCount)
+// you should param PIP_ADAPTER_INFO obj delete
+int SystemNetwork::getInterfaces(PIP_ADAPTER_INFO &paramAdapter, int &outCount)
 {
 	int nResult = 1;
 
@@ -356,7 +356,7 @@ int SystemNetwork::getInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outCount)
 
 	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)))
 	{
-		parmAdapter = pAdapterInfo;
+		paramAdapter = pAdapterInfo;
 	}
 	else
 		nResult = dwRetVal; // set return value
@@ -364,18 +364,18 @@ int SystemNetwork::getInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outCount)
 	return nResult;
 }
 
-void SystemNetwork::formatToMacAddress(TCHAR *parm, BYTE addr[])
+void SystemNetwork::formatToMacAddress(TCHAR *param, BYTE addr[])
 {
 	//CString strMacAddr = "";
 	//strMacAddr.format("%02x%02x%02x%02x%02x%02x",
-	//	parmAdapter->Address[0],
-	//	parmAdapter->Address[1],
-	//	parmAdapter->Address[2],
-	//	parmAdapter->Address[3],
-	//	parmAdapter->Address[4],
-	//	parmAdapter->Address[5]);
+	//	paramAdapter->Address[0],
+	//	paramAdapter->Address[1],
+	//	paramAdapter->Address[2],
+	//	paramAdapter->Address[3],
+	//	paramAdapter->Address[4],
+	//	paramAdapter->Address[5]);
 
-	sprintf(parm, "%.2X-%.2X-%.2X-%.2X-%.2X-%.2X",
+	sprintf(param, "%.2X-%.2X-%.2X-%.2X-%.2X-%.2X",
 		addr[0],
 		addr[1],
 		addr[2],
@@ -388,33 +388,33 @@ void SystemNetwork::formatToMacAddress(TCHAR *parm, BYTE addr[])
 int main()
 {
 	int count = 0;
-	PIP_ADAPTER_INFO parmAdapter; // delete
+	PIP_ADAPTER_INFO paramAdapter; // delete
 	SystemNetwork net;
 
 
-	if (net.getNetworkInterfaces(parmAdapter, count))
+	if (net.getNetworkInterfaces(paramAdapter, count))
 	{
 
 		for (int k = 0; k < count; k++)
 		{
-			printf("\tComboIndex: \t%d\n", parmAdapter[k].ComboIndex);
-			printf("\tAdapter Name: \t%s\n", parmAdapter[k].AdapterName);
-			printf("\tAdapter Desc: \t%s\n", parmAdapter[k].Description);
+			printf("\tComboIndex: \t%d\n", paramAdapter[k].ComboIndex);
+			printf("\tAdapter Name: \t%s\n", paramAdapter[k].AdapterName);
+			printf("\tAdapter Desc: \t%s\n", paramAdapter[k].Description);
 			printf("\tAdapter Addr: \t");
 
 			TCHAR *macAddr = new TCHAR[18];
-			net.formatToMacAddress(macAddr, parmAdapter[k].Address);
+			net.formatToMacAddress(macAddr, paramAdapter[k].Address);
 			// TODO change
 			cout << macAddr << endl;
 
-			string strType = net.getNetworkInterfaceType(parmAdapter[k]);
+			string strType = net.getNetworkInterfaceType(paramAdapter[k]);
 		}
 	}
 
-	if (parmAdapter)
+	if (paramAdapter)
 	{
-		delete[] parmAdapter;
-		parmAdapater = nullptr;
+		delete[] paramAdapter;
+		paramAdapater = nullptr;
 	}
 	system("pause");
 }*/

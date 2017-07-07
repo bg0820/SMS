@@ -28,7 +28,7 @@ public:
 		WSACleanup();
 	}
 
-	int Init(SOCKET &parmSocket);
+	int Init(SOCKET &paramSocket);
 	int Connect(SOCKET socket);
 	void initSocketAddr(u_short port, const char * ip);
 	static int Send(SOCKET socket, char * buf, int bufSize);

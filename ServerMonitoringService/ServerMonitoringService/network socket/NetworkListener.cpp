@@ -1,15 +1,15 @@
 #include "NetworkListener.hpp"
 
-int NetworkListener::Init(SOCKET &parmSocket)
+int NetworkListener::Init(SOCKET &paramSocket)
 {
 	//WinSock Init
 	if (WSAStartup(DllVersion, &wsa) != 0)
 		return 0;
 
 	// Socket Create
-	parmSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	paramSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	if (parmSocket == INVALID_SOCKET) // FAILED
+	if (paramSocket == INVALID_SOCKET) // FAILED
 		return 0;
 
 	return 1;

@@ -170,7 +170,7 @@ int Process::getHandleCount(DWORD &val)
 	return 1;
 }
 
-int Process::getThreadCount(int &parmTotalThreadCount, int &parmCurrentProcessThreadCount)
+int Process::getThreadCount(int &paramTotalThreadCount, int &paramCurrentProcessThreadCount)
 {
 	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
 	THREADENTRY32 te32;
@@ -214,8 +214,8 @@ int Process::getThreadCount(int &parmTotalThreadCount, int &parmCurrentProcessTh
 	if (hThreadSnap != INVALID_HANDLE_VALUE)
 		CloseHandle(hThreadSnap);
 
-	parmTotalThreadCount = totalThreadCount;
-	parmCurrentProcessThreadCount = processThreadCount;
+	paramTotalThreadCount = totalThreadCount;
+	paramCurrentProcessThreadCount = processThreadCount;
 
 	return 1;
 }

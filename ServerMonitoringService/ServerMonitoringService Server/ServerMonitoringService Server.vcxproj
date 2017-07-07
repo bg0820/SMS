@@ -111,6 +111,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="data\Client.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="network socket\NetworkListener.cpp" />
     <ClCompile Include="network socket\NetworkManager.cpp" />
@@ -118,6 +119,7 @@
     <ClCompile Include="util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="data\Client.h" />
     <ClInclude Include="network socket\NetworkListener.hpp" />
     <ClInclude Include="network socket\NetworkManager.hpp" />
     <ClInclude Include="util\StopWatch.hpp" />

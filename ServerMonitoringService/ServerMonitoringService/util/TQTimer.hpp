@@ -20,11 +20,11 @@ private:
 public:
 	function<void(void)> func = NULL;
 public:
-	TQTimer(function<void(void)> parmFunc)
+	TQTimer(function<void(void)> paramFunc)
 	{
 		timerCount++;
 		timerID = timerCount - 1;
-		func = parmFunc;
+		func = paramFunc;
 	}
 
 	~TQTimer()

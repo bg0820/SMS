@@ -45,9 +45,9 @@ int main()
 	system("pause");
 }
 */
-int SystemDiskIO::getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList)
+int SystemDiskIO::getPartitionList(vector<string> &paramStrDiskList, Disk *&paramDiskList)
 {
-	parmStrDiskList.clear();
+	paramStrDiskList.clear();
 
 	TCHAR szBuffer[MAX_PATH];
 	int count = 0;
@@ -61,9 +61,9 @@ int SystemDiskIO::getPartitionList(vector<string> &parmStrDiskList, Disk *&parmD
 	// (A:\\B:\\C:\\D:\\)
 	// A:\\, B:\\, C:\\, D:\\ 4byte
 	for (int i = 0; i < count / 4; i++)
-		parmStrDiskList.push_back(szBuffer + (i * 4));
+		paramStrDiskList.push_back(szBuffer + (i * 4));
 
-	parmDiskList = new Disk[parmStrDiskList.size()];
+	paramDiskList = new Disk[paramStrDiskList.size()];
 
 	return 1;
 }
