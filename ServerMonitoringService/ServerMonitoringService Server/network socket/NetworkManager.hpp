@@ -35,16 +35,6 @@ public:
 	int Init();
 	int Start();
 	int Stop();
-};
-
-#endif
-
-class NetworkManager
-{
-
-public:
-	void Start();
-	void Stop();
 	void networkProc();
 };
 
