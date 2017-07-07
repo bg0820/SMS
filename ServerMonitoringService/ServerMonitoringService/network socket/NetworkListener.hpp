@@ -21,6 +21,16 @@ private:
 	SOCKADDR_IN addr;
 	WORD DllVersion = MAKEWORD(2, 1);
 public:
+	NetworkListener()
+	{
+
+	}
+
+	~NetworkListener()
+	{
+		WSACleanup();
+	}
+
 	int Init(SOCKET &parmSocket);
 	int Connect(SOCKET socket);
 	void initSocketAddr(u_short port, const char * ip);

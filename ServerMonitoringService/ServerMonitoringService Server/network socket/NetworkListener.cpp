@@ -15,33 +15,28 @@ int NetworkListener::Init(SOCKET &parmSocket)
 	return 1;
 }
 
+int NetworkListener::Bind(SOCKET socket)
+{
+	if (bind(socket, (sockaddr *)&addr, sizeof(addr)) == SOCKET_ERROR)
+		return 0;
+
+	return 1;
+}
+
+int NetworkListener::Listen(SOCKET socket)
+{
+	if (listen(socket, SOMAXCONN) == SOCKET_ERROR)
+		return 0;
+
+	return 1;
+}
+
 void NetworkListener::initSocketAddr(u_short port, const TCHAR *ip)
 {
 	// Socket Init
 	addr.sin_family = AF_INET; // IPv4
 	addr.sin_port = htons(port); // Port
 	addr.sin_addr.S_un.S_addr = inet_addr(ip); // Broadcast
-}
-/*
-int NetworkListener::Bind()
-{
-
-
-}
-
-int NetworkListener::Listen()
-{
-
-}*/
-
-int NetworkListener::Connect(SOCKET socket)
-{
-	if (connect(socket, (SOCKADDR*)&addr, sizeof(addr)) == SOCKET_ERROR) // if function success return value is 0
-		return 0;
-
-	// TODO : if(result == 0) ~~~
-
-	return 1;
 }
 
 int NetworkListener::Send(SOCKET socket, TCHAR *buf, int bufSize)

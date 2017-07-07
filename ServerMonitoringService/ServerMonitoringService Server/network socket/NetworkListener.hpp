@@ -18,8 +18,19 @@ private:
 	SOCKADDR_IN addr;
 	WORD DllVersion = MAKEWORD(2, 1);
 public:
+	NetworkListener()
+	{
+
+	}
+
+	~NetworkListener()
+	{
+		WSACleanup();
+	}
+
 	int Init(SOCKET &pSocket);
-	int Connect(SOCKET socket);
+	int Bind(SOCKET socket);
+	int Listen(SOCKET socket);
 	void initSocketAddr(u_short port, const TCHAR *ip);
 	static int Send(SOCKET socket, TCHAR *buf, int bufSize);
 	static int Recv(SOCKET socket, TCHAR *buf, int bufSize);
