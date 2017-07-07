@@ -1,6 +1,115 @@
 #include "SystemNetwork.hpp"
 
-int SystemNetwork::getNetworkTable(NetworkConnection *&parmConnection, ULONG &parmCount)
+
+int main()
+{
+	ULONG count;
+	SystemNetwork sn;
+	NetworkConnection *networkConnection;
+	sn.getConnectionTable(networkConnection, count);
+
+	for (ULONG i = 0; i < count; i++)
+	{
+		cout << networkConnection[i].processID << endl;
+	}
+
+	system("pause");
+}
+
+TCHAR* SystemNetwork::getInterfaceTypeName(IP_ADAPTER_INFO parmAdapterInfo)
+{
+	switch (parmAdapterInfo.Type) {
+	case MIB_IF_TYPE_OTHER:
+		return TEXT("Other");
+		break;
+	case MIB_IF_TYPE_ETHERNET:
+		return TEXT("Ethernet");
+		break;
+	case MIB_IF_TYPE_TOKENRING:
+		return TEXT("Token Ring");
+		break;
+	case MIB_IF_TYPE_FDDI:
+		return TEXT("FDDI");
+		break;
+	case MIB_IF_TYPE_PPP:
+		return TEXT("PPP");
+		break;
+	case MIB_IF_TYPE_LOOPBACK:
+		return TEXT("Lookback");
+		break;
+	case MIB_IF_TYPE_SLIP:
+		return TEXT("Slip");
+		break;
+	case IF_TYPE_ATM:
+		return TEXT("ATM");
+		break;
+	case IF_TYPE_IEEE80211:
+		return TEXT("IEEE 802.11 Wireless");
+		break;
+	case IF_TYPE_TUNNEL:
+		return TEXT("Tunnel type encapsulation");
+		break;
+	case IF_TYPE_IEEE1394:
+		return TEXT("IEEE 1394 Firewire");
+		break;
+	default:
+		return TEXT("Unknown type");
+		break;
+	}
+}
+
+
+TCHAR* SystemNetwork::getProtocolTypeName(ULONG protocolType)
+{
+	switch (protocolType)
+	{
+	case TCP4_NETWORK_PROTOCOL:
+		return TEXT("TCP");
+	case TCP6_NETWORK_PROTOCOL:
+		return TEXT("TCP6");
+	case UDP4_NETWORK_PROTOCOL:
+		return TEXT("UDP");
+	case UDP6_NETWORK_PROTOCOL:
+		return TEXT("UDP6");
+	default:
+		return TEXT("Unknown");
+	}
+}
+
+TCHAR * SystemNetwork::getStateName(ULONG state)
+{
+	switch (state)
+	{
+	case MIB_TCP_STATE_CLOSED:
+		return TEXT("Closed");
+	case MIB_TCP_STATE_LISTEN:
+		return TEXT("Listen");
+	case MIB_TCP_STATE_SYN_SENT:
+		return TEXT("SYN Sent");
+	case MIB_TCP_STATE_SYN_RCVD:
+		return TEXT("SYN Received");
+	case MIB_TCP_STATE_ESTAB:
+		return TEXT("Established");
+	case MIB_TCP_STATE_FIN_WAIT1:
+		return TEXT("FIN Wait 1");
+	case MIB_TCP_STATE_FIN_WAIT2:
+		return TEXT("FIN Wait 2");
+	case MIB_TCP_STATE_CLOSE_WAIT:
+		return TEXT("Close Wait");
+	case MIB_TCP_STATE_CLOSING:
+		return TEXT("Closing");
+	case MIB_TCP_STATE_LAST_ACK:
+		return TEXT("Last ACK");
+	case MIB_TCP_STATE_TIME_WAIT:
+		return TEXT("Time Wait");
+	case MIB_TCP_STATE_DELETE_TCB:
+		return TEXT("Delete TCB");
+	default:
+		return TEXT("Unknown");
+	}
+}
+
+int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG &parmCount)
 {
 	int nResult = 1;
 
@@ -113,15 +222,12 @@ int SystemNetwork::getNetworkTable(NetworkConnection *&parmConnection, ULONG &pa
 		for (int i = 0; i < tcp4Table->dwNumEntries; i++)
 		{
 			connections[index].protocolType = TCP4_NETWORK_PROTOCOL;
-
 			connections[index].localEndpoint.Address.Type = IPv4_NETWORK_TYPE;
 			connections[index].localEndpoint.Address.Ipv4 = tcp4Table->table[i].dwLocalAddr;
 			connections[index].localEndpoint.Port = (USHORT)tcp4Table->table[i].dwLocalPort;
-
 			connections[index].remoteEndpoint.Address.Type = IPv4_NETWORK_TYPE;
 			connections[index].remoteEndpoint.Address.Ipv4 = tcp4Table->table[i].dwRemoteAddr;
 			connections[index].remoteEndpoint.Port = _byteswap_ushort((USHORT)tcp4Table->table[i].dwRemotePort);
-
 			connections[index].state = tcp4Table->table[i].dwState;
 			connections[index].processID = UlongToHandle(tcp4Table->table[i].dwOwningPid);
 			connections[index].createTime = tcp4Table->table[i].liCreateTimestamp;
@@ -143,15 +249,12 @@ int SystemNetwork::getNetworkTable(NetworkConnection *&parmConnection, ULONG &pa
 		for (int i = 0; i < tcp6Table->dwNumEntries; i++)
 		{
 			connections[index].protocolType = TCP6_NETWORK_PROTOCOL;
-
 			connections[index].localEndpoint.Address.Type = IPv6_NETWORK_TYPE;
 			memcpy(connections[index].localEndpoint.Address.Ipv6, tcp6Table->table[i].ucLocalAddr, 16);
 			connections[index].localEndpoint.Port = (USHORT)tcp6Table->table[i].dwLocalPort;
-
 			connections[index].remoteEndpoint.Address.Type = IPv6_NETWORK_TYPE;
 			memcpy(connections[index].remoteEndpoint.Address.Ipv6, tcp6Table->table[i].ucRemoteAddr, 16);
 			connections[index].remoteEndpoint.Port = _byteswap_ushort((USHORT)tcp6Table->table[i].dwRemotePort);
-
 			connections[index].state = tcp6Table->table[i].dwState;
 			connections[index].processID = UlongToHandle(tcp6Table->table[i].dwOwningPid);
 			connections[index].createTime = tcp6Table->table[i].liCreateTimestamp;
@@ -173,13 +276,10 @@ int SystemNetwork::getNetworkTable(NetworkConnection *&parmConnection, ULONG &pa
 		for (int i = 0; i < udp4Table->dwNumEntries; i++)
 		{
 			connections[index].protocolType = UDP4_NETWORK_PROTOCOL;
-
 			connections[index].localEndpoint.Address.Type = IPv4_NETWORK_TYPE;
 			connections[index].localEndpoint.Address.Ipv4 = udp4Table->table[i].dwLocalAddr;
 			connections[index].localEndpoint.Port = (USHORT)udp4Table->table[i].dwLocalPort;
-
 			connections[index].remoteEndpoint.Address.Type = 0;
-
 			connections[index].state = 0;
 			connections[index].processID = UlongToHandle(udp4Table->table[i].dwOwningPid);
 			connections[index].createTime = udp4Table->table[i].liCreateTimestamp;
@@ -201,13 +301,10 @@ int SystemNetwork::getNetworkTable(NetworkConnection *&parmConnection, ULONG &pa
 		for (int i = 0; i < udp6Table->dwNumEntries; i++)
 		{
 			connections[index].protocolType = UDP6_NETWORK_PROTOCOL;
-
 			connections[index].localEndpoint.Address.Type = IPv6_NETWORK_TYPE;
 			memcpy(connections[index].localEndpoint.Address.Ipv6, udp6Table->table[i].ucLocalAddr, 16);
 			connections[index].localEndpoint.Port = (USHORT)udp6Table->table[i].dwLocalPort;
-
 			connections[index].remoteEndpoint.Address.Type = 0;
-
 			connections[index].state = 0;
 			connections[index].processID = UlongToHandle(udp6Table->table[i].dwOwningPid);
 			connections[index].createTime = udp6Table->table[i].liCreateTimestamp;
@@ -229,62 +326,6 @@ int SystemNetwork::getNetworkTable(NetworkConnection *&parmConnection, ULONG &pa
 	return nResult;
 }
 
-
-int main()
-{
-	getNetworkTcpTable();
-	system("pause");
-}
-
-string SystemNetwork::getNetworkInterfaceType(IP_ADAPTER_INFO parmAdapterInfo)
-{
-	string strType = NULL;
-
-	if (parmAdapterInfo != NULL)
-	{
-		switch (parmAdapterInfo.Type) {
-		case MIB_IF_TYPE_OTHER:
-			strType = "Other";
-			break;
-		case MIB_IF_TYPE_ETHERNET:
-			strType = "Ethernet";
-			break;
-		case MIB_IF_TYPE_TOKENRING:
-			strType = "Token Ring";
-			break;
-		case MIB_IF_TYPE_FDDI:
-			strType = "FDDI";
-			break;
-		case MIB_IF_TYPE_PPP:
-			strType = "PPP";
-			break;
-		case MIB_IF_TYPE_LOOPBACK:
-			strType = "Lookback";
-			break;
-		case MIB_IF_TYPE_SLIP:
-			strType = "Slip";
-			break;
-		case IF_TYPE_ATM:
-			strType = "ATM";
-			break;
-		case IF_TYPE_IEEE80211:
-			strType = "IEEE 802.11 Wireless";
-			break;
-		case IF_TYPE_TUNNEL:
-			strType = "Tunnel type encapsulation";
-			break;
-		case IF_TYPE_IEEE1394:
-			strType = "IEEE 1394 Firewire";
-			break;
-		default:
-			strType = "Unknown type";
-			break;
-		}
-	}
-
-	return strType;
-}
-
 int SystemNetwork::getNetworkSendBytes()
 {
 	//Win32_PerfFormattedData_Tcpip_NetworkInterface win;
@@ -292,7 +333,7 @@ int SystemNetwork::getNetworkSendBytes()
 }
 
 // you should parm PIP_ADAPTER_INFO obj delete
-int SystemNetwork::getNetworkInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outCount)
+int SystemNetwork::getInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outCount)
 {
 	int nResult = 1;
 
@@ -331,6 +372,15 @@ int SystemNetwork::getNetworkInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outC
 
 void SystemNetwork::formatToMacAddress(TCHAR *parm, BYTE addr[])
 {
+	//CString strMacAddr = "";
+	//strMacAddr.format("%02x%02x%02x%02x%02x%02x",
+	//	parmAdapter->Address[0],
+	//	parmAdapter->Address[1],
+	//	parmAdapter->Address[2],
+	//	parmAdapter->Address[3],
+	//	parmAdapter->Address[4],
+	//	parmAdapter->Address[5]);
+
 	sprintf(parm, "%.2X-%.2X-%.2X-%.2X-%.2X-%.2X",
 		addr[0],
 		addr[1],
@@ -339,15 +389,6 @@ void SystemNetwork::formatToMacAddress(TCHAR *parm, BYTE addr[])
 		addr[4],
 		addr[5]);
 }
-
-//CString strMacAddr = "";
-//strMacAddr.format("%02x%02x%02x%02x%02x%02x",
-//	parmAdapter->Address[0],
-//	parmAdapter->Address[1],
-//	parmAdapter->Address[2],
-//	parmAdapter->Address[3],
-//	parmAdapter->Address[4],
-//	parmAdapter->Address[5]);
 
 /*
 int main()
