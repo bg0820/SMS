@@ -2,7 +2,7 @@
 
 int NetworkManager::Init()
 {
-	if (!networkListener->Init(&socket))
+	if (!networkListener->Init(socket))
 		return 0;
 
 	networkListener->initSocketAddr(8080, "127.0.0.1");
