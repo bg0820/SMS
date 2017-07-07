@@ -1,6 +1,6 @@
 #include <iostream>
 #include <windows.h>	
-
+#include <Shlobj.h>
 #include "system/SystemNetwork.hpp"
 
 #define DIV				1024						// KB
@@ -43,7 +43,7 @@ void mainStart()
 	
 }
 
-/*
+
 int main(int argc, char* argv[])
 {
 	if (IsUserAnAdmin())
@@ -57,4 +57,3 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
-*/

@@ -1,5 +1,6 @@
 #include "SystemNetwork.hpp"
 
+/*
 int main()
 {
 	ULONG count;
@@ -14,7 +15,7 @@ int main()
 
 	system("pause");
 }
-
+*/
 
 TCHAR* SystemNetwork::getInterfaceTypeName(IP_ADAPTER_INFO parmAdapterInfo)
 {

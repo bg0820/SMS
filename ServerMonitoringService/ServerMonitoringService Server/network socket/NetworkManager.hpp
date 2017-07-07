@@ -37,6 +37,7 @@ public:
 	int Start();
 	int Stop();
 	void networkProc();
+	void clientProc(SOCKET client);
 };
 
 #endif

@@ -2,31 +2,38 @@
 
 int NetworkManager::Start()
 {
-	thread networkThread(&networkProc);
-	networkThread.join();
+	/*thread networkThread(&networkProc);
+	networkThread.join();*/
 
 	return 1;
+}
+/*
+void NetworkManager::clientProc(SOCKET client)
+{
+	cout << "Á¢¼ÓµÈ Client : " << inet_ntoa(addr.sin_addr) << endl;
 }
 
 void NetworkManager::networkProc()
 {
 	while (true)
 	{
-		if (networkListener->Connect(socket))
-		{
+		SOCKET client = accept(socket, (SOCKADDR*)&addr, sizeof(addr));
 
-		}
-
+		thread clientThread(&clientProc, client);
+		clientThread.join();
 	}
 }
-
+*/
 
 int NetworkManager::Init()
 {
-	if (!networkListener->Init(socket))
+	/*if (!networkListener->Init(socket))
 		return 0;
 
 	networkListener->initSocketAddr(8080, "127.0.0.1");
+
+	networkListener->Bind(socket);
+	networkListener->Listen(socket);*/
 
 	return 1;
 }
