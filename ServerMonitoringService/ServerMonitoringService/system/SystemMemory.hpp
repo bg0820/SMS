@@ -1,7 +1,7 @@
 #ifndef _SYSTEMEMORY_H_
 #define _SYSTEMEMORY_H_
 
-#include "windows.h"
+#include <Windows.h>
 
 typedef unsigned long       DWORD;
 

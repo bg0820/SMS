@@ -35,7 +35,7 @@ int NetworkListener::Connect(SOCKET socket)
 
 int NetworkListener::Send(SOCKET socket, char * buf, int bufSize)
 {
-	if (send(socket, buf, sizeof(buf), NULL) == SOCKET_ERROR) // if function success return value is 0
+	if (send(socket, buf, bufSize, NULL) == SOCKET_ERROR) // if function success return value is 0
 		return 0;
 
 	return 1;

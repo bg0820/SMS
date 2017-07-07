@@ -16,13 +16,14 @@ using std::thread;
 
 #define RECEIVE_BUFFER_SIZE 1024
 #define SEND_BUFFER_SIZE 1024
+#define BUFFER_SIZE 1024
 
 class NetworkListener
 {
 private:
 	WSADATA wsa;
 	SOCKADDR_IN addr;
-	WORD DllVersion = MAKEWORD(2, 1);
+	WORD DllVersion = MAKEWORD(2, 2);
 public:
 	NetworkListener()
 	{

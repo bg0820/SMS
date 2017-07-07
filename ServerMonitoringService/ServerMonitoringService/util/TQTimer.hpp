@@ -1,8 +1,8 @@
 #ifndef _TQTIMER_H_
 #define _TQTIMER_H_
 
-#include <Windows.h>
 #include <functional>
+#include <Windows.h>
 
 #define FAILED_CREATE_TIMER -10
 

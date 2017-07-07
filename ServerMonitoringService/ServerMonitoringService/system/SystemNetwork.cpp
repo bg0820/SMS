@@ -126,7 +126,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 
 	//PMIB_TCP6TABLE tcp6Table;
 	//PMIB_UDP6TABLE udp6Table;
-	// TCP IPv4
+	// TCP IPv4n
 	dwSize = 0;
 	GetExtendedTcpTable(NULL, &dwSize, FALSE, AF_INET, TCP_TABLE_OWNER_MODULE_ALL, 0);
 

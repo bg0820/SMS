@@ -1,10 +1,7 @@
 #ifndef _NETWORKLISTENER_H_
 #define _NETWORKLISTENER_H_
 
-#ifndef _WINDOWS_
-#include <WinSock2.h>
 #include <Windows.h>
-#endif
 
 #pragma comment(lib, "ws2_32.lib") // WinSock2 Lib
 
@@ -19,7 +16,7 @@ class NetworkListener
 private:
 	WSADATA wsa;
 	SOCKADDR_IN addr;
-	WORD DllVersion = MAKEWORD(2, 1);
+	WORD DllVersion = MAKEWORD(2, 2);
 public:
 	NetworkListener()
 	{

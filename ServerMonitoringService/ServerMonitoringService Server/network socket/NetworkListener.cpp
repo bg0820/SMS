@@ -66,10 +66,25 @@ int NetworkListener::Disconnect(SOCKET socket)
 	return 1;
 }
 
-
 void clientProc(SOCKET client, SOCKADDR_IN parmAddr)
 {
-	cout<<"Client Conneced IP : " << inet_ntoa(parmAddr.sin_addr) << endl;
+	cout << "Client Conneced IP : " << inet_ntoa(parmAddr.sin_addr) << endl;
+
+	char buf[BUFFER_SIZE + 1];
+
+	while (true)
+	{
+		int len = recv(client, buf, BUFFER_SIZE, 0);
+		if (len == SOCKET_ERROR || len == 0) {
+			break;
+		}
+
+		buf[BUFFER_SIZE] = '\0';
+
+		printf("[TCP/%s:%d] %s\n", inet_ntoa(parmAddr.sin_addr), ntohs(parmAddr.sin_port), buf);
+	}
+
+	cout << "DisConnected IP : " << inet_ntoa(parmAddr.sin_addr) << endl;
 }
 
 void networkProc(SOCKET serverSocket, SOCKADDR_IN parmAddr)

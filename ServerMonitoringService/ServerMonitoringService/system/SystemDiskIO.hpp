@@ -2,9 +2,9 @@
 #define _SYSTEMDISKIO_H_
 
 #include <iostream>
-#include <Windows.h>
 #include <vector>
 #include "../util/TQTimer.hpp"
+#include <Windows.h>
 
 #define INTERVAL 500
 
