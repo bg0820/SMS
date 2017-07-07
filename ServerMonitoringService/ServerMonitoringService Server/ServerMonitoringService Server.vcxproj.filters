@@ -24,12 +24,24 @@
     <ClCompile Include="util\StopWatch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="network socket\NetworkListener.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="network socket\NetworkManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util\StopWatch.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="util\Util.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="network socket\NetworkListener.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="network socket\NetworkManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

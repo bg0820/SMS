@@ -112,10 +112,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="network socket\NetworkListener.cpp" />
+    <ClCompile Include="network socket\NetworkManager.cpp" />
     <ClCompile Include="util\StopWatch.cpp" />
     <ClCompile Include="util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="network socket\NetworkListener.h" />
+    <ClInclude Include="network socket\NetworkManager.h" />
     <ClInclude Include="util\StopWatch.hpp" />
     <ClInclude Include="util\Util.h" />
   </ItemGroup>
