@@ -1,6 +1,6 @@
 #include <iostream>
 #include <windows.h>	
-#include <Shlobj.h>
+
 #include "system/SystemNetwork.hpp"
 
 #define DIV				1024						// KB
