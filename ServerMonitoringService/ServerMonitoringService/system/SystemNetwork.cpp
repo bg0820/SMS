@@ -1,46 +1,285 @@
 #include "SystemNetwork.hpp"
 
+int SystemNetwork::getNetworkTable(NetworkConnection *&parmConnection, ULONG &parmCount)
+{
+	int nResult = 1;
+
+	int totalCount = 0;
+	DWORD dwSize;
+	PVOID table;
+	MIB_TCPTABLE_OWNER_MODULE *tcp4Table;
+	MIB_UDPTABLE_OWNER_MODULE *udp4Table;
+	MIB_TCP6TABLE_OWNER_MODULE *tcp6Table;
+	MIB_UDP6TABLE_OWNER_MODULE *udp6Table;
+	NetworkConnection *connections;
+	ULONG index = 0;
+
+	//PMIB_TCP6TABLE tcp6Table;
+	//PMIB_UDP6TABLE udp6Table;
+	// TCP IPv4
+	dwSize = 0;
+	GetExtendedTcpTable(NULL, &dwSize, FALSE, AF_INET, TCP_TABLE_OWNER_MODULE_ALL, 0);
+
+	table = new PVOID[dwSize];
+	//table = new PVOID[dwSize]; // size; dwSize / sizeof(PVOID) ?
+
+	if (GetExtendedTcpTable(table, &dwSize, FALSE, AF_INET, TCP_TABLE_OWNER_MODULE_ALL, 0) == 0)
+	{
+		tcp4Table = (PMIB_TCPTABLE_OWNER_MODULE)table;
+		totalCount += tcp4Table->dwNumEntries;
+	}
+	else
+	{
+		if (table)
+		{
+			delete table;
+			table = NULL;
+		}
+
+		nResult = 0;
+	}
+
+	// TCP IPv6
+	dwSize = 0;
+	GetExtendedTcpTable(NULL, &dwSize, FALSE, 23, TCP_TABLE_OWNER_MODULE_ALL, 0);
+
+	table = new PVOID[dwSize]; // size; dwSize / sizeof(PVOID) ?
+
+	if (GetExtendedTcpTable(table, &dwSize, FALSE, 23, TCP_TABLE_OWNER_MODULE_ALL, 0) == 0)
+	{
+		tcp6Table = (PMIB_TCP6TABLE_OWNER_MODULE)table;
+		totalCount += tcp6Table->dwNumEntries;
+	}
+	else
+	{
+		if (table)
+		{
+			delete table;
+			table = NULL;
+		}
+
+		nResult = 0;
+	}
+
+	// UDP IPv4
+	dwSize = 0;
+	GetExtendedUdpTable(NULL, &dwSize, FALSE, AF_INET, UDP_TABLE_OWNER_MODULE, 0);
+
+	table = new PVOID[dwSize]; // size; dwSize / sizeof(PVOID) ?
+
+	if (GetExtendedUdpTable(udp4Table, &dwSize, FALSE, AF_INET, UDP_TABLE_OWNER_MODULE, 0) == 0)
+	{
+		udp4Table = (PMIB_UDPTABLE_OWNER_MODULE)table;
+		totalCount += tcp6Table->dwNumEntries;
+	}
+	else
+	{
+		if (table)
+		{
+			delete table;
+			table = NULL;
+		}
+
+		nResult = 0;
+	}
+
+	// UDP IPv6
+	dwSize = 0;
+	GetExtendedUdpTable(NULL, &dwSize, FALSE, 23, UDP_TABLE_OWNER_MODULE, 0);
+
+	table = new PVOID[dwSize]; // size; dwSize / sizeof(PVOID) ?
+
+	if (GetExtendedUdpTable(table, &dwSize, FALSE, 23, UDP_TABLE_OWNER_MODULE, 0) == 0)
+	{
+		udp6Table = (PMIB_UDP6TABLE_OWNER_MODULE)table;
+		totalCount += tcp6Table->dwNumEntries;
+	}
+	else
+	{
+		if (table)
+		{
+			delete table;
+			table = NULL;
+		}
+
+		nResult = 0;
+	}
+
+	connections = new NetworkConnection[totalCount];
+	memset(connections, 0, sizeof(connections) * totalCount);
+
+	if (tcp4Table)
+	{
+		for (int i = 0; i < tcp4Table->dwNumEntries; i++)
+		{
+			connections[index].protocolType = TCP4_NETWORK_PROTOCOL;
+
+			connections[index].localEndpoint.Address.Type = IPv4_NETWORK_TYPE;
+			connections[index].localEndpoint.Address.Ipv4 = tcp4Table->table[i].dwLocalAddr;
+			connections[index].localEndpoint.Port = (USHORT)tcp4Table->table[i].dwLocalPort;
+
+			connections[index].remoteEndpoint.Address.Type = IPv4_NETWORK_TYPE;
+			connections[index].remoteEndpoint.Address.Ipv4 = tcp4Table->table[i].dwRemoteAddr;
+			connections[index].remoteEndpoint.Port = _byteswap_ushort((USHORT)tcp4Table->table[i].dwRemotePort);
+
+			connections[index].state = tcp4Table->table[i].dwState;
+			connections[index].processID = UlongToHandle(tcp4Table->table[i].dwOwningPid);
+			connections[index].createTime = tcp4Table->table[i].liCreateTimestamp;
+			memcpy(connections[index].ownerInfo, tcp4Table->table[i].OwningModuleInfo, sizeof(ULONGLONG) *NETWORK_OWNER_INFO_SIZE);
+			index++;
+		}
+
+		if (tcp4Table)
+		{
+			delete tcp4Table;
+			tcp4Table = nullptr;
+		}
+	}
+	else
+		nResult = 0;
+
+	if (tcp6Table)
+	{
+		for (int i = 0; i < tcp6Table->dwNumEntries; i++)
+		{
+			connections[index].protocolType = TCP6_NETWORK_PROTOCOL;
+
+			connections[index].localEndpoint.Address.Type = IPv6_NETWORK_TYPE;
+			memcpy(connections[index].localEndpoint.Address.Ipv6, tcp6Table->table[i].ucLocalAddr, 16);
+			connections[index].localEndpoint.Port = (USHORT)tcp6Table->table[i].dwLocalPort;
+
+			connections[index].remoteEndpoint.Address.Type = IPv6_NETWORK_TYPE;
+			memcpy(connections[index].remoteEndpoint.Address.Ipv6, tcp6Table->table[i].ucRemoteAddr, 16);
+			connections[index].remoteEndpoint.Port = _byteswap_ushort((USHORT)tcp6Table->table[i].dwRemotePort);
+
+			connections[index].state = tcp6Table->table[i].dwState;
+			connections[index].processID = UlongToHandle(tcp6Table->table[i].dwOwningPid);
+			connections[index].createTime = tcp6Table->table[i].liCreateTimestamp;
+			memcpy(connections[index].ownerInfo, tcp6Table->table[i].OwningModuleInfo, sizeof(ULONGLONG) *NETWORK_OWNER_INFO_SIZE);
+			index++;
+		}
+
+		if (tcp6Table)
+		{
+			delete tcp6Table;
+			tcp6Table = nullptr;
+		}
+	}
+	else
+		nResult = 0;
+
+	if (udp4Table)
+	{
+		for (int i = 0; i < udp4Table->dwNumEntries; i++)
+		{
+			connections[index].protocolType = UDP4_NETWORK_PROTOCOL;
+
+			connections[index].localEndpoint.Address.Type = IPv4_NETWORK_TYPE;
+			connections[index].localEndpoint.Address.Ipv4 = udp4Table->table[i].dwLocalAddr;
+			connections[index].localEndpoint.Port = (USHORT)udp4Table->table[i].dwLocalPort;
+
+			connections[index].remoteEndpoint.Address.Type = 0;
+
+			connections[index].state = 0;
+			connections[index].processID = UlongToHandle(udp4Table->table[i].dwOwningPid);
+			connections[index].createTime = udp4Table->table[i].liCreateTimestamp;
+			memcpy(connections[index].ownerInfo, udp4Table->table[i].OwningModuleInfo, sizeof(ULONGLONG) *NETWORK_OWNER_INFO_SIZE);
+			index++;
+		}
+
+		if (udp4Table)
+		{
+			delete udp4Table;
+			udp4Table = nullptr;
+		}
+	}
+	else
+		nResult = 0;
+
+	if (udp6Table)
+	{
+		for (int i = 0; i < udp6Table->dwNumEntries; i++)
+		{
+			connections[index].protocolType = UDP6_NETWORK_PROTOCOL;
+
+			connections[index].localEndpoint.Address.Type = IPv6_NETWORK_TYPE;
+			memcpy(connections[index].localEndpoint.Address.Ipv6, udp6Table->table[i].ucLocalAddr, 16);
+			connections[index].localEndpoint.Port = (USHORT)udp6Table->table[i].dwLocalPort;
+
+			connections[index].remoteEndpoint.Address.Type = 0;
+
+			connections[index].state = 0;
+			connections[index].processID = UlongToHandle(udp6Table->table[i].dwOwningPid);
+			connections[index].createTime = udp6Table->table[i].liCreateTimestamp;
+			memcpy(connections[index].ownerInfo, udp6Table->table[i].OwningModuleInfo, sizeof(ULONGLONG) *NETWORK_OWNER_INFO_SIZE);
+			index++;
+		}
+		if (udp6Table)
+		{
+			delete udp6Table;
+			udp6Table = nullptr;
+		}
+	}
+	else
+		nResult = 0;
+
+	parmConnection = connections;
+	parmCount = totalCount;
+
+	return nResult;
+}
+
+
+int main()
+{
+	getNetworkTcpTable();
+	system("pause");
+}
+
 string SystemNetwork::getNetworkInterfaceType(IP_ADAPTER_INFO parmAdapterInfo)
 {
 	string strType = NULL;
 
-	switch (parmAdapterInfo.Type) {
-	case MIB_IF_TYPE_OTHER:
-		strType = "Other";
-		break;
-	case MIB_IF_TYPE_ETHERNET:
-		strType = "Ethernet";
-		break;
-	case MIB_IF_TYPE_TOKENRING:
-		strType = "Token Ring";
-		break;
-	case MIB_IF_TYPE_FDDI:
-		strType = "FDDI";
-		break;
-	case MIB_IF_TYPE_PPP:
-		strType = "PPP";
-		break;
-	case MIB_IF_TYPE_LOOPBACK:
-		strType = "Lookback";
-		break;
-	case MIB_IF_TYPE_SLIP:
-		strType = "Slip";
-		break;
-	case IF_TYPE_ATM:
-		strType = "ATM";
-		break;
-	case IF_TYPE_IEEE80211:
-		strType = "IEEE 802.11 Wireless";
-		break;
-	case IF_TYPE_TUNNEL:
-		strType = "Tunnel type encapsulation";
-		break;
-	case IF_TYPE_IEEE1394:
-		strType = "IEEE 1394 Firewire";
-		break;
-	default:
-		strType = "Unknown type";
-		break;
+	if (parmAdapterInfo != NULL)
+	{
+		switch (parmAdapterInfo.Type) {
+		case MIB_IF_TYPE_OTHER:
+			strType = "Other";
+			break;
+		case MIB_IF_TYPE_ETHERNET:
+			strType = "Ethernet";
+			break;
+		case MIB_IF_TYPE_TOKENRING:
+			strType = "Token Ring";
+			break;
+		case MIB_IF_TYPE_FDDI:
+			strType = "FDDI";
+			break;
+		case MIB_IF_TYPE_PPP:
+			strType = "PPP";
+			break;
+		case MIB_IF_TYPE_LOOPBACK:
+			strType = "Lookback";
+			break;
+		case MIB_IF_TYPE_SLIP:
+			strType = "Slip";
+			break;
+		case IF_TYPE_ATM:
+			strType = "ATM";
+			break;
+		case IF_TYPE_IEEE80211:
+			strType = "IEEE 802.11 Wireless";
+			break;
+		case IF_TYPE_TUNNEL:
+			strType = "Tunnel type encapsulation";
+			break;
+		case IF_TYPE_IEEE1394:
+			strType = "IEEE 1394 Firewire";
+			break;
+		default:
+			strType = "Unknown type";
+			break;
+		}
 	}
 
 	return strType;
@@ -68,7 +307,7 @@ int SystemNetwork::getNetworkInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outC
 
 	// Make an initial call to GetAdaptersInfo to get
 	// the necessary size into the ulOutBufLen variable
-	if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW)
+	if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen))
 	{
 		delete pAdapterInfo;
 		pAdapterInfo = nullptr;
@@ -80,7 +319,7 @@ int SystemNetwork::getNetworkInterfaces(PIP_ADAPTER_INFO &parmAdapter, int &outC
 			nResult = -2;
 	}
 
-	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == NO_ERROR)
+	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)))
 	{
 		parmAdapter = pAdapterInfo;
 	}
@@ -132,7 +371,7 @@ int main()
 			net.formatToMacAddress(macAddr, parmAdapter[k].Address);
 			// TODO change
 			cout << macAddr << endl;
-			
+
 			string strType = net.getNetworkInterfaceType(parmAdapter[k]);
 		}
 	}

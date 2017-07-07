@@ -23,6 +23,7 @@ void SystemDiskIO::CallbackProc()
 	}
 }
 
+/*
 int main()
 {
 	SystemDiskIO systemdiskIO;
@@ -43,7 +44,7 @@ int main()
 
 	system("pause");
 }
-
+*/
 int SystemDiskIO::getPartitionList(vector<string> &parmStrDiskList, Disk *&parmDiskList)
 {
 	parmStrDiskList.clear();
