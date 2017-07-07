@@ -27,7 +27,7 @@ int NetworkListener::Connect(SOCKET socket)
 {
 	if (connect(socket, (SOCKADDR*)&addr, sizeof(addr)) == SOCKET_ERROR) // if function success return value is 0
 		return 0;
-
+	
 	// TODO : if(result == 0) ~~~
 
 	return 1;

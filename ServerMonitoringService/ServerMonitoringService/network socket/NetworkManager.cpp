@@ -12,7 +12,7 @@ int NetworkManager::Init()
 
 int NetworkManager::Start()
 {
-	if (networkListener->Connect(socket))
+	if (!networkListener->Connect(socket))
 		return 0;
 
 	while (true)

@@ -45,6 +45,8 @@ void mainStart()
 	networkManager = new NetworkManager();
 	networkManager->Init();
 	networkManager->Start();
+
+	system("pause");
 }
 
 
