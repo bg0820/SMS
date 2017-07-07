@@ -11,7 +11,7 @@ int main()
 	{
 		cout << networkConnection[i].processID << endl;
 	}
-	
+
 	system("pause");
 }
 
@@ -114,6 +114,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 	int nResult = 1;
 
 	int totalCount = 0;
+	int index = 0;
 	DWORD dwSize;
 	PVOID table;
 	MIB_TCPTABLE_OWNER_MODULE *tcp4Table = NULL;
@@ -121,7 +122,6 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 	MIB_TCP6TABLE_OWNER_MODULE *tcp6Table = NULL;
 	MIB_UDP6TABLE_OWNER_MODULE *udp6Table = NULL;
 	NetworkConnection *connections;
-	ULONG index = 0;
 
 	//PMIB_TCP6TABLE tcp6Table;
 	//PMIB_UDP6TABLE udp6Table;
@@ -129,7 +129,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 	dwSize = 0;
 	GetExtendedTcpTable(NULL, &dwSize, FALSE, AF_INET, TCP_TABLE_OWNER_MODULE_ALL, 0);
 
-	table = new PVOID[dwSize];
+	table = new PVOID[dwSize / sizeof(PVOID)];
 	//table = new PVOID[dwSize]; // size; dwSize / sizeof(PVOID) ?
 
 	if (GetExtendedTcpTable(table, &dwSize, FALSE, AF_INET, TCP_TABLE_OWNER_MODULE_ALL, 0) == 0)
@@ -153,7 +153,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 	dwSize = 0;
 	GetExtendedTcpTable(NULL, &dwSize, FALSE, 23, TCP_TABLE_OWNER_MODULE_ALL, 0);
 
-	table = new PVOID[dwSize]; // size; dwSize / sizeof(PVOID) ?
+	table = new PVOID[dwSize / sizeof(PVOID)];
 
 	if (GetExtendedTcpTable(table, &dwSize, FALSE, 23, TCP_TABLE_OWNER_MODULE_ALL, 0) == 0)
 	{
@@ -176,12 +176,12 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 	dwSize = 0;
 	GetExtendedUdpTable(NULL, &dwSize, FALSE, AF_INET, UDP_TABLE_OWNER_MODULE, 0);
 
-	table = new PVOID[dwSize]; // size; dwSize / sizeof(PVOID) ?
+	table = new PVOID[dwSize / sizeof(PVOID)];
 
 	if (GetExtendedUdpTable(table, &dwSize, FALSE, AF_INET, UDP_TABLE_OWNER_MODULE, 0) == 0)
 	{
 		udp4Table = (PMIB_UDPTABLE_OWNER_MODULE)table;
-		totalCount += tcp6Table->dwNumEntries;
+		totalCount += udp4Table->dwNumEntries;
 	}
 	else
 	{
@@ -199,12 +199,12 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 	dwSize = 0;
 	GetExtendedUdpTable(NULL, &dwSize, FALSE, 23, UDP_TABLE_OWNER_MODULE, 0);
 
-	table = new PVOID[dwSize]; // size; dwSize / sizeof(PVOID) ?
+	table = new PVOID[dwSize / sizeof(PVOID)];
 
 	if (GetExtendedUdpTable(table, &dwSize, FALSE, 23, UDP_TABLE_OWNER_MODULE, 0) == 0)
 	{
 		udp6Table = (PMIB_UDP6TABLE_OWNER_MODULE)table;
-		totalCount += tcp6Table->dwNumEntries;
+		totalCount += udp6Table->dwNumEntries;
 	}
 	else
 	{
@@ -219,7 +219,6 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 	}
 
 	connections = new NetworkConnection[totalCount];
-	memset(connections, 0, sizeof(connections) * totalCount);
 
 	if (tcp4Table)
 	{
@@ -239,11 +238,8 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 			index++;
 		}
 
-		if (tcp4Table)
-		{
-			delete tcp4Table;
-			tcp4Table = nullptr;
-		}
+		delete tcp4Table;
+		tcp4Table = nullptr;
 	}
 	else
 		nResult = 0;
@@ -266,11 +262,8 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 			index++;
 		}
 
-		if (tcp6Table)
-		{
-			delete tcp6Table;
-			tcp6Table = nullptr;
-		}
+		delete tcp6Table;
+		tcp6Table = nullptr;
 	}
 	else
 		nResult = 0;
@@ -291,17 +284,15 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 			index++;
 		}
 
-		if (udp4Table)
-		{
-			delete udp4Table;
-			udp4Table = nullptr;
-		}
+		delete udp4Table;
+		udp4Table = nullptr;
 	}
 	else
 		nResult = 0;
 
 	if (udp6Table)
 	{
+		cout << udp6Table->dwNumEntries << endl;
 		for (int i = 0; i < udp6Table->dwNumEntries; i++)
 		{
 			connections[index].protocolType = UDP6_NETWORK_PROTOCOL;
@@ -315,11 +306,9 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 			memcpy(connections[index].ownerInfo, udp6Table->table[i].OwningModuleInfo, sizeof(ULONGLONG) * NETWORK_OWNER_INFO_SIZE);
 			index++;
 		}
-		if (udp6Table)
-		{
-			delete udp6Table;
-			udp6Table = nullptr;
-		}
+
+		delete udp6Table;
+		udp6Table = nullptr;
 	}
 	else
 		nResult = 0;

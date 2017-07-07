@@ -31,10 +31,10 @@ public:
 			networkListener = nullptr;
 		}
 	}
-public:
-	int Init();
-	int Start();
-	int Stop();
+
+	void Init();
+	void Start();
+	void Stop();
 	void networkProc();
 };
 
