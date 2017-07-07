@@ -1,10 +1,10 @@
 #ifndef _NETWORKMANAGER_H_
 #define _NETWORKMANAGER_H_
 
-#include <iostream>
+//#include <iostream>
 #include "NetworkListener.hpp"
 
-using namespace std;
+//using namespace std;
 
 #define PORT 8080
 #define LOOPBACK "127.0.0.1"

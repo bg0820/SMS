@@ -30,7 +30,7 @@ private:
 	TCHAR path[MAX_PATH];
 	TCHAR commandLine[MAX_PATH];
 private:
-	int getHandleFromPID();
+	HANDLE getHandleFromPID();
 	// TODO initFunc retrun Type TCHAR* > int, initName(TCHAR *val)
 	TCHAR* initName();
 	TCHAR* initPath();
@@ -41,7 +41,7 @@ public:
 	{
 		// fixed value Init
 		Process::pid = pid;
-		getHandleFromPID();
+		Process::handle = getHandleFromPID();
 
 		// strcpy_s(Multi-Byte) -> wcscpy_s(UNICODE)
 		strcpy_s(name, initName());

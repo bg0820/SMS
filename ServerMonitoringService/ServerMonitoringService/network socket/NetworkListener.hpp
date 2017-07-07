@@ -1,12 +1,15 @@
 #ifndef _NETWORKLISTENER_H_
 #define _NETWORKLISTENER_H_
 
-#include <windows.h>
-#include <iostream>
+#ifndef _WINSOCK2API_
+#include <WinSock2.h>
+#include <Windows.h>
+#endif
 
 #pragma comment(lib, "ws2_32.lib") // WinSock2 Lib
 
-using namespace std;
+//#include <iostream>
+//using namespace std;
 
 #define RECEIVE_BUFFER_SIZE 1024
 #define SEND_BUFFER_SIZE 1024

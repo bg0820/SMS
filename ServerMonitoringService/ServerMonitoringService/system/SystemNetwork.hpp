@@ -2,12 +2,16 @@
 #define _SYSTEMNETWORK_H_
 
 #include <iostream>
-#include <Windows.h>
 
+#ifndef _WINDOWS_
 #include <ws2tcpip.h>
+#include <windows.h>
+#endif
+
 #include <iphlpapi.h>
+
+
 #pragma comment(lib, "IPHLPAPI.lib")
-#pragma comment(lib, "ws2_32.lib") // WinSock2 Lib
 
 #define KBPS  8 / 1000
 #define MBPS  8 / 1000 / 1000
@@ -47,7 +51,7 @@ typedef struct network_connection
 	IP_ENDPOINT localEndpoint;
 	IP_ENDPOINT remoteEndpoint;
 	ULONG state;
-	HANDLE processID;
+	DWORD processID;
 	LARGE_INTEGER createTime;
 	ULONGLONG ownerInfo[NETWORK_OWNER_INFO_SIZE];
 }NetworkConnection;

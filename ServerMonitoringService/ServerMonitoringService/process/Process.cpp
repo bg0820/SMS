@@ -129,15 +129,13 @@ TCHAR* Process::initCommandLine()
 }
 
 // When you are finished with the handle, be sure to close it using the CloseHandle function.
-int Process::getHandleFromPID()
+HANDLE Process::getHandleFromPID()
 {
 	HANDLE handle;
 	if ((handle = OpenProcess(MAXIMUM_ALLOWED, false, Process::pid)) == NULL)
-		return 0;
+		throw -1;
 
-	Process::handle = handle;
-
-	return 1;
+	return handle;
 }
 
 DWORD Process::getPid()

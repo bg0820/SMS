@@ -1,6 +1,5 @@
 #include "SystemNetwork.hpp"
 
-
 int main()
 {
 	ULONG count;
@@ -12,9 +11,10 @@ int main()
 	{
 		cout << networkConnection[i].processID << endl;
 	}
-
+	
 	system("pause");
 }
+
 
 TCHAR* SystemNetwork::getInterfaceTypeName(IP_ADAPTER_INFO parmAdapterInfo)
 {
@@ -116,10 +116,10 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 	int totalCount = 0;
 	DWORD dwSize;
 	PVOID table;
-	MIB_TCPTABLE_OWNER_MODULE *tcp4Table;
-	MIB_UDPTABLE_OWNER_MODULE *udp4Table;
-	MIB_TCP6TABLE_OWNER_MODULE *tcp6Table;
-	MIB_UDP6TABLE_OWNER_MODULE *udp6Table;
+	MIB_TCPTABLE_OWNER_MODULE *tcp4Table = NULL;
+	MIB_UDPTABLE_OWNER_MODULE *udp4Table = NULL;
+	MIB_TCP6TABLE_OWNER_MODULE *tcp6Table = NULL;
+	MIB_UDP6TABLE_OWNER_MODULE *udp6Table = NULL;
 	NetworkConnection *connections;
 	ULONG index = 0;
 
@@ -176,7 +176,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 
 	table = new PVOID[dwSize]; // size; dwSize / sizeof(PVOID) ?
 
-	if (GetExtendedUdpTable(udp4Table, &dwSize, FALSE, AF_INET, UDP_TABLE_OWNER_MODULE, 0) == 0)
+	if (GetExtendedUdpTable(table, &dwSize, FALSE, AF_INET, UDP_TABLE_OWNER_MODULE, 0) == 0)
 	{
 		udp4Table = (PMIB_UDPTABLE_OWNER_MODULE)table;
 		totalCount += tcp6Table->dwNumEntries;
@@ -229,7 +229,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 			connections[index].remoteEndpoint.Address.Ipv4 = tcp4Table->table[i].dwRemoteAddr;
 			connections[index].remoteEndpoint.Port = _byteswap_ushort((USHORT)tcp4Table->table[i].dwRemotePort);
 			connections[index].state = tcp4Table->table[i].dwState;
-			connections[index].processID = UlongToHandle(tcp4Table->table[i].dwOwningPid);
+			connections[index].processID = tcp4Table->table[i].dwOwningPid;
 			connections[index].createTime = tcp4Table->table[i].liCreateTimestamp;
 			memcpy(connections[index].ownerInfo, tcp4Table->table[i].OwningModuleInfo, sizeof(ULONGLONG) *NETWORK_OWNER_INFO_SIZE);
 			index++;
@@ -256,7 +256,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 			memcpy(connections[index].remoteEndpoint.Address.Ipv6, tcp6Table->table[i].ucRemoteAddr, 16);
 			connections[index].remoteEndpoint.Port = _byteswap_ushort((USHORT)tcp6Table->table[i].dwRemotePort);
 			connections[index].state = tcp6Table->table[i].dwState;
-			connections[index].processID = UlongToHandle(tcp6Table->table[i].dwOwningPid);
+			connections[index].processID = tcp6Table->table[i].dwOwningPid;
 			connections[index].createTime = tcp6Table->table[i].liCreateTimestamp;
 			memcpy(connections[index].ownerInfo, tcp6Table->table[i].OwningModuleInfo, sizeof(ULONGLONG) *NETWORK_OWNER_INFO_SIZE);
 			index++;
@@ -281,7 +281,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 			connections[index].localEndpoint.Port = (USHORT)udp4Table->table[i].dwLocalPort;
 			connections[index].remoteEndpoint.Address.Type = 0;
 			connections[index].state = 0;
-			connections[index].processID = UlongToHandle(udp4Table->table[i].dwOwningPid);
+			connections[index].processID = udp4Table->table[i].dwOwningPid;
 			connections[index].createTime = udp4Table->table[i].liCreateTimestamp;
 			memcpy(connections[index].ownerInfo, udp4Table->table[i].OwningModuleInfo, sizeof(ULONGLONG) *NETWORK_OWNER_INFO_SIZE);
 			index++;
@@ -306,7 +306,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&parmConnection, ULONG 
 			connections[index].localEndpoint.Port = (USHORT)udp6Table->table[i].dwLocalPort;
 			connections[index].remoteEndpoint.Address.Type = 0;
 			connections[index].state = 0;
-			connections[index].processID = UlongToHandle(udp6Table->table[i].dwOwningPid);
+			connections[index].processID = udp6Table->table[i].dwOwningPid;
 			connections[index].createTime = udp6Table->table[i].liCreateTimestamp;
 			memcpy(connections[index].ownerInfo, udp6Table->table[i].OwningModuleInfo, sizeof(ULONGLONG) *NETWORK_OWNER_INFO_SIZE);
 			index++;
