@@ -17,7 +17,7 @@ using std::thread;
 #define RECEIVE_BUFFER_SIZE 1024
 #define SEND_BUFFER_SIZE 1024
 #define BUFFER_SIZE 1024
-
+#define BACKLOG_COUNT 128
 class NetworkListener
 {
 private:
@@ -34,6 +34,7 @@ public:
 	{
 		WSACleanup();
 	}
+	void Start();
 	void clientProc(SOCKET client, SOCKADDR_IN paramAddr);
 	void networkProc(SOCKET serverSocket, SOCKADDR_IN paramAddr);
 	int Init(SOCKET &pSocket);

@@ -25,7 +25,7 @@ int NetworkListener::Bind(SOCKET socket)
 
 int NetworkListener::Listen(SOCKET socket)
 {
-	if (listen(socket, SOMAXCONN) == SOCKET_ERROR)
+	if (listen(socket, BACKLOG_COUNT) == SOCKET_ERROR)
 		return 0;
 
 	return 1;
@@ -84,6 +84,8 @@ void NetworkListener::clientProc(SOCKET client, SOCKADDR_IN paramAddr)
 		printf("[TCP/%s:%d] %s\n", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port), buf);
 	}
 
+	//select()
+
 	cout << "DisConnected IP : " << inet_ntoa(paramAddr.sin_addr) << endl;
 }
 
@@ -95,9 +97,13 @@ void NetworkListener::networkProc(SOCKET serverSocket, SOCKADDR_IN paramAddr)
 		int size = sizeof(paramAddr);
 		SOCKET client = accept(serverSocket, (SOCKADDR*)&paramAddr, &size);
 
-		thread clientThread(&clientProc, client, paramAddr);
+		thread clientThread([&]() {clientProc(client, paramAddr); });
 		clientThread.join();
 	}
+}
+
+void NetworkListener::Start()
+{
 }
 
 int main()
@@ -120,7 +126,7 @@ int main()
 	networkListener.Listen(socket);
 
 	cout << "Network Thread Create..." << endl;
-	thread networkThread(std::bind(&networkListener.networkProc, networkListener));
+	thread networkThread([&]() {networkListener.networkProc(socket, addr); });
 	networkThread.join();
 
 	system("pause");
