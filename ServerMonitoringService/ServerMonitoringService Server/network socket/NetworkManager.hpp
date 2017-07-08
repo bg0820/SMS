@@ -20,11 +20,15 @@ class NetworkManager
 private:
 	NetworkListener* networkListener = NULL;
 	SOCKET socket;
+	SOCKADDR_IN addr;
+	TCHAR *ip;
+	USHORT port;
 public:
-	NetworkManager()
+	NetworkManager(TCHAR *ip, USHORT port) : ip(ip), port(port)
 	{
-		networkListener = new NetworkListener;
+		networkListener = new NetworkListener(ip, port);
 	}
+
 	~NetworkManager()
 	{
 		if (networkListener)
@@ -33,11 +37,12 @@ public:
 			networkListener = nullptr;
 		}
 	}
+
 	int Init();
 	int Start();
 	int Stop();
-	void networkProc();
-	void clientProc(SOCKET client);
+	void clientProc(SOCKET client, SOCKADDR_IN paramAddr);
+	void networkProc(SOCKET serverSocket, SOCKADDR_IN paramAddr);
 };
 
 #endif
