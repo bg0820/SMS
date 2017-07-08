@@ -115,6 +115,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="network socket\NetworkListener.cpp" />
     <ClCompile Include="network socket\NetworkManager.cpp" />
+    <ClCompile Include="util\Log.cpp" />
     <ClCompile Include="util\StopWatch.cpp" />
     <ClCompile Include="util\Util.cpp" />
   </ItemGroup>
@@ -122,6 +123,7 @@
     <ClInclude Include="data\Client.h" />
     <ClInclude Include="network socket\NetworkListener.hpp" />
     <ClInclude Include="network socket\NetworkManager.hpp" />
+    <ClInclude Include="util\Log.hpp" />
     <ClInclude Include="util\StopWatch.hpp" />
     <ClInclude Include="util\Util.hpp" />
   </ItemGroup>

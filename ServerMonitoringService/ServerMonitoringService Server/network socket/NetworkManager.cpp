@@ -61,8 +61,6 @@ void NetworkManager::networkProc(SOCKET serverSocket, SOCKADDR_IN paramAddr)
 	}
 }
 
-
-
 int main()
 {
 	cout << "Server Start" << endl;
@@ -71,6 +69,7 @@ int main()
 
 	if (networkManager.Init())
 	{
+
 		cout << "Network Thread Create..." << endl;
 		networkManager.Start();
 	}

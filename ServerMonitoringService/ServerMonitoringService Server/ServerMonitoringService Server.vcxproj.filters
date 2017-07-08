@@ -33,6 +33,9 @@
     <ClCompile Include="data\Client.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="util\Log.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util\StopWatch.hpp">
@@ -48,6 +51,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="data\Client.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="util\Log.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
