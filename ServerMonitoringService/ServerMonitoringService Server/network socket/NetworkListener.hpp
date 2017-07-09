@@ -6,7 +6,7 @@
 #include <WinSock2.h>
 #include <Windows.h>
 #endif
-#include "../data/Client.h"
+#include "../data/Client.hpp"
 
 #pragma comment(lib, "ws2_32.lib") // WinSock2 Lib
 
