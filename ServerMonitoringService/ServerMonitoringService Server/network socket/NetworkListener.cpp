@@ -1,9 +1,18 @@
 #include "NetworkListener.hpp"
 #include "../data/ClientManager.hpp"
+#include <atlstr.h>
 
 int main()
 {
-	NetworkListener *networkListener = new NetworkListener("127.0.0.1", 8080);
+	string localIp = Util::getLocalIp();
+
+	string str = Util::string_format("Local IP : %s", localIp.c_str());
+	Log::printLog(str);
+
+	TCHAR ip[16];
+	_tcscpy_s(ip, CA2T(localIp.c_str())); // string to TCHAR
+
+	NetworkListener *networkListener = new NetworkListener(ip, 41850);
 	SOCKET serverSocket;
 	SOCKADDR_IN addr;
 

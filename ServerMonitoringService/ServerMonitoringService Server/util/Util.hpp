@@ -16,6 +16,7 @@ class Util
 public:
 	static string currentDateTime();
 	static string string_format(const string fmt_str, ...);
+	static string getLocalIp();
 };
 
 #endif

@@ -10,8 +10,7 @@
 
 #pragma comment(lib, "ws2_32.lib") // WinSock2 Lib
 
-using std::cout;
-using std::endl;
+using namespace std;
 
 #define RECEIVE_BUFFER_SIZE 1024
 #define SEND_BUFFER_SIZE 1024

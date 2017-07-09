@@ -9,7 +9,7 @@
 #pragma comment(lib, "ws2_32.lib") // WinSock2 Lib
 //using namespace std;
 
-#define PORT 8080
+#define PORT 41850
 #define LOOPBACK TEXT("127.0.0.1")
 
 class NetworkManager

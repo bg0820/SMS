@@ -30,3 +30,25 @@ string Util::string_format(const string fmt_str, ...)
 	}
 	return string(formatted.get());
 }
+
+string Util::getLocalIp()
+{
+	string ip;
+	WSADATA wsaData;
+	char name[255];
+	PHOSTENT hostinfo;
+	WORD DllVersion = MAKEWORD(2, 2);
+	if (WSAStartup(DllVersion, &wsaData) == 0)
+	{
+		if (gethostname(name, sizeof(name)) == 0)
+		{
+			if ((hostinfo = gethostbyname(name)) != NULL)
+			{
+				ip = inet_ntoa(*(struct in_addr *)*hostinfo->h_addr_list);
+			}
+		}
+		WSACleanup();
+	}
+
+	return ip;
+}
