@@ -49,16 +49,13 @@ int main()
 			if ((clientSocket = accept(serverSocket, (SOCKADDR*)&clientAddr, &nAddrLength)) == INVALID_SOCKET)
 			{
 				if (WSAGetLastError() != WSAEWOULDBLOCK)
-					cout << "ERROR : accept()" << endl;
+					Log::printLog("Error : accept()");
 			}
 			else
 			{
-				printf("[TCP 서버] 클라이언트 접속: IP 주소 = %s, 포트번호 = %d 현재 : %d 명\n",
-					inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), clientManager.getCount() + 1);
-
 				if (clientManager.add(clientAddr, clientSocket) == FALSE)
 				{
-					printf("[TCP 서버] 클라이언트 접속을 해제 합니다\n");
+					Log::printLog("Client Disconnected");
 					closesocket(clientSocket);
 				}
 			}
@@ -76,7 +73,7 @@ int main()
 				{
 					if (WSAGetLastError() != WSAEWOULDBLOCK)
 					{
-						cout << "ERROR : recv()" << endl;
+						Log::printLog("Error : recv()");
 						clientManager.remove(clientAddr);
 						continue;
 					}
@@ -104,7 +101,7 @@ int main()
 				{
 					if (WSAGetLastError() != WSAEWOULDBLOCK)
 					{
-						cout << "ERROR : send()" << endl;
+						Log::printLog("Error : send()");
 						clientManager.remove(clientAddr);
 						continue;
 					}
@@ -119,17 +116,6 @@ int main()
 
 	}
 
-
-	/*
-	cout << "Server Start" << endl;
-	NetworkManager networkManager("127.0.0.1", 8080);
-
-	err_quit("제목", "내용");
-	if (networkManager.Init())
-	{
-	networkManager.Start();
-	}
-	*/
 	system("pause");
 }
 

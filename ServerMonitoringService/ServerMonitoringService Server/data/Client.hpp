@@ -14,7 +14,6 @@ public:
 	CHAR sendBuffer[BUFFER_SIZE + 1];
 	int recvBytes;
 	int sendBytes;
-	TCHAR *ip;
 public:
 	Client() // SOCKET socket, SOCKADDR_IN addr)
 	{

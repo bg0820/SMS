@@ -3,18 +3,21 @@
 
 BOOLEAN ClientManager::add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
 {
-	if (clientList.find(inet_ntoa(paramAddr.sin_addr)) == clientList.end())
-	{
-		cout << "FIND" << endl;
+	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 
+	if (clientList.find(ip) == clientList.end()) // NOT FOUND
+	{
 		Client client;
 		client.socket = paramClientSocket;
+		client.addr = paramAddr;
 		client.recvBytes = 0;
 		client.sendBytes = 0;
-		client.ip = inet_ntoa(paramAddr.sin_addr);
 
-		std::pair<string, Client> hash = hash_map<string, Client>::value_type(client.ip, client);
+		pair<string, Client> hash = hash_map<string, Client>::value_type(ip, client);
 		clientList.insert(hash);
+
+		string str = Util::string_format("Client Connected [%s], Count : %d", ip.c_str(), getCount());
+		Log::printLog(str);
 
 		return TRUE;
 	}
@@ -24,29 +27,43 @@ BOOLEAN ClientManager::add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
 
 void ClientManager::remove(SOCKADDR_IN paramAddr)
 {
-	TCHAR *buffer = "[TCP 서버] 클라이언트 종료: IP 주소 = %s, 포트번호 = %d\n";
-	sprintf(buffer, inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
-	Log::printLog(buffer);
-	
-	hash_map<string, Client>::iterator Iter = clientList.lower_bound(inet_ntoa(paramAddr.sin_addr));
-	Client client = Iter->second;
-	closesocket(client.socket);
+	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 
-	// 클라이언트 정보 얻기
-	SOCKADDR_IN socketAddr;
-	int nAddrLength = sizeof(socketAddr);
-	getpeername(client.socket, (SOCKADDR*)&socketAddr, &nAddrLength);
+	if (clientList.find(ip) != clientList.end()) // FOUND
+	{
+		hash_map<string, Client>::iterator Iter = clientList.lower_bound(ip);
+		Client client = Iter->second;
+		closesocket(client.socket);
+
+		// 클라이언트 정보 얻기
+		SOCKADDR_IN socketAddr;
+		int nAddrLength = sizeof(socketAddr);
+		getpeername(client.socket, (SOCKADDR*)&socketAddr, &nAddrLength);
+
+		clientList.erase(ip); // remove
+
+		string str = Util::string_format("Client DisConnected [%s], Count : %d", ip.c_str(), getCount());
+		Log::printLog(str);
+	}
 }
 
-BOOLEAN ClientManager::isContainsKey(string ip)
+BOOLEAN ClientManager::isContainsKey(SOCKADDR_IN paramAddr)
 {
-	return BOOLEAN();
+	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
+
+	if (clientList.find(ip) == clientList.end())
+		return FALSE;
+	else
+		return TRUE;
 }
 
 Client ClientManager::getValue(SOCKADDR_IN paramAddr)
 {
-	hash_map<string, Client>::iterator Iter = clientList.lower_bound(inet_ntoa(paramAddr.sin_addr));
+	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
+
+	hash_map<string, Client>::iterator Iter = clientList.lower_bound(ip);
 	Client client = Iter->second;
+
 	return client;
 }
 
