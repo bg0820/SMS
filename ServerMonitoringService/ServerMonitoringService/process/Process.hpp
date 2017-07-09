@@ -37,10 +37,9 @@ private:
 	TCHAR* initCommandLine();
 	PVOID GetPebAddress(HANDLE ProcessHandle);
 public:
-	Process(const DWORD pid = 0)
+	Process(const DWORD pid = 0) : pid(pid)
 	{
 		// fixed value Init
-		Process::pid = pid;
 		Process::handle = getHandleFromPID();
 
 		// strcpy_s(Multi-Byte) -> wcscpy_s(UNICODE)

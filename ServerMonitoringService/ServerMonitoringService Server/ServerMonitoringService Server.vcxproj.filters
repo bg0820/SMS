@@ -36,6 +36,9 @@
     <ClCompile Include="util\Log.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="data\ClientManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util\StopWatch.hpp">
@@ -50,10 +53,13 @@
     <ClInclude Include="util\Util.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="data\Client.h">
+    <ClInclude Include="util\Log.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="util\Log.hpp">
+    <ClInclude Include="data\ClientManager.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Client.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

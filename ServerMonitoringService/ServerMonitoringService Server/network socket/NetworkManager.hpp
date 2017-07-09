@@ -19,13 +19,14 @@ class NetworkManager
 {
 private:
 	NetworkListener* networkListener = NULL;
-	SOCKET socket;
+	SOCKET serverSocket;
 	SOCKADDR_IN addr;
 	TCHAR *ip;
 	USHORT port;
 public:
 	NetworkManager(TCHAR *ip, USHORT port) : ip(ip), port(port)
 	{
+		cout << "Network Listener Creating..." << endl;
 		networkListener = new NetworkListener(ip, port);
 	}
 

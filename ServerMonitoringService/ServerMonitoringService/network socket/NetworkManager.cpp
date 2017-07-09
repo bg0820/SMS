@@ -17,7 +17,7 @@ int NetworkManager::Start()
 
 	while (true)
 	{
-		std::cout << "SEND()" << std::endl;
+		//std::cout << "SEND()" << std::endl;
 		char * buf = "SADASDDAS";
 
 		if (!NetworkListener::Send(socket, buf,10))

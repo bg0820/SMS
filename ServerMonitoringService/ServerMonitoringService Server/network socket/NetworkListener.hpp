@@ -6,6 +6,7 @@
 #include <WinSock2.h>
 #include <Windows.h>
 #endif
+#include "../data/Client.h"
 
 #pragma comment(lib, "ws2_32.lib") // WinSock2 Lib
 
@@ -20,6 +21,7 @@ using std::endl;
 class NetworkListener
 {
 private:
+	Client client[FD_SETSIZE];
 	WSADATA wsa;
 	SOCKADDR_IN addr;
 	WORD DllVersion = MAKEWORD(2, 2);
@@ -38,9 +40,7 @@ public:
 		WSACleanup();
 	}
 
-	int Init(SOCKET &pSocket, SOCKADDR_IN &parmAddr);
-	static int Send(SOCKET socket, TCHAR *buf, int bufSize);
-	static int Recv(SOCKET socket, TCHAR *buf, int bufSize);
+	int Init(SOCKET &pSocket, SOCKADDR_IN &paramAddr, int &paramRetValue);
 	int Disconnect(SOCKET socket);
 };
 

@@ -2,24 +2,24 @@
 
 int NetworkManager::Start()
 {
-	thread networkThread([&]() {networkProc(socket, addr); });
+	cout << "Network Thread Create..." << endl;
+	thread networkThread([&]() {networkProc(serverSocket, addr); });
 	networkThread.join();
-
 
 	return 1;
 }
 
 int NetworkManager::Init()
 {
-	if (!networkListener->Init(socket, addr))
-		return 0;
+	/*if (!networkListener->Init(this->serverSocket, this->addr))
+		return 0;*/
 
 	return 1;
 }
 
 int NetworkManager::Stop()
 {
-	if (!networkListener->Disconnect(socket))
+	if (!networkListener->Disconnect(this->serverSocket))
 		return 0;
 
 	return 1;
@@ -40,7 +40,7 @@ void NetworkManager::clientProc(SOCKET client, SOCKADDR_IN paramAddr)
 
 		buf[BUFFER_SIZE] = '\0';
 
-		printf("[TCP/%s:%d] %s\n", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port), buf);
+		//printf("[TCP/%s:%d] %s\n", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port), buf);
 	}
 
 	//select()
@@ -59,20 +59,4 @@ void NetworkManager::networkProc(SOCKET serverSocket, SOCKADDR_IN paramAddr)
 		thread clientThread([&]() {clientProc(client, paramAddr); });
 		clientThread.join();
 	}
-}
-
-int main()
-{
-	cout << "Server Start" << endl;
-	cout << "Network Listener..." << endl;
-	NetworkManager networkManager("127.0.0.1", 8080);
-
-	if (networkManager.Init())
-	{
-
-		cout << "Network Thread Create..." << endl;
-		networkManager.Start();
-	}
-
-	system("pause");
 }
