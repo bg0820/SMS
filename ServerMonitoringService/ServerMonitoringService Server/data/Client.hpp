@@ -14,8 +14,7 @@ public:
 	CHAR sendBuffer[BUFFER_SIZE + 1];
 	int recvBytes;
 	int sendBytes;
-public:
-	static int clientCount;
+	TCHAR *ip;
 public:
 	Client() // SOCKET socket, SOCKADDR_IN addr)
 	{

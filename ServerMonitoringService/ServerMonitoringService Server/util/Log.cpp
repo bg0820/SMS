@@ -1,11 +1,19 @@
 #include "Log.hpp"
 
-void Log::printErrLine(wchar_t * msg, int lineNumber)
+// string str = Util::string_format("%s %d", "", int);
+void Log::printLog(string msg)
 {
-	printf("%s : %d", msg, lineNumber);
+	string time = Util::currentDateTime();
+	cout << time << " " << msg << endl;
 }
 
-void Log::errQuit(TCHAR* title, TCHAR *context)
+void Log::printErrLine(string file, int lineNumber, string msg)
+{
+	string time = Util::currentDateTime();
+	cout << time << " " << file << ":" << lineNumber << " - " << msg << endl;
+}
+
+void Log::errQuit(string title, string context)
 {
 	//LPVOID lpMsgBuf;
 
@@ -14,7 +22,7 @@ void Log::errQuit(TCHAR* title, TCHAR *context)
 	NULL, WSAGetLastError(),
 	MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 	(LPTSTR)&lpMsgBuf, 0, NULL);*/
-	MessageBox(NULL, (LPCTSTR)context, title, MB_ICONERROR);
+	MessageBox(NULL, (LPCTSTR)context.c_str(), title.c_str(), MB_ICONERROR);
 	//LocalFree(lpMsgBuf);
 	exit(-1);
 }

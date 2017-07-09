@@ -1,44 +1,5 @@
 #include "NetworkListener.hpp"
-
-
-BOOL AddSocketInfo(Client *clientArray, SOCKET clientSocket)
-{
-	if (Client::clientCount >= (1024 - 1))
-	{
-		printf("[오류] 소켓 정보를 추가할 수 없습니다.\n");
-		return FALSE;
-	}
-
-	Client client;
-
-	client.socket = clientSocket;
-	client.recvBytes = 0;
-	client.sendBytes = 0;
-
-	clientArray[Client::clientCount++] = client;
-
-	return TRUE;
-}
-
-void RemoveSocketInfo(Client *clientArray, int nIndex)
-{
-	Client client = clientArray[nIndex];
-
-	// 클라이언트 정보 얻기
-	SOCKADDR_IN socketAddr;
-	int nAddrLength = sizeof(socketAddr);
-	getpeername(client.socket, (SOCKADDR*)&socketAddr, &nAddrLength);
-	printf("[TCP 서버] 클라이언트 종료: IP 주소 = %s, 포트번호 = %d\n",
-		inet_ntoa(socketAddr.sin_addr), ntohs(socketAddr.sin_port));
-
-	closesocket(client.socket);
-
-	for (int i = nIndex; i < Client::clientCount; ++i)
-		clientArray[i] = clientArray[i + 1];
-
-	Client::clientCount--;
-}
-
+#include "../data/ClientManager.hpp"
 
 int main()
 {
@@ -56,9 +17,9 @@ int main()
 	SOCKADDR_IN clientAddr;
 	int nAddrLength;
 
-	Client *clientArray = new Client[1024];
+	ClientManager clientManager;
 
-	while (1)
+	while (TRUE)
 	{
 		// 소켓 셋 초기화
 		FD_ZERO(&rset);
@@ -67,12 +28,12 @@ int main()
 		// 소켓 셋 지정
 		FD_SET(serverSocket, &rset);
 
-		for (int i = 0; i < Client::clientCount; ++i)
+		for (int i = 0; i < clientManager.getCount(); ++i)
 		{
-			if (clientArray[i].recvBytes > clientArray[i].sendBytes)
-				FD_SET(clientArray[i].socket, &wset);
+			if (clientManager.getValue(clientAddr).recvBytes > clientManager.getValue(clientAddr).sendBytes)
+				FD_SET(clientManager.getValue(clientAddr).socket, &wset);
 			else
-				FD_SET(clientArray[i].socket, &rset);
+				FD_SET(clientManager.getValue(clientAddr).socket, &rset);
 		}
 
 		// select()
@@ -93,20 +54,20 @@ int main()
 			else
 			{
 				printf("[TCP 서버] 클라이언트 접속: IP 주소 = %s, 포트번호 = %d 현재 : %d 명\n",
-					inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), Client::clientCount + 1);
+					inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), clientManager.getCount() + 1);
 
-				if (AddSocketInfo(clientArray, clientSocket) == FALSE)
+				if (clientManager.add(clientAddr, clientSocket) == FALSE)
 				{
-					printf("[TCP 서버] 클라이언트 접속을 해제 합니다n");
+					printf("[TCP 서버] 클라이언트 접속을 해제 합니다\n");
 					closesocket(clientSocket);
 				}
 			}
 		}
 
 		// 소켓 셋 검사 #2 : 데이터 통신
-		for (int i = 0; i < Client::clientCount; ++i)
+		for (int i = 0; i < clientManager.getCount(); ++i)
 		{
-			Client client = clientArray[i];
+			Client client = clientManager.getValue(clientAddr);
 			if (FD_ISSET(client.socket, &rset))
 			{
 				// 데이터받기
@@ -116,7 +77,7 @@ int main()
 					if (WSAGetLastError() != WSAEWOULDBLOCK)
 					{
 						cout << "ERROR : recv()" << endl;
-						RemoveSocketInfo(clientArray, i);
+						clientManager.remove(clientAddr);
 						continue;
 					}
 				}
@@ -144,7 +105,7 @@ int main()
 					if (WSAGetLastError() != WSAEWOULDBLOCK)
 					{
 						cout << "ERROR : send()" << endl;
-						RemoveSocketInfo(clientArray, i);
+						clientManager.remove(clientAddr);
 						continue;
 					}
 				}
@@ -179,7 +140,7 @@ int NetworkListener::Init(SOCKET &paramSocket, SOCKADDR_IN &parmAddr, int &param
 {
 	int nResult = 1;
 	int retValue;
-	cout << "Network Listener Socket Initializing..." << endl;
+	Log::printLog("Network Listener Socket Initializing...");
 
 	//WinSock Init
 	if (WSAStartup(DllVersion, &wsa) != 0)
@@ -191,10 +152,12 @@ int NetworkListener::Init(SOCKET &paramSocket, SOCKADDR_IN &parmAddr, int &param
 	if (paramSocket == INVALID_SOCKET) // FAILED
 		nResult = 0;
 
-	cout << "Network Listener Socket Address" << " [" << this->ip << ":" << this->port << "]" << " Initializing..." << endl;
+	string str = Util::string_format("Network Listener Socket Address [%s:%d] Initializing...", this->ip, this->port);
+	Log::printLog(str);
+
 	initSocketAddr(parmAddr, this->port, this->ip, FALSE);
 
-	cout << "Network Listener Bind and Listen..." << endl;
+	Log::printLog("Network Listener Bind and Listen...");
 	if ((retValue = bind(paramSocket, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
 		nResult = 0;
 
