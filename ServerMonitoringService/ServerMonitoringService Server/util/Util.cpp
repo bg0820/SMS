@@ -2,12 +2,12 @@
 
 string Util::currentDateTime()
 {
-	time_t     now = time(0);
-	struct tm  tstruct = *localtime(&now);
-	TCHAR       buf[80];
-	strftime(buf, sizeof(buf), "[%Y-%m-%d %X]", &tstruct);
+	SYSTEMTIME st;
+	GetLocalTime(&st);
 
-	return buf;
+	string str = Util::string_format("[%04d-%02d-%02d %02d:%02d:%02d.%03d]", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+
+	return str;
 }
 
 

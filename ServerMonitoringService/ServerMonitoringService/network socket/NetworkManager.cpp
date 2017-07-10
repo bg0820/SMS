@@ -5,7 +5,7 @@ int NetworkManager::Init()
 	if (!networkListener->Init(socket))
 		return 0;
 
-	networkListener->initSocketAddr(PORT, "127.0.0.1");
+	networkListener->initSocketAddr(PORT, "219.250.237.78");
 
 	return 1;
 }

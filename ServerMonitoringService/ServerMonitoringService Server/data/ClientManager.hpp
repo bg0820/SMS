@@ -13,7 +13,7 @@ using namespace std;
 class ClientManager
 {
 private:
-	hash_map<string, Client> clientList;
+	hash_map<SOCKADDR_IN, Client> clientList;
 	int clientCount = 0;
 public:
 	BOOLEAN add(const SOCKADDR_IN paramAddr, SOCKET paramClientSocket);

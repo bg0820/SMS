@@ -1,11 +1,11 @@
 #include "ClientManager.hpp"
 
 
-BOOLEAN ClientManager::add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
+BOOLEAN ClientManager::add(const SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
 {
 	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 
-	if (clientList.find(ip) == clientList.end()) // NOT FOUND
+	if (!isContainsKey(paramAddr)) // NOT FOUND
 	{
 		Client client;
 		client.socket = paramClientSocket;
@@ -13,7 +13,7 @@ BOOLEAN ClientManager::add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
 		client.recvBytes = 0;
 		client.sendBytes = 0;
 
-		pair<string, Client> hash = hash_map<string, Client>::value_type(ip, client);
+		pair<SOCKADDR_IN, Client> hash = hash_map<SOCKADDR_IN, Client>::value_type(paramAddr, client);
 		clientList.insert(hash);
 
 		string str = Util::string_format("Client Connected [%s], Count : %d", ip.c_str(), getCount());
@@ -25,46 +25,50 @@ BOOLEAN ClientManager::add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
 	return FALSE;
 }
 
-void ClientManager::remove(SOCKADDR_IN paramAddr)
+void ClientManager::remove(const SOCKADDR_IN paramAddr)
 {
 	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 
-	if (clientList.find(ip) != clientList.end()) // FOUND
+	if (isContainsKey(paramAddr)) // FOUND
 	{
-		hash_map<string, Client>::iterator Iter = clientList.lower_bound(ip);
-		Client client = Iter->second;
-		closesocket(client.socket);
-
+		Client client = getValue(paramAddr);
+		cout << inet_ntoa(client.addr.sin_addr) << endl;
+		
 		// 클라이언트 정보 얻기
 		SOCKADDR_IN socketAddr;
 		int nAddrLength = sizeof(socketAddr);
 		getpeername(client.socket, (SOCKADDR*)&socketAddr, &nAddrLength);
 
-		clientList.erase(ip); // remove
+		//closesocket(client.socket);
+
+		clientList.erase(paramAddr); // remove
 
 		string str = Util::string_format("Client DisConnected [%s], Count : %d", ip.c_str(), getCount());
 		Log::printLog(str);
 	}
 }
 
-BOOLEAN ClientManager::isContainsKey(SOCKADDR_IN paramAddr)
+
+BOOLEAN ClientManager::isContainsKey(const SOCKADDR_IN paramAddr)
 {
 	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 
-	if (clientList.find(ip) == clientList.end())
+	if (clientList.find(paramAddr) == clientList.end())
 		return FALSE;
 	else
 		return TRUE;
 }
 
-Client ClientManager::getValue(SOCKADDR_IN paramAddr)
+Client ClientManager::getValue(const SOCKADDR_IN paramAddr)
 {
 	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 
-	hash_map<string, Client>::iterator Iter = clientList.lower_bound(ip);
-	Client client = Iter->second;
+	hash_map<SOCKADDR_IN, Client>::iterator clientFind = clientList.find(paramAddr);
 
+	// if (client is Exist)
+	Client client = clientFind->second;
 	return client;
+
 }
 
 int ClientManager::getCount()
