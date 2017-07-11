@@ -1,5 +1,6 @@
 # SMS - Server Monitoring Service
 
+### (this project is not a finished project.)
 ### Server Monitoring Service
 #### > SMS Agent
 #### > Data Server
