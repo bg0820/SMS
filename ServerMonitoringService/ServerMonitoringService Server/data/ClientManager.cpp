@@ -3,7 +3,7 @@
 
 Client* ClientManager::add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
 {
-	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
+	string ip = Util::format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 
 	Client *client = NULL;
 
@@ -17,7 +17,7 @@ Client* ClientManager::add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
 
 		clientList.insert(hash_map<string, Client*>::value_type(ip, client));
 
-		string str = Util::string_format("Client Connected [%s], Count : %d", ip.c_str(), getCount());
+		string str = Util::format("Client Connected [%s], Count : %d", ip.c_str(), getCount());
 		Log::printLog(str);
 
 		return client;
@@ -28,7 +28,7 @@ Client* ClientManager::add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
 
 Client* ClientManager::remove(SOCKADDR_IN paramAddr)
 {
-	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
+	string ip = Util::format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 	Client *client = NULL;
 
 	if (isContainsKey(paramAddr)) // FOUND
@@ -44,7 +44,7 @@ Client* ClientManager::remove(SOCKADDR_IN paramAddr)
 
 		clientList.erase(ip); // remove
 
-		string str = Util::string_format("Client DisConnected [%s], Count : %d", ip.c_str(), getCount());
+		string str = Util::format("Client DisConnected [%s], Count : %d", ip.c_str(), getCount());
 		Log::printLog(str);
 
 		return client;
@@ -56,7 +56,7 @@ Client* ClientManager::remove(SOCKADDR_IN paramAddr)
 
 BOOLEAN ClientManager::isContainsKey(SOCKADDR_IN paramAddr)
 {
-	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
+	string ip = Util::format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 
 	if (clientList.find(ip) == clientList.end())
 		return FALSE;
@@ -66,7 +66,7 @@ BOOLEAN ClientManager::isContainsKey(SOCKADDR_IN paramAddr)
 
 Client* ClientManager::getValue(SOCKADDR_IN paramAddr)
 {
-	string ip = Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
+	string ip = Util::format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 
 	Client* client = NULL;
 

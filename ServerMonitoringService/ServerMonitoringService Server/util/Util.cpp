@@ -5,19 +5,20 @@ string Util::currentDateTime()
 	SYSTEMTIME st;
 	GetLocalTime(&st);
 
-	string str = Util::string_format("[%04d-%02d-%02d %02d:%02d:%02d.%03d]", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+	string str = Util::format("[%04d-%02d-%02d %02d:%02d:%02d.%03d]", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
 
 	return str;
 }
 
-string Util::string_format(const string fmt_str, ...)
+
+string Util::format(const string fmt_str, ...)
 {
-	int final_n, n = ((int)fmt_str.size()) * 2; /* Reserve two times as much as the length of the fmt_str */
+	int final_n, n = ((int)fmt_str.size()) * 2;
 	string str;
 	unique_ptr<char[]> formatted;
 	va_list ap;
 	while (1) {
-		formatted.reset(new char[n]); /* Wrap the plain char array into the unique_ptr */
+		formatted.reset(new char[n]);
 		strcpy(&formatted[0], fmt_str.c_str());
 		va_start(ap, fmt_str);
 		final_n = vsnprintf(&formatted[0], n, fmt_str.c_str(), ap);
@@ -54,5 +55,5 @@ string Util::getLocalIp()
 
 string Util::getStringToAddr(SOCKADDR_IN paramAddr)
 {
-	return Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
+	return Util::format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 }

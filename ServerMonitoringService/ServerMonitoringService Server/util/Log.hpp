@@ -12,7 +12,7 @@ private:
 public:
 	static void printLog(string msg);
 	static void printErrLine(string file, int lineNumber, string msg);
-	static void errQuit(string title, string context);
+	static void showMsg(string title, string context);
 };
 
 #endif

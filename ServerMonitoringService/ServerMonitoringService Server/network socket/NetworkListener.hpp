@@ -21,20 +21,20 @@
 class NetworkListener
 {
 private:
+	TCHAR *serverIp;
+	USHORT serverPort;
 	WORD DllVersion = MAKEWORD(2, 2);
 	WSADATA wsa;
 	SOCKET serverSocket;
 	SOCKADDR_IN serverAddr;
 	int retValue;
-	TCHAR *ip;
-	USHORT port;
 private:
 	int Init(SOCKET &pSocket, SOCKADDR_IN &paramAddr, int &paramRetValue);
 	void initSocketAddr(BOOLEAN IPv6);
 public:
-	NetworkListener(TCHAR *ip, USHORT port) : ip(ip), port(port)
+	NetworkListener(TCHAR *ip, USHORT port) : serverIp(ip), serverPort(port)
 	{
-		this->Init(this->serverSocket, this->serverAddr, retValue);
+		this->Init(this->serverSocket, this->serverAddr, this->retValue);
 	}
 
 	~NetworkListener()
