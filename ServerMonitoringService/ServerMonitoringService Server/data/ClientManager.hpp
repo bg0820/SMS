@@ -13,13 +13,13 @@ using namespace std;
 class ClientManager
 {
 private:
-	hash_map<SOCKADDR_IN, Client> clientList;
+	hash_map<string, Client*> clientList;
 	int clientCount = 0;
 public:
-	BOOLEAN add(const SOCKADDR_IN paramAddr, SOCKET paramClientSocket);
-	void remove(const SOCKADDR_IN paramAddr);
-	BOOLEAN isContainsKey(const SOCKADDR_IN paramAddr);
-	Client getValue(const SOCKADDR_IN paramAddr);
+	Client* add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket);
+	Client* remove(SOCKADDR_IN paramAddr);
+	BOOLEAN isContainsKey(SOCKADDR_IN paramAddr);
+	Client* getValue(SOCKADDR_IN paramAddr);
 	//BOOLEAN isContainsValue(Client client);
 	int getCount();
 };

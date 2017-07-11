@@ -6,11 +6,12 @@
 #include <WinSock2.h>
 #include <Windows.h>
 #endif
+#include <thread>
 #include "../data/Client.hpp"
+#include "../data/ClientManager.hpp"
+#include <atlstr.h>
 
 #pragma comment(lib, "ws2_32.lib") // WinSock2 Lib
-
-using namespace std;
 
 #define RECEIVE_BUFFER_SIZE 1024
 #define SEND_BUFFER_SIZE 1024
@@ -20,18 +21,20 @@ using namespace std;
 class NetworkListener
 {
 private:
-	Client client[FD_SETSIZE];
-	WSADATA wsa;
-	SOCKADDR_IN addr;
 	WORD DllVersion = MAKEWORD(2, 2);
+	WSADATA wsa;
+	SOCKET serverSocket;
+	SOCKADDR_IN serverAddr;
+	int retValue;
 	TCHAR *ip;
 	USHORT port;
 private:
-	void initSocketAddr(SOCKADDR_IN &paramAddr, u_short port, const TCHAR *ip, BOOLEAN IPv6);
+	int Init(SOCKET &pSocket, SOCKADDR_IN &paramAddr, int &paramRetValue);
+	void initSocketAddr(BOOLEAN IPv6);
 public:
 	NetworkListener(TCHAR *ip, USHORT port) : ip(ip), port(port)
 	{
-
+		this->Init(this->serverSocket, this->serverAddr, retValue);
 	}
 
 	~NetworkListener()
@@ -39,8 +42,15 @@ public:
 		WSACleanup();
 	}
 
-	int Init(SOCKET &pSocket, SOCKADDR_IN &paramAddr, int &paramRetValue);
+	void clientProc(SOCKET client, SOCKADDR_IN paramAddr);
+	void networkProc(SOCKET serverSocket, SOCKADDR_IN paramAddr);
+	int getRetValue();
+	TCHAR* getIp();
+	USHORT getPort();
+	SOCKET getSocket();
+	SOCKADDR_IN getSockAddr();
 	int Disconnect(SOCKET socket);
+
 };
 
 #endif

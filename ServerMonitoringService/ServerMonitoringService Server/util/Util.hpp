@@ -17,6 +17,7 @@ public:
 	static string currentDateTime();
 	static string string_format(const string fmt_str, ...);
 	static string getLocalIp();
+	string getStringToAddr(SOCKADDR_IN paramAddr);
 };
 
 #endif

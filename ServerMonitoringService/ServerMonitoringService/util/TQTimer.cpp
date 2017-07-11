@@ -13,7 +13,7 @@ void CALLBACK TQTimer::TimerProc(PVOID lpParameter, BOOLEAN TimerOrWaitFired)
 
 void TQTimer::Start()
 {
-	if (TQTimer::timerQueue)
+	if (TQTimer::timerQueue) // timer is exist
 		Stop();
 
 	TQTimer::timerQueue = CreateTimerQueue();

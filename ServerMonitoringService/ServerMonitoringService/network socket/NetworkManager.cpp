@@ -18,7 +18,7 @@ int NetworkManager::Start()
 	while (true)
 	{
 		//std::cout << "SEND()" << std::endl;
-		char * buf = "SADASDDAS";
+		char * buf = "1\0";
 
 		if (!NetworkListener::Send(socket, buf,10))
 		{
@@ -26,7 +26,7 @@ int NetworkManager::Start()
 		}
 		//cout << nResult << endl;
 
-		Sleep(100);
+		Sleep(1000);
 	}
 
 	return 1;

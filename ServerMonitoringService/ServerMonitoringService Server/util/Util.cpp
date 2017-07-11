@@ -10,7 +10,6 @@ string Util::currentDateTime()
 	return str;
 }
 
-
 string Util::string_format(const string fmt_str, ...)
 {
 	int final_n, n = ((int)fmt_str.size()) * 2; /* Reserve two times as much as the length of the fmt_str */
@@ -51,4 +50,9 @@ string Util::getLocalIp()
 	}
 
 	return ip;
+}
+
+string Util::getStringToAddr(SOCKADDR_IN paramAddr)
+{
+	return Util::string_format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 }
