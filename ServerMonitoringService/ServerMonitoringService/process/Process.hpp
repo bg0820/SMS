@@ -45,6 +45,7 @@ public:
 		// strcpy_s(Multi-Byte) -> wcscpy_s(UNICODE)
 		strcpy_s(name, initName());
 		strcpy_s(path, initPath());
+		// commadLine add
 		commandLine = initCommandLine();
 	}
 
