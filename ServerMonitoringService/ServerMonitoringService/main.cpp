@@ -38,18 +38,21 @@ void onShellExecute()
 		// else if (dwStatus == ERROR_FILE_NOT_FOUND) { // TODO : lpFile is not founded; }
 	}
 }
+#include "process/Process.hpp"
 
 void mainStart()
 {
+	//Process pro = Process(6908);
+	/*
 	NetworkManager *networkManager;
 	networkManager = new NetworkManager();
 	networkManager->Init();
-	networkManager->Start();
+	networkManager->Start();*/
 
 	system("pause");
 }
 
-
+/*
 int main(int argc, char* argv[])
 {
 	if (IsUserAnAdmin())
@@ -63,3 +66,4 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+*/

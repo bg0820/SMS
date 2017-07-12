@@ -4,6 +4,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <Psapi.h>
+#include <vector>
 #include "Process.hpp"
 
 #pragma comment(lib, "psapi.lib")
@@ -15,11 +16,26 @@ typedef unsigned long       DWORD;
 class ProcessList
 {
 private:
-	DWORD processList[1024];
+	int processListCount = 0;
+	DWORD *processList;
 	DWORD processListSize = NULL;
-
 public:
-	int Update(); // process list update
+	ProcessList()
+	{
+		//processList.reserve(128);
+		processListCount = 128;
+		processList = new DWORD[processListCount];
+	}
+
+	~ProcessList()
+	{
+		if (processList)
+		{
+			delete[] processList;
+			processList = nullptr;
+		}
+	}
+	void Update(); // process list update
 	int getCount(); // update -> return value is processList count
 	Process getProcess(const DWORD processId); // return value is processId index to Process Obj
 	int getPID(const int i); // return value is num i to process PID value

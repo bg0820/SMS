@@ -12,7 +12,7 @@
 
 using namespace std;
 
-#define PORT 41850
+#define SERVER_PORT        41850
 #define LOOPBACK TEXT("127.0.0.1")
 
 class NetworkManager

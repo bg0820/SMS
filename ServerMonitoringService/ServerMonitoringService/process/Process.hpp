@@ -28,7 +28,7 @@ private:
 	HANDLE handle;
 	TCHAR name[MAX_PATH];
 	TCHAR path[MAX_PATH];
-	TCHAR commandLine[MAX_PATH];
+	TCHAR *commandLine;
 private:
 	HANDLE getHandleFromPID();
 	// TODO initFunc retrun Type TCHAR* > int, initName(TCHAR *val)
@@ -45,13 +45,20 @@ public:
 		// strcpy_s(Multi-Byte) -> wcscpy_s(UNICODE)
 		strcpy_s(name, initName());
 		strcpy_s(path, initPath());
-		strcpy_s(commandLine, initCommandLine());
+		commandLine = initCommandLine();
 	}
 
 	~Process()
 	{
 		if (handle != INVALID_HANDLE_VALUE)
 			CloseHandle(handle);
+
+		if (commandLine)
+		{
+			delete[] commandLine;
+			commandLine = nullptr;
+		}
+
 	}
 
 	DWORD getPid();

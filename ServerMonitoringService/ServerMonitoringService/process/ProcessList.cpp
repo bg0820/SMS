@@ -1,12 +1,33 @@
 #include "ProcessList.hpp"
 
-int ProcessList::Update()
+void ProcessList::Update()
 {
-	if (EnumProcesses(processList, sizeof(processList), &processListSize) == 0) // EnumProcesses func FAILED return value is zero;
-		return 0;
+	while (true)
+	{
+		DWORD cb = sizeof(DWORD) * processListCount;
+		DWORD cbNeeded = NULL;
 
-	return 1; // SUCCESS
+		EnumProcesses(this->processList, cb, &cbNeeded);
+
+		if (cb == cbNeeded)
+		{
+			if (this->processList)
+			{
+				delete[] this->processList;
+				this->processList = nullptr;
+			}
+
+			this->processListCount += 128;
+			this->processList = new DWORD[this->processListCount];
+		}
+		else
+		{
+			this->processListSize = cbNeeded;
+			break;
+		}			
+	}
 }
+
 
 int ProcessList::getCount()
 {

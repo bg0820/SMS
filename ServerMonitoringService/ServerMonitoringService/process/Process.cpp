@@ -75,6 +75,7 @@ PVOID Process::GetPebAddress(HANDLE ProcessHandle)
 
 TCHAR* Process::initCommandLine()
 {
+	int nResult = 1;
 	PVOID pebAddress;
 	PVOID rtlUserProcParamsAddress;
 	UNICODE_STRING commandLine;
@@ -82,50 +83,39 @@ TCHAR* Process::initCommandLine()
 
 	pebAddress = GetPebAddress(Process::handle);
 
-	/* get the address of ProcessParameters */
 	if (!ReadProcessMemory(Process::handle, &(((_PEB*)pebAddress)->ProcessParameters), &rtlUserProcParamsAddress, sizeof(PVOID), NULL))
-	{
-		printf("Could not read the address of ProcessParameters!\n");
-		GetLastError();
-	}
+		nResult = -1;
 
-	/* read the CommandLine UNICODE_STRING structure */
 	if (!ReadProcessMemory(Process::handle, &(((_RTL_USER_PROCESS_PARAMETERS*)rtlUserProcParamsAddress)->CommandLine), &commandLine, sizeof(commandLine), NULL))
-	{
-		printf("Could not read CommandLine!\n");
-		GetLastError();
-	}
+		nResult = -2;
 
-	/* allocate memory to hold the command line */
 	commandLineContents = new TCHAR[commandLine.Length];
 
-	/* read the command line */
 	if (!ReadProcessMemory(Process::handle, commandLine.Buffer, commandLineContents, commandLine.Length, NULL))
-	{
-		printf("Could not read the command line string!\n");
-		GetLastError();
-	}
+		nResult = -3;
 
-	/* print it */
-	/* the length specifier is in characters, but commandLine.Length is in bytes */
-	/* a WCHAR is 2 bytes */
-	cout << commandLine.Length / 2 << endl;
-	cout << commandLineContents << endl;
+	int size = commandLine.Length / 2;
+	TCHAR *strCommandLine = new TCHAR[size + 1];
+	memset(strCommandLine, NULL, size);
+
 	for (int i = 0; i < commandLine.Length; i++)
 	{
-		cout << (int)commandLineContents[i] << endl;
+		if (commandLineContents[i] != NULL)
+			strCommandLine[i / 2] = commandLineContents[i];
 	}
-
-	cout << commandLineContents << endl;
-	printf("%.*S\n", commandLine.Length / 2, commandLineContents);
+	strCommandLine[size] = commandLineContents[commandLine.Length - 1];
 
 	if (commandLineContents)
 	{
-		delete commandLineContents;
+		delete[] commandLineContents;
 		commandLineContents = nullptr;
 	}
 
-	return "";
+
+	if (nResult != 1)
+		throw nResult;
+
+	return strCommandLine;
 }
 
 // When you are finished with the handle, be sure to close it using the CloseHandle function.
@@ -133,7 +123,7 @@ HANDLE Process::getHandleFromPID()
 {
 	HANDLE handle;
 	if ((handle = OpenProcess(MAXIMUM_ALLOWED, false, Process::pid)) == NULL)
-		throw -1;
+		throw - 1;
 
 	return handle;
 }

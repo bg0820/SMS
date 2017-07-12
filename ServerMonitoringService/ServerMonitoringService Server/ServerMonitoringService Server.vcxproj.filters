@@ -39,9 +39,6 @@
     <ClCompile Include="data\ClientManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="thread\ThreadInfo.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util\StopWatch.hpp">
@@ -63,9 +60,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="data\Client.hpp">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="thread\ThreadInfo.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

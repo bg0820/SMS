@@ -115,6 +115,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="data\DataManager.hpp" />
     <ClInclude Include="main.hpp" />
     <ClInclude Include="network socket\NetworkListener.hpp" />
     <ClInclude Include="network socket\NetworkManager.hpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="util\TQTimer.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="data\DataManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="network socket\NetworkListener.cpp" />
     <ClCompile Include="network socket\NetworkManager.cpp" />
