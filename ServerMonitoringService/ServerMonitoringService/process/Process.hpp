@@ -39,27 +39,32 @@ private:
 public:
 	Process(const DWORD pid = 0) : pid(pid)
 	{
-		// fixed value Init
-		Process::handle = getHandleFromPID();
+		if (pid != 0)
+		{
+			// fixed value Init
+			Process::handle = getHandleFromPID();
 
-		// strcpy_s(Multi-Byte) -> wcscpy_s(UNICODE)
-		strcpy_s(name, initName());
-		strcpy_s(path, initPath());
-		// commadLine add
-		commandLine = initCommandLine();
+			// strcpy_s(Multi-Byte) -> wcscpy_s(UNICODE)
+			strcpy_s(name, initName());
+			strcpy_s(path, initPath());
+			// commadLine add
+			commandLine = initCommandLine();
+		}
 	}
 
 	~Process()
 	{
-		if (handle != INVALID_HANDLE_VALUE)
-			CloseHandle(handle);
-
-		if (commandLine)
+		if (pid != 0)
 		{
-			delete[] commandLine;
-			commandLine = nullptr;
-		}
+			if (handle != INVALID_HANDLE_VALUE)
+				CloseHandle(handle);
 
+			if (commandLine)
+			{
+				delete[] commandLine;
+				commandLine = nullptr;
+			}
+		}
 	}
 
 	DWORD getPid();

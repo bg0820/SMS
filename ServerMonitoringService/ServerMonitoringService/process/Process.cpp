@@ -8,7 +8,7 @@ TCHAR* Process::initName()
 	int nResult = 1;
 
 	TCHAR szProcessName[MAX_PATH];
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Process::pid);
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
 
 	if (hProcess != NULL)
 	{
@@ -38,7 +38,7 @@ TCHAR* Process::initPath()
 	int nResult = 1;
 
 	TCHAR szProcessPath[MAX_PATH];
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Process::pid);
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
 
 	if (hProcess != NULL)
 	{
@@ -81,17 +81,17 @@ TCHAR* Process::initCommandLine()
 	UNICODE_STRING commandLine;
 	TCHAR *commandLineContents;
 
-	pebAddress = GetPebAddress(Process::handle);
+	pebAddress = GetPebAddress(this->handle);
 
-	if (!ReadProcessMemory(Process::handle, &(((_PEB*)pebAddress)->ProcessParameters), &rtlUserProcParamsAddress, sizeof(PVOID), NULL))
+	if (!ReadProcessMemory(this->handle, &(((_PEB*)pebAddress)->ProcessParameters), &rtlUserProcParamsAddress, sizeof(PVOID), NULL))
 		nResult = -1;
 
-	if (!ReadProcessMemory(Process::handle, &(((_RTL_USER_PROCESS_PARAMETERS*)rtlUserProcParamsAddress)->CommandLine), &commandLine, sizeof(commandLine), NULL))
+	if (!ReadProcessMemory(this->handle, &(((_RTL_USER_PROCESS_PARAMETERS*)rtlUserProcParamsAddress)->CommandLine), &commandLine, sizeof(commandLine), NULL))
 		nResult = -2;
 
 	commandLineContents = new TCHAR[commandLine.Length];
 
-	if (!ReadProcessMemory(Process::handle, commandLine.Buffer, commandLineContents, commandLine.Length, NULL))
+	if (!ReadProcessMemory(this->handle, commandLine.Buffer, commandLineContents, commandLine.Length, NULL))
 		nResult = -3;
 
 	int size = commandLine.Length / 2;
@@ -121,8 +121,9 @@ TCHAR* Process::initCommandLine()
 // When you are finished with the handle, be sure to close it using the CloseHandle function.
 HANDLE Process::getHandleFromPID()
 {
+	cout << this->pid << endl;
 	HANDLE handle;
-	if ((handle = OpenProcess(MAXIMUM_ALLOWED, false, Process::pid)) == NULL)
+	if ((handle = OpenProcess(MAXIMUM_ALLOWED, false, this->pid)) == NULL)
 		throw - 1;
 
 	return handle;
@@ -130,29 +131,29 @@ HANDLE Process::getHandleFromPID()
 
 DWORD Process::getPid()
 {
-	return Process::pid;
+	return this->pid;
 }
 
 TCHAR * Process::getName()
 {
-	return Process::name;
+	return this->name;
 }
 
 TCHAR * Process::getPath()
 {
-	return Process::path;
+	return this->path;
 }
 
 TCHAR * Process::getCommandLine()
 {
-	return Process::commandLine;
+	return this->commandLine;
 }
 
 int Process::getHandleCount(DWORD &val)
 {
 	DWORD pCount;
 
-	if (GetProcessHandleCount(Process::handle, &pCount) == 0)
+	if (GetProcessHandleCount(this->handle, &pCount) == 0)
 		return 0;
 
 	val = pCount;
@@ -191,7 +192,7 @@ int Process::getThreadCount(int &paramTotalThreadCount, int &paramCurrentProcess
 	do // Thread32First
 	{
 		totalThreadCount++;
-		if (te32.th32OwnerProcessID == Process::pid)
+		if (te32.th32OwnerProcessID == this->pid)
 		{
 			processThreadCount++;
 			//printf(TEXT("\n     THREAD ID      = 0x%08X"), te32.th32ThreadID);
@@ -225,7 +226,7 @@ int Process::getMemoryUsage(DWORD &val)
 	DWORD dPrivatePages = 0;
 	DWORD dPageTablePages = 0;
 
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Process::pid);
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
 
 	if (hProcess == NULL)
 		nResult = 0;
@@ -299,7 +300,7 @@ int Process::getCpuUsage(double &val)
 	GetSystemInfo(&sysInfo);
 	int numProcessors = sysInfo.dwNumberOfProcessors;
 
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, Process::pid);
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
 
 	if (hProcess == NULL)
 		nResult = 0;
