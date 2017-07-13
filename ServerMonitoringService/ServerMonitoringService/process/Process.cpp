@@ -135,25 +135,20 @@ TCHAR* Process::initCommandLine()
 	return strCommandLine;
 }
 
-ULONG Process::getPidFromHwnd(HWND hwnd)
-{
-	ULONG idProc;
-	GetWindowThreadProcessId(hwnd, &idProc);
-	return idProc;
-}
-
 HWND Process::getHwndFromPid()
 {
-	HWND hwnd = FindWindow(NULL, NULL);
-
-	while (hwnd != NULL)
+	HWND hWnd = FindWindow(NULL, NULL);
+	while (hWnd != NULL)
 	{
-		if (GetParent(hwnd) == NULL)
-			if (this->pid == getPidFromHwnd(hwnd))
-				return hwnd;
-		hwnd = GetWindow(hwnd, GW_HWNDNEXT); // Next Window Handle
-	}
+		if (GetParent(hWnd) == NULL) {
+			DWORD dwProcId;
+			GetWindowThreadProcessId(hWnd, &dwProcId);
 
+			if (this->pid == dwProcId)
+				return hWnd;			
+		}
+		hWnd = GetWindow(hWnd, GW_HWNDNEXT);
+	}
 	return NULL;
 }
 

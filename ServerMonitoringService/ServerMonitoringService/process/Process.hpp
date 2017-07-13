@@ -34,7 +34,6 @@ private:
 private:
 	HANDLE handleFromPid();
 	HWND getHwndFromPid();
-	ULONG getPidFromHwnd(HWND hwnd);
 	HICON initIcon(BOOLEAN LargeIcon = FALSE);
 	HANDLE getHandleFromPid();
 	TCHAR* initName();
