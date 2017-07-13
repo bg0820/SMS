@@ -84,7 +84,7 @@ int SystemDiskIO::Start()
 {
 	if (this->tqTimer == NULL)
 	{
-		this->tqTimer = new TQTimer(std::bind(&this->CallbackProc, this));
+		this->tqTimer = new TQTimer(std::bind(&SystemDiskIO::CallbackProc, this));
 		this->tqTimer->setInterval(1000); // 1Sec
 		this->tqTimer->Start();
 	}
@@ -122,7 +122,7 @@ int SystemDiskIO::getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerform
 	TCHAR * tc = strtok_s(path_array, TEXT(":"), &context);
 	string strPath;
 	strPath = "\\\\.\\C:";
-	stringReplace(strPath, "C", tc);
+	Util::stringReplace(strPath, "C", tc);
 
 	HANDLE handle = CreateFile(strPath.c_str(),
 		FILE_READ_ATTRIBUTES,

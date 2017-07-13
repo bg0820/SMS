@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "../util/TQTimer.hpp"
+#include "../util/Util.hpp"
 #include <Windows.h>
 
 #define INTERVAL 500
