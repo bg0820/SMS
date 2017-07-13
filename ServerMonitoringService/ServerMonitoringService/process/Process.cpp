@@ -20,9 +20,7 @@ TCHAR* Process::initName()
 			nResult = 0;
 	}
 	else
-	{
 		nResult = 0;
-	}
 
 	if (hProcess != INVALID_HANDLE_VALUE)
 		CloseHandle(hProcess);
@@ -49,9 +47,7 @@ TCHAR* Process::initPath()
 			nResult = 0;
 	}
 	else
-	{
 		nResult = 0;
-	}
 
 	if (hProcess != INVALID_HANDLE_VALUE)
 		CloseHandle(hProcess);
@@ -167,6 +163,65 @@ TCHAR * Process::initOwner()
 		return "";
 
 	return ownerName;
+}
+
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	Process process = Process(3360);
+	
+	system("pause");
+}
+
+TCHAR * Process::initDescription()
+{
+	LPCVOID pBlock;
+
+	// 버전정보에 포함된 FileDescription 정보를 얻어서 출력한다.
+	/*if (VerQueryValue(pBlock, "\\StringFileInfo\\041204b0\\FileDescription", (void **)&p_data, &data_size)) {
+		SetDlgItemText(IDC_FILE_DEscRIPTION_EDIT, p_data);
+	}*/
+
+	return nullptr;
+}
+
+/*
+char* timeToString(struct tm *t) {
+	static char s[20];
+
+	sprintf(s, "%04d-%02d-%02d %02d:%02d:%02d",
+		t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
+		t->tm_hour, t->tm_min, t->tm_sec
+	);
+
+	return s;
+}*/
+
+tm Process::initCreateTime()
+{
+	FILETIME createTime, exitTime, kernelTime, userTime ;
+	GetProcessTimes(this->handle, &createTime, &exitTime, &kernelTime, &userTime);
+
+	FILETIME localFileTime;
+	FileTimeToLocalFileTime(&createTime, &localFileTime);
+	SYSTEMTIME sysTime;
+	FileTimeToSystemTime(&localFileTime, &sysTime);
+	struct tm tmTime = { 0 };
+	tmTime.tm_year = sysTime.wYear - 1900;
+	tmTime.tm_mon = sysTime.wMonth - 1;
+	tmTime.tm_mday = sysTime.wDay;
+	tmTime.tm_hour = sysTime.wHour;
+	tmTime.tm_min = sysTime.wMinute;
+	tmTime.tm_sec = sysTime.wSecond;
+	tmTime.tm_wday = 0;
+	tmTime.tm_yday = 0;
+	tmTime.tm_isdst = -1;
+
+	return tmTime;
 }
 
 HWND Process::getHwndFromPid()

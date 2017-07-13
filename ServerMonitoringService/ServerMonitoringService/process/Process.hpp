@@ -5,6 +5,7 @@
 #include <Psapi.h>
 #include <tlhelp32.h>
 #include "Winternl.h"
+#include <time.h>
 
 #pragma comment(lib, "psapi.lib")
 
@@ -32,6 +33,7 @@ private:
 	TCHAR path[MAX_PATH];
 	TCHAR owner[MAX_PATH];
 	TCHAR *commandLine = NULL;
+	tm createTime = { 0 };
 private:
 	HWND getHwndFromPid();
 	HANDLE getHandleFromPid();
@@ -40,6 +42,8 @@ private:
 	TCHAR* initPath();
 	TCHAR* initCommandLine();
 	TCHAR* initOwner();
+	TCHAR* initDescription();
+	tm initCreateTime();
 public:
 	Process(const DWORD pid = 0) : pid(pid)
 	{
@@ -53,6 +57,7 @@ public:
 		commandLine = initCommandLine();
 
 		icon = initIcon(TRUE);
+		this->tm = initCreateTime();
 	}
 
 	~Process()

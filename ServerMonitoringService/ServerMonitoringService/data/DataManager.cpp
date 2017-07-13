@@ -1,10 +1,10 @@
 #include "DataManager.hpp"
 
-int main()
-{
-	DataManager dataManager;
-	SystemInfo* system = dataManager.getSystem();
-}
+//int main()
+//{
+//	DataManager dataManager;
+//	SystemInfo* system = dataManager.getSystem();
+//}
 
 void DataManager::Update()
 {
