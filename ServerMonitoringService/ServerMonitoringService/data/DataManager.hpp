@@ -49,6 +49,13 @@ private:
 	SystemMemory systemMemory;
 	SystemNetwork systemNetwork;
 	SystemOS systemOS;
+
+	TQTimer *tqTimer;
+private:
+	void Update();
+	void Start();
+	void Stop();
+	void CallbackProc();
 public:
 	DataManager()
 	{
@@ -59,8 +66,12 @@ public:
 		systemInfo->userName = systemOS.getUserName();
 		systemInfo->osVersion = systemOS.getOSVersionName();
 
+		// first Call
+		this->Update();
+
 		// Start Function Call
 		systemDiskIO.Start();
+		this->Start();
 	}
 
 	~DataManager()
@@ -88,9 +99,11 @@ public:
 			delete systemInfo;
 			systemInfo = nullptr;
 		}
+
+		systemDiskIO.Stop();
+		this->Stop();
 	}
 
-	void Update();
 	SystemInfo* getSystem();
 };
 

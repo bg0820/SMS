@@ -174,12 +174,13 @@ int SystemDiskIO::Update()
 		this->diskList = nullptr;
 	}
 
+	// get Partition List
 	nResult = getPartitionList(this->strDiskList, this->diskList);
-	diskCount = strDiskList.size();
+	this->diskCount = strDiskList.size();
 
 	if (nResult)
 	{
-		for (int i = 0; i < this->strDiskList.size(); i++)
+		for (int i = 0; i < this->diskCount; i++)
 		{
 			// nResult = 0; if Then nResult == false 
 			if (!getDiskInfo(this->strDiskList[i].c_str(), this->diskList[i]))

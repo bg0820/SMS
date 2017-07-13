@@ -1,12 +1,10 @@
 #include "DataManager.hpp"
 
-//int main()
-//{
-////	DataManager dataManager;
-////	dataManager.Update();
-//
-////	dataManage
-//}
+int main()
+{
+	DataManager dataManager;
+	dataManager.
+}
 
 void DataManager::Update()
 {
@@ -27,6 +25,7 @@ void DataManager::Update()
 	systemCpu.getIdleUsage(systemInfo->cpuIdleVal);
 
 	// Disk Usage Update
+	systemDiskIO.Update();
 	systemInfo->disk = systemDiskIO.getDiskList(systemInfo->diskCount);
 
 	// Memory Update
@@ -38,6 +37,34 @@ void DataManager::Update()
 	 // Network Update
 	 systemNetwork.getConnectionTable(systemInfo->networkConnection, systemInfo->networkConnectionCount);
 	 systemNetwork.getInterfaces(systemInfo->adapterInfo, systemInfo->adapterCount);
+}
+
+
+void DataManager::CallbackProc()
+{
+	// 1Sec Update
+	Update();
+}
+
+void DataManager::Start()
+{
+	if (this->tqTimer == NULL)
+	{
+		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
+		this->tqTimer->setInterval(1000); // 1Sec
+		this->tqTimer->Start();
+	}
+}
+
+void DataManager::Stop()
+{
+	if (this->tqTimer)
+	{
+		this->tqTimer->Stop();
+
+		delete this->tqTimer;
+		this->tqTimer = nullptr;
+	}
 }
 
 SystemInfo* DataManager::getSystem()
