@@ -27,9 +27,14 @@ typedef struct system
 	string osVersion;
 
 	Disk *disk = NULL;
+	int diskCount = 0;
 	Process *process = NULL;
+	int processCount = 0;
 	NetworkConnection *networkConnection = NULL;
 	ULONG networkConnectionCount;
+
+	PIP_ADAPTER_INFO adapterInfo;
+	int adapterCount = 0;
 
 }System;
 

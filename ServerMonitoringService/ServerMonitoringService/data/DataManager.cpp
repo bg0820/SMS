@@ -10,11 +10,11 @@ void DataManager::Update()
 {
 	// ProcessList Update
 	processListObj.Update();
-	int processCount = processListObj.getCount();
+	system->processCount = processListObj.getCount();
 
 	// Process Update
-	system->process = new Process[processCount];
-	for (int i = 0; i < processCount; i++)
+	system->process = new Process[system->processCount];
+	for (int i = 0; i < system->processCount; i++)
 	{
 		int pid = processListObj.getPID(i);
 		system->process[i] = processListObj.getProcess(pid);
@@ -25,14 +25,7 @@ void DataManager::Update()
 	systemCpu.getIdleUsage(system->cpuIdleVal);
 
 	// Disk Usage Update
-	int count = 0;
-	system->disk = systemDiskIO.getDiskList(count);
-	
-	/*for (int i = 0; i < count; i++)
-	{
-	cout << "Read/sec : " << disk[i].readSec / 1024.0 << "kb/s" << endl;
-	cout << "Write/sec : " << disk[i].writeSec / 1024.0 << "kb/s" << endl;
-	}*/
+	system->disk = systemDiskIO.getDiskList(system->diskCount);
 
 	// Memory Update
 	 systemMemory.getFreeByte(system->memoryFreeByte);
@@ -40,35 +33,9 @@ void DataManager::Update()
 	 systemMemory.getTotalByte(system->memoryTotalByte);
 	 systemMemory.getLoadPercent(system->memoryLoadPercent);
 
+	 // Network Update
 	 systemNetwork.getConnectionTable(system->networkConnection, system->networkConnectionCount);
-
-	 for (ULONG i = 0; i < count; i++)
-	 {
-		cout << system->networkConnection[i].processID << endl;
-	 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	 systemNetwork.getInterfaces(system->adapterInfo, system->adapterCount);
 
 
 }
