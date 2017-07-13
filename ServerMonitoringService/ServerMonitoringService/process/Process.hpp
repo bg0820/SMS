@@ -30,16 +30,14 @@ private:
 	HWND hWnd = NULL;
 	TCHAR name[MAX_PATH];
 	TCHAR path[MAX_PATH];
-	TCHAR *commandLine;
+	TCHAR *commandLine = NULL;
 private:
-	HANDLE handleFromPid();
 	HWND getHwndFromPid();
-	HICON initIcon(BOOLEAN LargeIcon = FALSE);
 	HANDLE getHandleFromPid();
+	HICON initIcon(BOOLEAN LargeIcon = FALSE);
 	TCHAR* initName();
 	TCHAR* initPath();
 	TCHAR* initCommandLine();
-	PVOID GetPebAddress(HANDLE ProcessHandle);
 public:
 	Process(const DWORD pid = 0) : pid(pid)
 	{

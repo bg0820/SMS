@@ -76,17 +76,6 @@ HICON Process::initIcon(BOOLEAN LargeIcon)
 	return shFileInfo.hIcon;
 }
 
-
-PVOID Process::GetPebAddress(HANDLE ProcessHandle)
-{
-	_NtQueryInformationProcess NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationProcess");
-	PROCESS_BASIC_INFORMATION pbi;
-
-	NtQueryInformationProcess(ProcessHandle, 0, &pbi, sizeof(pbi), NULL);
-
-	return pbi.PebBaseAddress;
-}
-
 TCHAR* Process::initCommandLine()
 {
 	if (this->handle == NULL)
@@ -98,7 +87,10 @@ TCHAR* Process::initCommandLine()
 	UNICODE_STRING commandLine;
 	TCHAR *commandLineContents;
 
-	pebAddress = GetPebAddress(this->handle);
+	_NtQueryInformationProcess NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationProcess");
+	PROCESS_BASIC_INFORMATION processBasicInformation;
+	NtQueryInformationProcess(this->handle, 0, &processBasicInformation, sizeof(processBasicInformation), NULL);
+	pebAddress = processBasicInformation.PebBaseAddress;
 
 	if (!ReadProcessMemory(this->handle, &(((_PEB*)pebAddress)->ProcessParameters), &rtlUserProcParamsAddress, sizeof(PVOID), NULL))
 		nResult = -1;
@@ -145,7 +137,7 @@ HWND Process::getHwndFromPid()
 			GetWindowThreadProcessId(hWnd, &dwProcId);
 
 			if (this->pid == dwProcId)
-				return hWnd;			
+				return hWnd;
 		}
 		hWnd = GetWindow(hWnd, GW_HWNDNEXT);
 	}
@@ -182,6 +174,11 @@ TCHAR * Process::getCommandLine()
 	return this->commandLine;
 }
 
+HICON Process::getIcon()
+{
+	return this->icon;
+}
+
 BOOLEAN Process::isRunning()
 {
 	DWORD_PTR dw = 0;
@@ -191,7 +188,7 @@ BOOLEAN Process::isRunning()
 	{
 		return TRUE; // process is running
 	}
-	else 
+	else
 	{
 		if (GetLastError() == ERROR_TIMEOUT) {
 			return FALSE; // process is not responsed
