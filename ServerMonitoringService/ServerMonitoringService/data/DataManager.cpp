@@ -13,7 +13,4 @@ void DataManager::Update()
 		int pid = processListObj.getPID(i);
 		system.process[i] = processListObj.getProcess(pid);
 	}
-
-	// gyu0560
-	// bg0820
 }
