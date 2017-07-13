@@ -12,10 +12,10 @@ private:
 private:
 	int memoryCall();
 public:
-	int getLoadPercent(int &val);
-	int getUsage(double &val);
-	int getTotalByte(DWORD &val);
-	int getFreeByte(DWORD &val);
+	int getLoadPercent(DWORD &val);
+	int getUsage(DWORDLONG &val);
+	int getTotalByte(DWORDLONG &val);
+	int getFreeByte(DWORDLONG &val);
 };
 
 #endif
