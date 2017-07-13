@@ -25,13 +25,18 @@ class Process
 {
 private:
 	DWORD pid;
-	HANDLE handle;
+	HICON icon;
+	HANDLE handle = NULL;
+	HWND hWnd = NULL;
 	TCHAR name[MAX_PATH];
 	TCHAR path[MAX_PATH];
 	TCHAR *commandLine;
 private:
-	HANDLE getHandleFromPID();
-	// TODO initFunc retrun Type TCHAR* > int, initName(TCHAR *val)
+	HANDLE handleFromPid();
+	HWND getHwndFromPid();
+	ULONG getPidFromHwnd(HWND hwnd);
+	HICON initIcon(BOOLEAN LargeIcon = FALSE);
+	HANDLE getHandleFromPid();
 	TCHAR* initName();
 	TCHAR* initPath();
 	TCHAR* initCommandLine();
@@ -39,38 +44,35 @@ private:
 public:
 	Process(const DWORD pid = 0) : pid(pid)
 	{
-		if (pid != 0)
-		{
-			// fixed value Init
-			Process::handle = getHandleFromPID();
+		// fixed value Init
+		this->handle = getHandleFromPid();
+		this->hWnd = getHwndFromPid();
 
-			// strcpy_s(Multi-Byte) -> wcscpy_s(UNICODE)
-			strcpy_s(name, initName());
-			strcpy_s(path, initPath());
-			// commadLine add
-			commandLine = initCommandLine();
-		}
+		strcpy_s(name, initName());
+		strcpy_s(path, initPath());
+		commandLine = initCommandLine();
+
+		icon = initIcon(TRUE);
 	}
 
 	~Process()
 	{
-		if (pid != 0)
-		{
-			if (handle != INVALID_HANDLE_VALUE)
-				CloseHandle(handle);
+		if (handle != INVALID_HANDLE_VALUE)
+			CloseHandle(handle);
 
-			if (commandLine)
-			{
-				delete[] commandLine;
-				commandLine = nullptr;
-			}
+		if (commandLine)
+		{
+			delete[] commandLine;
+			commandLine = nullptr;
 		}
 	}
 
+	BOOLEAN isRunning();
 	DWORD getPid();
 	TCHAR* getName();
 	TCHAR* getPath();
 	TCHAR* getCommandLine();
+	HICON getIcon();
 
 	int getHandleCount(DWORD &val);
 	int getThreadCount(int &paramTotalThreadCount, int &paramCurrentProcessThreadCount);

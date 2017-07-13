@@ -37,7 +37,7 @@ public:
 	}
 	void Update(); // process list update
 	int getCount(); // update -> return value is processList count
-	Process getProcess(const DWORD processId); // return value is processId index to Process Obj
+	Process* getProcess(const DWORD processId); // return value is processId index to Process Obj
 	int getPID(const int i); // return value is num i to process PID value
 							 // TODO: function Add
 							 // getProcessUser, getProcessStatus, getProcessNetworkSend, 

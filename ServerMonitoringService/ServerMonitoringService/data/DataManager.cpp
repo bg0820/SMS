@@ -1,12 +1,12 @@
 #include "DataManager.hpp"
 
-int main()
-{
-	DataManager dataManager;
-	dataManager.Update();
-
-//	dataManage
-}
+//int main()
+//{
+////	DataManager dataManager;
+////	dataManager.Update();
+//
+////	dataManage
+//}
 
 void DataManager::Update()
 {
@@ -19,7 +19,7 @@ void DataManager::Update()
 	for (int i = 0; i < systemInfo->processCount; i++)
 	{
 		int pid = processListObj.getPID(i);
-		systemInfo->process[i] = processListObj.getProcess(pid);
+		systemInfo->process[i] = Process(pid);
 	}
 
 	// Cpu Usage Update

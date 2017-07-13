@@ -63,6 +63,23 @@ TCHAR* Process::initPath()
 }
 
 
+
+HICON Process::initIcon(BOOLEAN LargeIcon)
+{
+	SHFILEINFO shFileInfo;
+
+	ZeroMemory(&shFileInfo, sizeof(SHFILEINFO));
+
+	ULONG iconFlag;
+	iconFlag = LargeIcon ? SHGFI_LARGEICON : SHGFI_SMALLICON;
+
+	if (!SHGetFileInfo(this->path, 0, &shFileInfo, sizeof(SHFILEINFO), SHGFI_ICON | iconFlag))
+		return NULL;
+
+	return shFileInfo.hIcon;
+}
+
+
 PVOID Process::GetPebAddress(HANDLE ProcessHandle)
 {
 	_NtQueryInformationProcess NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationProcess");
@@ -118,10 +135,31 @@ TCHAR* Process::initCommandLine()
 	return strCommandLine;
 }
 
-// When you are finished with the handle, be sure to close it using the CloseHandle function.
-HANDLE Process::getHandleFromPID()
+ULONG Process::getPidFromHwnd(HWND hwnd)
 {
-	cout << this->pid << endl;
+	ULONG idProc;
+	GetWindowThreadProcessId(hwnd, &idProc);
+	return idProc;
+}
+
+HWND Process::getHwndFromPid()
+{
+	HWND hwnd = FindWindow(NULL, NULL);
+
+	while (hwnd != NULL)
+	{
+		if (GetParent(hwnd) == NULL)
+			if (this->pid == getPidFromHwnd(hwnd))
+				return hwnd;
+		hwnd = GetWindow(hwnd, GW_HWNDNEXT); // Next Window Handle
+	}
+
+	return NULL;
+}
+
+// When you are finished with the handle, be sure to close it using the CloseHandle function.
+HANDLE Process::getHandleFromPid()
+{
 	HANDLE handle;
 	if ((handle = OpenProcess(MAXIMUM_ALLOWED, false, this->pid)) == NULL)
 		throw - 1;
@@ -147,6 +185,23 @@ TCHAR * Process::getPath()
 TCHAR * Process::getCommandLine()
 {
 	return this->commandLine;
+}
+
+BOOLEAN Process::isRunning()
+{
+	DWORD_PTR dw = 0;
+
+	// TimeOut 2sec
+	if (SendMessageTimeout(this->hWnd, NULL, NULL, NULL, SMTO_NORMAL, 2000, &dw))
+	{
+		return TRUE; // process is running
+	}
+	else 
+	{
+		if (GetLastError() == ERROR_TIMEOUT) {
+			return FALSE; // process is not responsed
+		}
+	}
 }
 
 int Process::getHandleCount(DWORD &val)
