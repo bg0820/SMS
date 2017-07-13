@@ -50,12 +50,12 @@ public:
 		this->handle = getHandleFromPid();
 		this->hWnd = getHwndFromPid();
 		
-		strcpy_s(owner, initOwner());
-		strcpy_s(name, initName());
-		strcpy_s(path, initPath());
-		commandLine = initCommandLine();
+		strcpy_s(this->owner, initOwner());
+		strcpy_s(this->name, initName());
+		strcpy_s(this->path, initPath());
+		this->commandLine = initCommandLine();
 
-		icon = initIcon(TRUE);
+		this->icon = initIcon(TRUE);
 		this->createTime = initCreateTime();
 	}
 
