@@ -26,7 +26,6 @@ typedef struct disk
 	LONGLONG writeSec = 0;
 }Disk;
 
-void stringReplace(string& subject, const string& search, const string& replace);
 
 class SystemDiskIO
 {

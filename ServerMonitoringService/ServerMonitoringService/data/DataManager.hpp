@@ -11,7 +11,7 @@
 #include "../system/SystemOS.hpp"
 #include "../util/TQTimer.hpp"
 
-typedef struct system
+typedef struct system_info
 {
 	double cpuUsageVal;
 	double cpuIdleVal;
@@ -35,9 +35,7 @@ typedef struct system
 
 	PIP_ADAPTER_INFO adapterInfo;
 	int adapterCount = 0;
-
-}System;
-
+}SystemInfo;
 
 class DataManager
 {
@@ -45,7 +43,7 @@ private:
 	DWORD *processes = NULL;
 	ProcessList processListObj = ProcessList();
 
-	System *system;
+	SystemInfo *systemInfo;
 	SystemCpu systemCpu;
 	SystemDiskIO systemDiskIO;
 	SystemMemory systemMemory;
@@ -54,12 +52,12 @@ private:
 public:
 	DataManager()
 	{
-		system = new System;
+		systemInfo = new SystemInfo;
 		// fixed variable
-		system->cpuModel = systemCpu.getCpuModeInfo();
-		system->computerName = systemOS.getComputerName();
-		system->userName = systemOS.getUserName();
-		system->osVersion = systemOS.getOSVersionName();
+		systemInfo->cpuModel = systemCpu.getCpuModeInfo();
+		systemInfo->computerName = systemOS.getComputerName();
+		systemInfo->userName = systemOS.getUserName();
+		systemInfo->osVersion = systemOS.getOSVersionName();
 
 		// Start Function Call
 		systemDiskIO.Start();
@@ -67,26 +65,33 @@ public:
 
 	~DataManager()
 	{
-		if (system)
+		if (systemInfo)
 		{
-			if (system->disk)
+			if (systemInfo->disk)
 			{
-				delete[] system->disk;
-				system->disk = nullptr;
+				delete[] systemInfo->disk;
+				systemInfo->disk = nullptr;
 			}
 			
-			if (system->process)
+			if (systemInfo->process)
 			{
-				delete[] system->process;
-				system->process = nullptr;
+				delete[] systemInfo->process;
+				systemInfo->process = nullptr;
 			}
 
-			delete system;
-			system = nullptr;
+			if (systemInfo->process)
+			{
+				delete[] systemInfo->networkConnection;
+				systemInfo->networkConnection = nullptr;
+			}
+
+			delete systemInfo;
+			systemInfo = nullptr;
 		}
 	}
 
 	void Update();
+	SystemInfo* getSystem();
 };
 
 #endif

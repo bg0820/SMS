@@ -4,38 +4,43 @@ int main()
 {
 	DataManager dataManager;
 	dataManager.Update();
+
+//	dataManage
 }
 
 void DataManager::Update()
 {
 	// ProcessList Update
 	processListObj.Update();
-	system->processCount = processListObj.getCount();
+	systemInfo->processCount = processListObj.getCount();
 
 	// Process Update
-	system->process = new Process[system->processCount];
-	for (int i = 0; i < system->processCount; i++)
+	systemInfo->process = new Process[systemInfo->processCount];
+	for (int i = 0; i < systemInfo->processCount; i++)
 	{
 		int pid = processListObj.getPID(i);
-		system->process[i] = processListObj.getProcess(pid);
+		systemInfo->process[i] = processListObj.getProcess(pid);
 	}
 
 	// Cpu Usage Update
-	systemCpu.getUsage(system->cpuUsageVal);
-	systemCpu.getIdleUsage(system->cpuIdleVal);
+	systemCpu.getUsage(systemInfo->cpuUsageVal);
+	systemCpu.getIdleUsage(systemInfo->cpuIdleVal);
 
 	// Disk Usage Update
-	system->disk = systemDiskIO.getDiskList(system->diskCount);
+	systemInfo->disk = systemDiskIO.getDiskList(systemInfo->diskCount);
 
 	// Memory Update
-	 systemMemory.getFreeByte(system->memoryFreeByte);
-	 systemMemory.getUsedByte(system->memoryUsedByte);
-	 systemMemory.getTotalByte(system->memoryTotalByte);
-	 systemMemory.getLoadPercent(system->memoryLoadPercent);
+	 systemMemory.getFreeByte(systemInfo->memoryFreeByte);
+	 systemMemory.getUsedByte(systemInfo->memoryUsedByte);
+	 systemMemory.getTotalByte(systemInfo->memoryTotalByte);
+	 systemMemory.getLoadPercent(systemInfo->memoryLoadPercent);
 
 	 // Network Update
-	 systemNetwork.getConnectionTable(system->networkConnection, system->networkConnectionCount);
-	 systemNetwork.getInterfaces(system->adapterInfo, system->adapterCount);
+	 systemNetwork.getConnectionTable(systemInfo->networkConnection, systemInfo->networkConnectionCount);
+	 systemNetwork.getInterfaces(systemInfo->adapterInfo, systemInfo->adapterCount);
+}
 
-
+SystemInfo* DataManager::getSystem()
+{
+	return this->systemInfo;
 }

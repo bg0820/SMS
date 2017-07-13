@@ -2,23 +2,23 @@
 
 void SystemDiskIO::CallbackProc()
 {
-	for (int i = 0; i < SystemDiskIO::diskCount; i++) // Disk Count Loop
+	for (int i = 0; i < this->diskCount; i++) // Disk Count Loop
 	{
-		if (SystemDiskIO::diskList[i].type != DRIVE_REMOVABLE) // Drive connect check
+		if (this->diskList[i].type != DRIVE_REMOVABLE) // Drive connect check
 		{
-			getDiskPerformance(SystemDiskIO::diskList[i].path, SystemDiskIO::diskList[i].curDiskPerformance);
+			getDiskPerformance(this->diskList[i].path, this->diskList[i].curDiskPerformance);
 
-			LONGLONG readSec = SystemDiskIO::diskList[i].curDiskPerformance.BytesRead.QuadPart - SystemDiskIO::diskList[i].prevDiskPerformance.BytesRead.QuadPart;
-			LONGLONG writeSec = SystemDiskIO::diskList[i].curDiskPerformance.BytesWritten.QuadPart - SystemDiskIO::diskList[i].prevDiskPerformance.BytesWritten.QuadPart;
+			LONGLONG readSec = this->diskList[i].curDiskPerformance.BytesRead.QuadPart - this->diskList[i].prevDiskPerformance.BytesRead.QuadPart;
+			LONGLONG writeSec = this->diskList[i].curDiskPerformance.BytesWritten.QuadPart - this->diskList[i].prevDiskPerformance.BytesWritten.QuadPart;
 
-			if (SystemDiskIO::diskList[i].prevDiskPerformance.BytesRead.QuadPart >= 0)
+			if (this->diskList[i].prevDiskPerformance.BytesRead.QuadPart >= 0)
 			{
-				SystemDiskIO::diskList[i].readSec = readSec;
-				SystemDiskIO::diskList[i].writeSec = writeSec;
+				this->diskList[i].readSec = readSec;
+				this->diskList[i].writeSec = writeSec;
 			}
 
 			// Prev DiskPerformance Data Change
-			SystemDiskIO::diskList[i].prevDiskPerformance = SystemDiskIO::diskList[i].curDiskPerformance;
+			this->diskList[i].prevDiskPerformance = this->diskList[i].curDiskPerformance;
 		}
 	}
 }
@@ -82,14 +82,11 @@ int SystemDiskIO::getDiskInfo(const TCHAR *path, Disk &disk)
 
 int SystemDiskIO::Start()
 {
-	// TODO :: UpdatePerSec
-
-	if (SystemDiskIO::tqTimer == NULL)
+	if (this->tqTimer == NULL)
 	{
-		cout << &SystemDiskIO::CallbackProc << endl;
-		SystemDiskIO::tqTimer = new TQTimer(std::bind(&SystemDiskIO::CallbackProc, this));
-		SystemDiskIO::tqTimer->setInterval(1000); // 1Sec
-		SystemDiskIO::tqTimer->Start();
+		this->tqTimer = new TQTimer(std::bind(&this->CallbackProc, this));
+		this->tqTimer->setInterval(1000); // 1Sec
+		this->tqTimer->Start();
 	}
 
 	return 1;
@@ -97,16 +94,11 @@ int SystemDiskIO::Start()
 
 int SystemDiskIO::Stop()
 {
-	// TODO :: UpdatePerSec Stop and DeleteTimerQueue
-
-	// If the function succeeds, the return value is nonzero.
-	// If the function fails, the return value is zero.To get extended error information, call GetLastError.
-
-	if (SystemDiskIO::tqTimer)
+	if (this->tqTimer)
 	{
-		SystemDiskIO::tqTimer->Stop();
-		delete SystemDiskIO::tqTimer;
-		SystemDiskIO::tqTimer = nullptr;
+		this->tqTimer->Stop();
+		delete this->tqTimer;
+		this->tqTimer = nullptr;
 	}
 
 	return 1;
@@ -114,19 +106,9 @@ int SystemDiskIO::Stop()
 
 int SystemDiskIO::getListCount()
 {
-	return SystemDiskIO::strDiskList.size();
+	return this->strDiskList.size();
 }
 
-void stringReplace(string& subject, const string& search, const string& replace)
-{
-	size_t pos = 0;
-
-	while ((pos = subject.find(search, pos)) != string::npos)
-	{
-		subject.replace(pos, search.length(), replace);
-		pos += replace.length();
-	}
-}
 
 // C, diskPerf;
 int SystemDiskIO::getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerformance)
@@ -177,9 +159,9 @@ int SystemDiskIO::getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerform
 
 Disk * SystemDiskIO::getDiskList(int &count)
 {
-	count = SystemDiskIO::strDiskList.size();
+	count = this->strDiskList.size();
 
-	return SystemDiskIO::diskList;
+	return this->diskList;
 }
 
 // call update function after recall getDiskList() function
@@ -187,21 +169,21 @@ int SystemDiskIO::Update()
 {
 	int nResult = 1;
 
-	if (SystemDiskIO::diskList)
+	if (this->diskList)
 	{
-		delete[] SystemDiskIO::diskList;
-		SystemDiskIO::diskList = nullptr;
+		delete[] this->diskList;
+		this->diskList = nullptr;
 	}
 
-	nResult = getPartitionList(SystemDiskIO::strDiskList, SystemDiskIO::diskList);
+	nResult = getPartitionList(this->strDiskList, this->diskList);
 	diskCount = strDiskList.size();
 
 	if (nResult)
 	{
-		for (int i = 0; i < SystemDiskIO::strDiskList.size(); i++)
+		for (int i = 0; i < this->strDiskList.size(); i++)
 		{
 			// nResult = 0; if Then nResult == false 
-			if (!getDiskInfo(SystemDiskIO::strDiskList[i].c_str(), SystemDiskIO::diskList[i]))
+			if (!getDiskInfo(this->strDiskList[i].c_str(), this->diskList[i]))
 				nResult = 0;
 		}
 	}
