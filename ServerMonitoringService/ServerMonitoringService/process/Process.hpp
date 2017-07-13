@@ -42,7 +42,6 @@ private:
 	TCHAR* initPath();
 	TCHAR* initCommandLine();
 	TCHAR* initOwner();
-	TCHAR* initDescription();
 	tm initCreateTime();
 public:
 	Process(const DWORD pid = 0) : pid(pid)
@@ -57,7 +56,7 @@ public:
 		commandLine = initCommandLine();
 
 		icon = initIcon(TRUE);
-		this->tm = initCreateTime();
+		this->createTime = initCreateTime();
 	}
 
 	~Process()

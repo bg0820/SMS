@@ -165,42 +165,6 @@ TCHAR * Process::initOwner()
 	return ownerName;
 }
 
-
-#include <iostream>
-
-using namespace std;
-
-int main()
-{
-	Process process = Process(3360);
-	
-	system("pause");
-}
-
-TCHAR * Process::initDescription()
-{
-	LPCVOID pBlock;
-
-	// 버전정보에 포함된 FileDescription 정보를 얻어서 출력한다.
-	/*if (VerQueryValue(pBlock, "\\StringFileInfo\\041204b0\\FileDescription", (void **)&p_data, &data_size)) {
-		SetDlgItemText(IDC_FILE_DEscRIPTION_EDIT, p_data);
-	}*/
-
-	return nullptr;
-}
-
-/*
-char* timeToString(struct tm *t) {
-	static char s[20];
-
-	sprintf(s, "%04d-%02d-%02d %02d:%02d:%02d",
-		t->tm_year + 1900, t->tm_mon + 1, t->tm_mday,
-		t->tm_hour, t->tm_min, t->tm_sec
-	);
-
-	return s;
-}*/
-
 tm Process::initCreateTime()
 {
 	FILETIME createTime, exitTime, kernelTime, userTime ;
