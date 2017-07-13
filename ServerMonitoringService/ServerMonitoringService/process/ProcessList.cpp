@@ -1,21 +1,5 @@
 #include "ProcessList.hpp"
 
-int main()
-{
-	ProcessList processList;
-	processList.Update();
-
-	for (int i = 0; i < processList.getCount(); i++)
-	{
-		int pid = processList.getPID(i);
-		Process process = Process(pid);
-		
-	}
-
-	system("pause");
-}
-
-
 void ProcessList::Update()
 {
 	while (true)
@@ -59,9 +43,4 @@ int ProcessList::getPID(const int i)
 		return processList[i];
 	else
 		return 0;
-}
-
-Process* ProcessList::getProcess(const DWORD processId)
-{
-	return new Process(processId);
 }
