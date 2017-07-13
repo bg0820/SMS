@@ -1,10 +1,16 @@
 #include "DataManager.hpp"
 
+int main()
+{
+	DataManager dataManager;
+	dataManager.Update();
+}
+
 void DataManager::Update()
 {
 	// ProcessList Update
 	processListObj.Update();
-	int processCount = processListObj.getCount;
+	int processCount = processListObj.getCount();
 	processes = new DWORD[processCount];
 	// Process Update
 	system.process = new Process[processCount];
