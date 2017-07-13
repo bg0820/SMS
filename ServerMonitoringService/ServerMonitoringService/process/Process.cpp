@@ -89,6 +89,9 @@ PVOID Process::GetPebAddress(HANDLE ProcessHandle)
 
 TCHAR* Process::initCommandLine()
 {
+	if (this->handle == NULL)
+		return NULL;
+
 	int nResult = 1;
 	PVOID pebAddress;
 	PVOID rtlUserProcParamsAddress;
@@ -159,7 +162,7 @@ HANDLE Process::getHandleFromPid()
 {
 	HANDLE handle;
 	if ((handle = OpenProcess(MAXIMUM_ALLOWED, false, this->pid)) == NULL)
-		throw - 1;
+		return NULL;
 
 	return handle;
 }

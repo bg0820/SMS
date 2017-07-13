@@ -5,12 +5,12 @@ int main()
 	ProcessList processList;
 	processList.Update();
 
-	/*for (int i = 0; i < processList.getCount(); i++)
+	for (int i = 0; i < processList.getCount(); i++)
 	{
 		int pid = processList.getPID(i);
 		Process process = Process(pid);
 		
-	}*/
+	}
 
 	system("pause");
 }
@@ -63,8 +63,5 @@ int ProcessList::getPID(const int i)
 
 Process* ProcessList::getProcess(const DWORD processId)
 {
-	// auto variable
-	Process *process = new Process(processId);
-
-	return process;
+	return new Process(processId);
 }
