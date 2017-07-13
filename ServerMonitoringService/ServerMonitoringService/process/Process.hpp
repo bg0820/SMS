@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <Psapi.h>
 #include <tlhelp32.h>
-#include <iostream>
+#include "Winternl.h"
 
 #pragma comment(lib, "psapi.lib")
 

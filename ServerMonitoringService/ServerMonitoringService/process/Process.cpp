@@ -1,7 +1,4 @@
 #include "Process.hpp" 
-#include <windows.h>
-#include <stdio.h>
-#include "Winternl.h"
 
 TCHAR* Process::initName()
 {
