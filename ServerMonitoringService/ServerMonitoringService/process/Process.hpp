@@ -65,6 +65,9 @@ public:
 			delete[] commandLine;
 			commandLine = nullptr;
 		}
+
+		if (icon)
+			DestroyIcon(icon);			
 	}
 
 	BOOLEAN isRunning();
