@@ -9,6 +9,12 @@
 
 ---
 
+#### SMS Agent -> (TCP)
+#### (TCP) Data Server -> (WebSocket)
+#### (WebSocket) Web Server
+
+
+
 ##### Cross-platform support be expected. Currently, only Windows is supported.
 
 [![npm](https://img.shields.io/badge/email-bg0820%40naver.com-red.svg)]()
