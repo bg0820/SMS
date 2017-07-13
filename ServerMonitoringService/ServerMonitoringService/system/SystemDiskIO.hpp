@@ -53,7 +53,6 @@ public:
 
 	~SystemDiskIO()
 	{
-		cout << "~SystemDiskIO()" << endl;
 		if (diskList)
 		{
 			delete[] diskList;

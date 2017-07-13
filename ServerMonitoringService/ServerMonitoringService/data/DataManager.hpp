@@ -13,11 +13,16 @@
 
 typedef struct system
 {
-	double cpuVal;
+	double cpuUsageVal;
 	double cpuIdleVal;
+	string cpuModel;
+
 	DWORD memoryUseVal;
 	DWORD memoryFreeVal;
-	Process *process;
+
+	Disk *disk = NULL;
+
+	Process *process = NULL;
 }System;
 
 
@@ -25,17 +30,44 @@ class DataManager
 {
 private:
 	DWORD *processes = NULL;
-	System system;
 	ProcessList processListObj = ProcessList();
+
+	System *system;
+	SystemCpu systemCpu;
+	SystemDiskIO systemDiskIO;
+	SystemMemory systemMemory;
+	SystemNetwork systemNetwork;
+	SystemOS systemOS;
 public:
 	DataManager()
 	{
+		system = new System;
+		// fixed variable
+		system->cpuModel = systemCpu.getCpuModeInfo();
 
+		// Start Function Call
+		systemDiskIO.Start();
 	}
 
 	~DataManager()
 	{
+		if (system)
+		{
+			if (system->disk)
+			{
+				delete[] system->disk;
+				system->disk = nullptr;
+			}
+			
+			if (system->process)
+			{
+				delete[] system->process;
+				system->process = nullptr;
+			}
 
+			delete system;
+			system = nullptr;
+		}
 	}
 
 	void Update();

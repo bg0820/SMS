@@ -23,28 +23,6 @@ void SystemDiskIO::CallbackProc()
 	}
 }
 
-/*
-int main()
-{
-	SystemDiskIO systemdiskIO;
-	systemdiskIO.Start();
-	int count = 0;
-	Disk *disk = NULL;
-	disk = systemdiskIO.getDiskList(count);
-
-	while (true)
-	{
-		for (int i = 0; i < count; i++)
-		{
-			cout << "Read/sec : " << disk[i].readSec / 1024.0 << "kb/s" << endl;
-			cout << "Write/sec : " << disk[i].writeSec / 1024.0 << "kb/s" << endl;
-		}
-		Sleep(1000);
-	}
-
-	system("pause");
-}
-*/
 int SystemDiskIO::getPartitionList(vector<string> &paramStrDiskList, Disk *&paramDiskList)
 {
 	paramStrDiskList.clear();
@@ -200,6 +178,7 @@ int SystemDiskIO::getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerform
 Disk * SystemDiskIO::getDiskList(int &count)
 {
 	count = SystemDiskIO::strDiskList.size();
+
 	return SystemDiskIO::diskList;
 }
 
