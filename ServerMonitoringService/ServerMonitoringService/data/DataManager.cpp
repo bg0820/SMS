@@ -3,7 +3,7 @@
 int main()
 {
 	DataManager dataManager;
-	dataManager.
+	SystemInfo* system = dataManager.getSystem();
 }
 
 void DataManager::Update()
