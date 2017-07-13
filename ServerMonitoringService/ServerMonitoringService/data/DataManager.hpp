@@ -22,9 +22,15 @@ typedef struct system
 	DWORDLONG memoryFreeByte;
 	DWORDLONG memoryTotalByte;
 
-	Disk *disk = NULL;
+	string userName;
+	string computerName;
+	string osVersion;
 
+	Disk *disk = NULL;
 	Process *process = NULL;
+	NetworkConnection *networkConnection = NULL;
+	ULONG networkConnectionCount;
+
 }System;
 
 
@@ -46,6 +52,9 @@ public:
 		system = new System;
 		// fixed variable
 		system->cpuModel = systemCpu.getCpuModeInfo();
+		system->computerName = systemOS.getComputerName();
+		system->userName = systemOS.getUserName();
+		system->osVersion = systemOS.getOSVersionName();
 
 		// Start Function Call
 		systemDiskIO.Start();

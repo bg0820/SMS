@@ -1,8 +1,6 @@
 #ifndef _SYSTEMNETWORK_H_
 #define _SYSTEMNETWORK_H_
 
-#include <iostream>
-
 #ifndef _WINDOWS_
 #include <ws2tcpip.h>
 #include <windows.h>
@@ -10,6 +8,8 @@
 
 #include <iphlpapi.h>
 #pragma comment(lib, "IPHLPAPI.lib")
+
+#include "../util/Util.hpp"
 
 #define KBPS  8 / 1000
 #define MBPS  8 / 1000 / 1000
@@ -22,8 +22,6 @@
 #define UDP4_NETWORK_PROTOCOL (IPv4_NETWORK_TYPE | UDP_PROTOCOL_TYPE)
 #define UDP6_NETWORK_PROTOCOL (IPv6_NETWORK_TYPE | UDP_PROTOCOL_TYPE)
 #define NETWORK_OWNER_INFO_SIZE 16
-
-using namespace std;
 
 typedef struct ip_address
 {

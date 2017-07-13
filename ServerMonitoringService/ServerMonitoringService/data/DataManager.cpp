@@ -40,6 +40,14 @@ void DataManager::Update()
 	 systemMemory.getTotalByte(system->memoryTotalByte);
 	 systemMemory.getLoadPercent(system->memoryLoadPercent);
 
+	 systemNetwork.getConnectionTable(system->networkConnection, system->networkConnectionCount);
+
+	 for (ULONG i = 0; i < count; i++)
+	 {
+		cout << system->networkConnection[i].processID << endl;
+	 }
+
+
 
 
 
