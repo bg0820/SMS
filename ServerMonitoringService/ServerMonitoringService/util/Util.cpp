@@ -10,6 +10,16 @@ string Util::currentDateTime()
 	return str;
 }
 
+void Util::stringReplace(string& subject, const string& search, const string& replace)
+{
+	size_t pos = 0;
+
+	while ((pos = subject.find(search, pos)) != string::npos)
+	{
+		subject.replace(pos, search.length(), replace);
+		pos += replace.length();
+	}
+}
 
 string Util::format(const string fmt_str, ...)
 {

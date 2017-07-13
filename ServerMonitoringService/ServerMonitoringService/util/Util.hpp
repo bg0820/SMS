@@ -18,6 +18,7 @@ public:
 	static string format(const string fmt_str, ...);
 	static string getLocalIp();
 	static string getStringToAddr(SOCKADDR_IN paramAddr);
+	static void stringReplace(string& subject, const string& search, const string& replace);
 };
 
 #endif

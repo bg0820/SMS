@@ -109,7 +109,6 @@ int SystemDiskIO::getListCount()
 	return this->strDiskList.size();
 }
 
-
 // C, diskPerf;
 int SystemDiskIO::getDiskPerformance(TCHAR * path, DISK_PERFORMANCE &diskPerformance)
 {
