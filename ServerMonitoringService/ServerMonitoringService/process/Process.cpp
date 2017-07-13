@@ -127,6 +127,48 @@ TCHAR* Process::initCommandLine()
 	return strCommandLine;
 }
 
+TCHAR * Process::initOwner()
+{
+	int nResult = 1;
+
+	TCHAR ownerName[MAX_PATH];
+
+	HANDLE tokenHandle = 0;
+
+	TOKEN_USER *tokenUser;
+	DWORD nlen = MAX_PATH, dlen = MAX_PATH;
+	char name[300], dom[300], tubuf[300], *pret = 0;
+	int iUse;
+
+	//open the processes token
+	if (!OpenProcessToken(this->handle , TOKEN_QUERY, &tokenHandle))
+		nResult = 0;
+
+	//get the SID of the token
+	tokenUser = (TOKEN_USER*)tubuf;
+
+	if (!GetTokenInformation(tokenHandle, TokenUser, tokenUser, MAX_PATH, &nlen))
+		nResult = 0;
+
+	// domain name of the SID
+	if (!LookupAccountSidA(0, tokenUser->User.Sid, name, &nlen, dom, &dlen, (PSID_NAME_USE)&iUse))
+		nResult = 0;
+
+	// copy info to our static buffer
+	strcpy(ownerName, dom);
+	strcat(ownerName, "/");
+	strcat(ownerName, name);
+
+
+	if (tokenHandle)
+		CloseHandle(tokenHandle);
+
+	if (!nResult)
+		return "";
+
+	return ownerName;
+}
+
 HWND Process::getHwndFromPid()
 {
 	HWND hWnd = FindWindow(NULL, NULL);
@@ -172,6 +214,11 @@ TCHAR * Process::getPath()
 TCHAR * Process::getCommandLine()
 {
 	return this->commandLine;
+}
+
+TCHAR * Process::getOwner()
+{
+	return this->owner;
 }
 
 HICON Process::getIcon()

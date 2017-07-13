@@ -30,6 +30,7 @@ private:
 	HWND hWnd = NULL;
 	TCHAR name[MAX_PATH];
 	TCHAR path[MAX_PATH];
+	TCHAR owner[MAX_PATH];
 	TCHAR *commandLine = NULL;
 private:
 	HWND getHwndFromPid();
@@ -38,13 +39,15 @@ private:
 	TCHAR* initName();
 	TCHAR* initPath();
 	TCHAR* initCommandLine();
+	TCHAR* initOwner();
 public:
 	Process(const DWORD pid = 0) : pid(pid)
 	{
 		// fixed value Init
 		this->handle = getHandleFromPid();
 		this->hWnd = getHwndFromPid();
-
+		
+		strcpy_s(owner, initOwner());
 		strcpy_s(name, initName());
 		strcpy_s(path, initPath());
 		commandLine = initCommandLine();
@@ -69,6 +72,7 @@ public:
 	TCHAR* getName();
 	TCHAR* getPath();
 	TCHAR* getCommandLine();
+	TCHAR* getOwner();
 	HICON getIcon();
 
 	int getHandleCount(DWORD &val);
