@@ -34,6 +34,11 @@ void DataManager::Update()
 	cout << "Write/sec : " << disk[i].writeSec / 1024.0 << "kb/s" << endl;
 	}*/
 
+	// Memory Update
+	 systemMemory.getFreeByte(system->memoryFreeByte);
+	 systemMemory.getUsedByte(system->memoryUsedByte);
+	 systemMemory.getTotalByte(system->memoryTotalByte);
+	 systemMemory.getLoadPercent(system->memoryLoadPercent);
 
 
 

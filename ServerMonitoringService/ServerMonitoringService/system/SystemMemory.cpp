@@ -40,7 +40,7 @@ int SystemMemory::getFreeByte(DWORDLONG &val)
 	return 1;
 }
 
-int SystemMemory::getUsage(DWORDLONG &val)
+int SystemMemory::getUsedByte(DWORDLONG &val)
 {
 	if (!memoryCall())
 		return 0;

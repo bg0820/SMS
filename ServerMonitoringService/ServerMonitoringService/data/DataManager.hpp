@@ -17,8 +17,10 @@ typedef struct system
 	double cpuIdleVal;
 	string cpuModel;
 
-	DWORD memoryUseVal;
-	DWORD memoryFreeVal;
+	DWORD memoryLoadPercent;
+	DWORDLONG memoryUsedByte;
+	DWORDLONG memoryFreeByte;
+	DWORDLONG memoryTotalByte;
 
 	Disk *disk = NULL;
 

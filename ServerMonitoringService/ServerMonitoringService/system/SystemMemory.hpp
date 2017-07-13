@@ -13,7 +13,7 @@ private:
 	int memoryCall();
 public:
 	int getLoadPercent(DWORD &val);
-	int getUsage(DWORDLONG &val);
+	int getUsedByte(DWORDLONG &val);
 	int getTotalByte(DWORDLONG &val);
 	int getFreeByte(DWORDLONG &val);
 };
