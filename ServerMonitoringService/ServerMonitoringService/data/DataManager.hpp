@@ -2,37 +2,12 @@
 #define _DATAMANAGER_H_
 
 #include <Windows.h>
-#include "../process/ProcessList.hpp"
-#include "../process/Process.hpp"
-
-
-typedef struct system
-{
-	double cpuVal;
-	double cpuIdleVal;
-	DWORD memoryUseVal;
-	DWORD memoryFreeVal;
-	Process *process;
-}System;
-
 
 class DataManager
 {
 private:
-	DWORD *processes = NULL;
-	System system;
-	ProcessList processListObj = ProcessList();
+	DWORD processList[1024];
 public:
-	DataManager()
-	{
-
-	}
-
-	~DataManager()
-	{
-
-	}
-
 	void Update();
 };
 
