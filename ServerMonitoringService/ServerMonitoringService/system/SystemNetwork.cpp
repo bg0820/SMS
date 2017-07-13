@@ -293,7 +293,6 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&paramConnection, ULONG
 
 	if (udp6Table)
 	{
-		cout << udp6Table->dwNumEntries << endl;
 		for (int i = 0; i < udp6Table->dwNumEntries; i++)
 		{
 			connections[index].protocolType = UDP6_NETWORK_PROTOCOL;

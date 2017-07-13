@@ -1,11 +1,13 @@
 #ifndef _PROCESS_H_
 #define _PROCESS_H_
 
+#include <iostream>
 #include <Windows.h>
 #include <Psapi.h>
 #include <tlhelp32.h>
 #include "Winternl.h"
 #include <time.h>
+#include "../util/StopWatch.hpp"
 
 #pragma comment(lib, "psapi.lib")
 
@@ -46,17 +48,24 @@ private:
 public:
 	Process(const DWORD pid = 0) : pid(pid)
 	{
+		//StopWatch stopWatch;
+
 		// fixed value Init
-		this->handle = getHandleFromPid();
-		this->hWnd = getHwndFromPid();
-		
-		strcpy_s(this->owner, initOwner());
-		strcpy_s(this->name, initName());
-		strcpy_s(this->path, initPath());
+		this->handle = getHandleFromPid(); // 0.005 ~ 0.01ms
+		this->hWnd = getHwndFromPid(); // 0.2 ~ 3.0 ms
+
+		strcpy_s(this->owner, initOwner()); // 0.15 ~ 0.08 ms
+		strcpy_s(this->name, initName()); // 0.05 ~ 1.3 ms
+		strcpy_s(this->path, initPath()); // 0.4 ~ 0.5 ms
+
+	//	stopWatch.Start();
 		this->commandLine = initCommandLine();
 
 		this->icon = initIcon(TRUE);
 		this->createTime = initCreateTime();
+		//stopWatch.Stop();
+		//stopWatch.milliPrint();
+
 	}
 
 	~Process()
@@ -71,7 +80,7 @@ public:
 		}
 
 		if (icon)
-			DestroyIcon(icon);			
+			DestroyIcon(icon);
 	}
 
 	BOOLEAN isRunning();

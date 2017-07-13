@@ -5,25 +5,25 @@ TCHAR* Process::initName()
 	int nResult = 1;
 
 	TCHAR szProcessName[MAX_PATH];
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
+	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
 
-	if (hProcess != NULL)
+	if (this->handle != NULL)
 	{
 		HMODULE hMod;
 		DWORD cbNeeded;
 
-		if (!EnumProcessModulesEx(hProcess, &hMod, sizeof(hMod), &cbNeeded, LIST_MODULES_ALL))
+		if (!EnumProcessModulesEx(this->handle, &hMod, sizeof(hMod), &cbNeeded, LIST_MODULES_ALL))
 			nResult = 0;
 
 
-		if (GetModuleBaseName(hProcess, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR)) == 0)
+		if (GetModuleBaseName(this->handle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR)) == 0)
 			nResult = 0;
 	}
 	else
 		nResult = 0;
 
-	if (hProcess != INVALID_HANDLE_VALUE)
-		CloseHandle(hProcess);
+	/*if (hProcess != INVALID_HANDLE_VALUE)
+		CloseHandle(hProcess);*/
 
 	return szProcessName;
 }
@@ -33,24 +33,24 @@ TCHAR* Process::initPath()
 	int nResult = 1;
 
 	TCHAR szProcessPath[MAX_PATH];
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
+	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
 
-	if (hProcess != NULL)
+	if (this->handle != NULL)
 	{
 		HMODULE hMod;
 		DWORD cbNeeded;
 
-		if (!EnumProcessModulesEx(hProcess, &hMod, sizeof(hMod), &cbNeeded, LIST_MODULES_ALL))
+		if (!EnumProcessModulesEx(this->handle, &hMod, sizeof(hMod), &cbNeeded, LIST_MODULES_ALL))
 			nResult = 0;
 
-		if (GetModuleFileNameEx(hProcess, hMod, szProcessPath, sizeof(szProcessPath) / sizeof(TCHAR)) == 0)
+		if (GetModuleFileNameEx(this->handle, hMod, szProcessPath, sizeof(szProcessPath) / sizeof(TCHAR)) == 0)
 			nResult = 0;
 	}
 	else
 		nResult = 0;
 
-	if (hProcess != INVALID_HANDLE_VALUE)
-		CloseHandle(hProcess);
+	/*if (hProcess != INVALID_HANDLE_VALUE)
+		CloseHandle(hProcess);*/
 
 	return szProcessPath;
 }
@@ -118,30 +118,33 @@ TCHAR* Process::initCommandLine()
 
 
 	if (nResult != 1)
-		throw nResult;
+		return "";
+	//	throw nResult;
 
 	return strCommandLine;
 }
 
 TCHAR * Process::initOwner()
 {
+	if (this->handle == NULL)
+		return "";
+
 	int nResult = 1;
 
 	TCHAR ownerName[MAX_PATH];
-
 	HANDLE tokenHandle = 0;
-
-	TOKEN_USER *tokenUser;
+	char name[MAX_PATH], dom[MAX_PATH], tubuf[MAX_PATH], *pret = 0;
 	DWORD nlen = MAX_PATH, dlen = MAX_PATH;
-	char name[300], dom[300], tubuf[300], *pret = 0;
+	TOKEN_USER *tokenUser = (TOKEN_USER*)tubuf;
+
 	int iUse;
 
 	//open the processes token
-	if (!OpenProcessToken(this->handle , TOKEN_QUERY, &tokenHandle))
+	if (!OpenProcessToken(this->handle, TOKEN_QUERY, &tokenHandle))
 		nResult = 0;
 
 	//get the SID of the token
-	tokenUser = (TOKEN_USER*)tubuf;
+
 
 	if (!GetTokenInformation(tokenHandle, TokenUser, tokenUser, MAX_PATH, &nlen))
 		nResult = 0;
@@ -151,9 +154,9 @@ TCHAR * Process::initOwner()
 		nResult = 0;
 
 	// copy info to our static buffer
-	strcpy(ownerName, dom);
-	strcat(ownerName, "/");
-	strcat(ownerName, name);
+	strcpy_s(ownerName, dom);
+	strcat_s(ownerName, "/");
+	strcat_s(ownerName, name);
 
 
 	if (tokenHandle)
@@ -167,7 +170,7 @@ TCHAR * Process::initOwner()
 
 tm Process::initCreateTime()
 {
-	FILETIME createTime, exitTime, kernelTime, userTime ;
+	FILETIME createTime, exitTime, kernelTime, userTime;
 	GetProcessTimes(this->handle, &createTime, &exitTime, &kernelTime, &userTime);
 
 	FILETIME localFileTime;
@@ -339,12 +342,12 @@ int Process::getMemoryUsage(DWORD &val)
 	DWORD dPrivatePages = 0;
 	DWORD dPageTablePages = 0;
 
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
+	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
 
-	if (hProcess == NULL)
-		nResult = 0;
+	//if (this->handle == NULL)
+	//	nResult = 0;
 
-	if (!QueryWorkingSet(hProcess, dWorkingSetPages, sizeof(dWorkingSetPages)))
+	if (!QueryWorkingSet(this->handle, dWorkingSetPages, sizeof(dWorkingSetPages)))
 		nResult = 0;
 
 	DWORD dPages = dWorkingSetPages[0];
@@ -394,8 +397,8 @@ int Process::getMemoryUsage(DWORD &val)
 
 	val = (dTotal - dShared) * 4; //ref
 
-	if (hProcess != INVALID_HANDLE_VALUE)
-		CloseHandle(hProcess);
+	//if (hProcess != INVALID_HANDLE_VALUE)
+	//	CloseHandle(hProcess);
 
 	return nResult;
 }
@@ -413,10 +416,10 @@ int Process::getCpuUsage(double &val)
 	GetSystemInfo(&sysInfo);
 	int numProcessors = sysInfo.dwNumberOfProcessors;
 
-	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
+	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
 
-	if (hProcess == NULL)
-		nResult = 0;
+	// if (this->handle == NULL)
+	//	nResult = 0;
 
 	int count = 0;
 	while (true)
@@ -424,7 +427,7 @@ int Process::getCpuUsage(double &val)
 		ULONG64	CycleTime;
 		LARGE_INTEGER qpcLastInt;
 
-		if (!QueryProcessCycleTime(hProcess, &CycleTime))
+		if (!QueryProcessCycleTime(this->handle, &CycleTime))
 			nResult = 0;
 
 		ULONG64 cycle = CycleTime - LastCycleTime;
@@ -452,8 +455,8 @@ int Process::getCpuUsage(double &val)
 		count++;
 	}
 
-	if (hProcess != INVALID_HANDLE_VALUE)
-		CloseHandle(hProcess);
+	//if (hProcess != INVALID_HANDLE_VALUE)
+	//	CloseHandle(hProcess);
 
 	return nResult;
 }
