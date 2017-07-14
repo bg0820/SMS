@@ -55,14 +55,13 @@ public:
 		strcpy_s(this->owner, initOwner()); // 0.15 ~ 0.08 ms
 		strcpy_s(this->name, initName()); // 0.05 ~ 1.3 ms
 		strcpy_s(this->path, initPath()); // 0.4 ~ 0.5 ms
-
 		this->commandLine = initCommandLine();
 
-		cout << "Owner : " << getOwner() << endl;
+	/*	cout << "Owner : " << getOwner() << endl;
 		cout << "Name : " << getName() << endl;
 		cout << "Path : " << getPath() << endl;
 		cout << "Cmd : " << getCommandLine() << endl;
-		cout << "=========================================" << endl<< endl;
+		cout << "=========================================" << endl<< endl;*/
 
 		// this->icon = initIcon(TRUE); // cpu time 69.4% usage
 		this->createTime = initCreateTime();

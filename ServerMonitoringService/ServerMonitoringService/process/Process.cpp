@@ -88,7 +88,6 @@ TCHAR* Process::initCommandLine()
 	PVOID pebAddress;
 	PVOID rtlUserProcParamsAddress;
 	UNICODE_STRING commandLine;
-	TCHAR *commandLineContents;
 
 	_NtQueryInformationProcess NtQueryInformationProcess = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandleA("ntdll.dll"), "NtQueryInformationProcess");
 	PROCESS_BASIC_INFORMATION processBasicInformation;
@@ -101,8 +100,7 @@ TCHAR* Process::initCommandLine()
 	if (!ReadProcessMemory(this->handle, &(((_RTL_USER_PROCESS_PARAMETERS*)rtlUserProcParamsAddress)->CommandLine), &commandLine, sizeof(commandLine), NULL))
 		nResult = -2;
 
-	commandLineContents = new TCHAR[commandLine.Length];
-
+	TCHAR *commandLineContents = new TCHAR[commandLine.Length];
 	if (!ReadProcessMemory(this->handle, commandLine.Buffer, commandLineContents, commandLine.Length, NULL))
 		nResult = -3;
 
@@ -110,12 +108,12 @@ TCHAR* Process::initCommandLine()
 	TCHAR *strCommandLine = new TCHAR[size + 1];
 	memset(strCommandLine, NULL, size + 1);
 
+	// char <-> w_char compatibility
 	for (int i = 0; i < commandLine.Length; i++)
 	{
 		if (commandLineContents[i] != NULL)
 			strCommandLine[i / 2] = commandLineContents[i];
 	}
-	strCommandLine[size] = commandLineContents[commandLine.Length - 1];
 
 	if (commandLineContents)
 	{
