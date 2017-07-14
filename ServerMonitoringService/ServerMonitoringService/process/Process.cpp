@@ -1,46 +1,18 @@
 #include "Process.hpp" 
 
-TCHAR* Process::initName()
+void Process::initFileNamePath()
 {
 	if (this->handle == NULL)
-		return "";
-
-	int nResult = 1;
-
-	TCHAR szProcessName[MAX_PATH];
-
-	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
-
-	if (this->handle != NULL)
 	{
-		HMODULE hMod;
-		DWORD cbNeeded;
-
-		if (!EnumProcessModulesEx(this->handle, &hMod, sizeof(hMod), &cbNeeded, LIST_MODULES_ALL))
-			nResult = 0;
-
-		if (GetModuleBaseName(this->handle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR)) == 0)
-			nResult = 0;
-
+		this->name = NULL;
+		this->path = NULL;
+		return;
 	}
-	else
-		nResult = 0;
-
-	/*if (hProcess != INVALID_HANDLE_VALUE)
-		CloseHandle(hProcess);*/
-
-	return szProcessName;
-}
-
-TCHAR* Process::initPath()
-{
-	if (this->handle == NULL)
-		return "";
 
 	int nResult = 1;
 
 	TCHAR szProcessPath[MAX_PATH];
-	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
+	TCHAR szProcessName[MAX_PATH];
 
 	if (this->handle != NULL)
 	{
@@ -48,23 +20,24 @@ TCHAR* Process::initPath()
 		DWORD cbNeeded;
 
 		if (!EnumProcessModulesEx(this->handle, &hMod, sizeof(hMod), &cbNeeded, LIST_MODULES_ALL))
-			nResult = 0;
+			nResult = -1;
 
+		// Get Process Path
 		if (GetModuleFileNameEx(this->handle, hMod, szProcessPath, sizeof(szProcessPath) / sizeof(TCHAR)) == 0)
-			nResult = 0;
+			nResult = -2;
+
+		// Get Process Name
+		if (GetModuleBaseName(this->handle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR)) == 0)
+			nResult = -3;
 	}
 	else
-		nResult = 0;
+		nResult = -4;
 
-	/*if (hProcess != INVALID_HANDLE_VALUE)
-		CloseHandle(hProcess);*/
-
-	return szProcessPath;
+	strcpy(this->name, szProcessName);
+	strcpy(this->path, szProcessPath);
 }
 
-
-
-HICON Process::initIcon(BOOLEAN LargeIcon)
+void Process::initIcon(BOOLEAN LargeIcon)
 {
 	SHFILEINFO shFileInfo;
 
@@ -74,15 +47,15 @@ HICON Process::initIcon(BOOLEAN LargeIcon)
 	iconFlag = LargeIcon ? SHGFI_LARGEICON : SHGFI_SMALLICON;
 
 	if (!SHGetFileInfo(this->path, 0, &shFileInfo, sizeof(SHFILEINFO), SHGFI_ICON | iconFlag))
-		return NULL;
+		return;
 
-	return shFileInfo.hIcon;
+	this->icon = shFileInfo.hIcon;
 }
 
-TCHAR* Process::initCommandLine()
+void Process::initCommandLine()
 {
 	if (this->handle == NULL)
-		return NULL;
+		return;
 
 	int nResult = 1;
 	PVOID pebAddress;
@@ -121,67 +94,61 @@ TCHAR* Process::initCommandLine()
 		commandLineContents = nullptr;
 	}
 
-
 	if (nResult != 1)
-		return NULL;
+		return;
 	//	throw nResult;
 
-	return strCommandLine;
+	this->commandLine = strCommandLine;
 }
 
-TCHAR * Process::initOwner()
+void Process::initOwner()
 {
 	if (this->handle == NULL)
-		return "";
+	{
+		this->owner = NULL;
+		return;
+	}
 
 	int nResult = 1;
 
-	TCHAR ownerName[MAX_PATH];
 	HANDLE tokenHandle = 0;
-	char name[MAX_PATH], dom[MAX_PATH], tubuf[MAX_PATH], *pret = 0;
+	TCHAR name[MAX_PATH], dom[MAX_PATH], tubuf[MAX_PATH];
 	DWORD nlen = MAX_PATH, dlen = MAX_PATH;
 	TOKEN_USER *tokenUser = (TOKEN_USER*)tubuf;
 
-	int iUse;
-
 	//open the processes token
 	if (!OpenProcessToken(this->handle, TOKEN_QUERY, &tokenHandle))
-		nResult = 0;
+		nResult = -1;
 
 	//get the SID of the token
-
-
 	if (!GetTokenInformation(tokenHandle, TokenUser, tokenUser, MAX_PATH, &nlen))
-		nResult = 0;
+		nResult = -2;
 
 	// domain name of the SID
+	int iUse;
 	if (!LookupAccountSidA(0, tokenUser->User.Sid, name, &nlen, dom, &dlen, (PSID_NAME_USE)&iUse))
-		nResult = 0;
+		nResult = -3;
 
 	// copy info to our static buffer
-	strcpy_s(ownerName, dom);
-	strcat_s(ownerName, "/");
-	strcat_s(ownerName, name);
+	strcpy(this->owner, dom);
+	strcat(this->owner, "/");
+	strcat(this->owner, name);
 
 
 	if (tokenHandle)
 		CloseHandle(tokenHandle);
-
-	if (!nResult)
-		return "";
-
-	return ownerName;
 }
 
-tm Process::initCreateTime()
+void Process::initCreateTime()
 {
 	FILETIME createTime, exitTime, kernelTime, userTime;
-	GetProcessTimes(this->handle, &createTime, &exitTime, &kernelTime, &userTime);
-
 	FILETIME localFileTime;
-	FileTimeToLocalFileTime(&createTime, &localFileTime);
 	SYSTEMTIME sysTime;
+
+	GetProcessTimes(this->handle, &createTime, &exitTime, &kernelTime, &userTime);
+	FileTimeToLocalFileTime(&createTime, &localFileTime);
 	FileTimeToSystemTime(&localFileTime, &sysTime);
+
 	struct tm tmTime = { 0 };
 	tmTime.tm_year = sysTime.wYear - 1900;
 	tmTime.tm_mon = sysTime.wMonth - 1;
@@ -193,7 +160,7 @@ tm Process::initCreateTime()
 	tmTime.tm_yday = 0;
 	tmTime.tm_isdst = -1;
 
-	return tmTime;
+	this->createTime = tmTime;
 }
 
 HWND Process::getHwndFromPid()
@@ -268,9 +235,10 @@ HICON Process::getIcon()
 BOOLEAN Process::isRunning()
 {
 	DWORD_PTR dw = 0;
+	HWND hWnd = getHwndFromPid();
 
 	// TimeOut 2sec
-	if (SendMessageTimeout(this->hWnd, NULL, NULL, NULL, SMTO_NORMAL, 2000, &dw))
+	if (SendMessageTimeout(hWnd, NULL, NULL, NULL, SMTO_NORMAL, 2000, &dw))
 	{
 		return TRUE; // process is running
 	}
@@ -346,6 +314,7 @@ int Process::getThreadCount(int &paramTotalThreadCount, int &paramCurrentProcess
 
 int Process::getNetworkUsage(double &val)
 {
+	// TODO : 
 	return 1;
 }
 
@@ -358,11 +327,6 @@ int Process::getMemoryUsage(DWORD &val)
 	DWORD dSharedPages = 0;
 	DWORD dPrivatePages = 0;
 	DWORD dPageTablePages = 0;
-
-	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
-
-	//if (this->handle == NULL)
-	//	nResult = 0;
 
 	if (!QueryWorkingSet(this->handle, dWorkingSetPages, sizeof(dWorkingSetPages)))
 		nResult = 0;
@@ -414,9 +378,6 @@ int Process::getMemoryUsage(DWORD &val)
 
 	val = (dTotal - dShared) * 4; //ref
 
-	//if (hProcess != INVALID_HANDLE_VALUE)
-	//	CloseHandle(hProcess);
-
 	return nResult;
 }
 
@@ -432,11 +393,6 @@ int Process::getCpuUsage(double &val)
 	SYSTEM_INFO sysInfo;
 	GetSystemInfo(&sysInfo);
 	int numProcessors = sysInfo.dwNumberOfProcessors;
-
-	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
-
-	// if (this->handle == NULL)
-	//	nResult = 0;
 
 	int count = 0;
 	while (true)
@@ -471,9 +427,6 @@ int Process::getCpuUsage(double &val)
 
 		count++;
 	}
-
-	//if (hProcess != INVALID_HANDLE_VALUE)
-	//	CloseHandle(hProcess);
 
 	return nResult;
 }

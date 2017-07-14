@@ -33,12 +33,12 @@ void DataManager::Update()
 	// Memory Leak prevation
 	if (systemInfo->process)
 	{
-		for (int i = 0; i<systemInfo->processCount; i++)
+		for (int i = 0; i < systemInfo->processCount; i++)
 			delete systemInfo->process[i];
 		delete[] systemInfo->process;
 		systemInfo->process = nullptr;
 	}
-	
+
 	systemInfo->processCount = processListObj.getCount();
 
 	// Process Update
@@ -47,10 +47,10 @@ void DataManager::Update()
 	{
 		int pid = processListObj.getPID(i);
 		systemInfo->process[i] = new Process(pid);
-//		cout << systemInfo->process[i]->getName() << endl;
-//		cout << systemInfo->process[i]->getCommandLine() << endl;
-//		cout << systemInfo->process[i]->getPath() << endl;
-	}	
+		//		cout << systemInfo->process[i]->getName() << endl;
+		//		cout << systemInfo->process[i]->getCommandLine() << endl;
+		//		cout << systemInfo->process[i]->getPath() << endl;
+	}
 
 	// Cpu Usage Update
 	systemCpu.getUsage(systemInfo->cpuUsageVal);
@@ -65,7 +65,7 @@ void DataManager::Update()
 	systemMemory.getUsedByte(systemInfo->memoryUsedByte);
 	systemMemory.getTotalByte(systemInfo->memoryTotalByte);
 	systemMemory.getLoadPercent(systemInfo->memoryLoadPercent);
-	
+
 	// Network Update
 
 	// Memory Leak prevation
@@ -90,7 +90,6 @@ void DataManager::Update()
 
 void DataManager::CallbackProc()
 {
-	//cout << "UPDATE" << endl;
 	// 1Sec Update
 	Update();
 }
@@ -100,7 +99,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(100000); // 100Sec
+		this->tqTimer->setInterval(1000); // 100Sec
 		this->tqTimer->Start();
 	}
 }

@@ -30,56 +30,70 @@ private:
 	DWORD pid;
 	HICON icon = NULL;
 	HANDLE handle = NULL;
-	HWND hWnd = NULL;
+	// HWND hWnd = NULL; Call only when needed
 	TCHAR *commandLine = NULL;
-	TCHAR name[MAX_PATH];
-	TCHAR path[MAX_PATH];
-	TCHAR owner[MAX_PATH];
+	TCHAR *name = new TCHAR[MAX_PATH];
+	TCHAR *path = new TCHAR[MAX_PATH];
+	TCHAR *owner = new TCHAR[MAX_PATH];
 	tm createTime = { 0 };
 private:
 	HWND getHwndFromPid();
 	HANDLE getHandleFromPid();
-	HICON initIcon(BOOLEAN LargeIcon = FALSE);
-	TCHAR* initName();
-	TCHAR* initPath();
-	TCHAR* initCommandLine();
-	TCHAR* initOwner();
-	tm initCreateTime();
+	void initIcon(BOOLEAN LargeIcon = FALSE);
+	void initFileNamePath();
+	void initOwner();
+	void initCommandLine();
+	void initCreateTime();
 public:
 	Process(const DWORD pid = 0) : pid(pid)
 	{
 		// fixed value Init
 		this->handle = getHandleFromPid(); // 0.005 ~ 0.01ms
-		this->hWnd = getHwndFromPid(); // 0.2 ~ 3.0 ms
+		// this->hWnd = getHwndFromPid(); // 0.2 ~ 3.0 ms Call only when needed
+		initOwner();
+		initFileNamePath();
+		initCommandLine();
+		initCreateTime();
+		// this->icon = initIcon(TRUE); // cpu time 69.4% usage
 
-		strcpy_s(this->owner, initOwner()); // 0.15 ~ 0.08 ms
-		strcpy_s(this->name, initName()); // 0.05 ~ 1.3 ms
-		strcpy_s(this->path, initPath()); // 0.4 ~ 0.5 ms
-		this->commandLine = initCommandLine();
-
-	/*	cout << "Owner : " << getOwner() << endl;
+		cout << "Owner : " << getOwner() << endl;
 		cout << "Name : " << getName() << endl;
 		cout << "Path : " << getPath() << endl;
 		cout << "Cmd : " << getCommandLine() << endl;
-		cout << "=========================================" << endl<< endl;*/
-
-		// this->icon = initIcon(TRUE); // cpu time 69.4% usage
-		this->createTime = initCreateTime();
+		cout << "=========================================" << endl<< endl;
 	}
 
 	~Process()
 	{
-		if (handle != INVALID_HANDLE_VALUE)
-			CloseHandle(handle);
+		if (this->handle != INVALID_HANDLE_VALUE)
+			CloseHandle(this->handle);
 
-		if (commandLine)
+		if (this->name)
 		{
-			delete[] commandLine;
-			commandLine = nullptr;
+			delete[] this->name;
+			this->name = nullptr;
 		}
 
-		if (icon)
-			DestroyIcon(icon);
+		if (this->path)
+		{
+			delete[] this->path;
+			this->path = nullptr;
+		}
+
+		if (this->owner)
+		{
+			delete[] this->owner;
+			this->owner = nullptr;
+		}
+
+		if (this->commandLine)
+		{
+			delete[] this->commandLine;
+			this->commandLine = nullptr;
+		}
+
+		if (this->icon)
+			DestroyIcon(this->icon);
 	}
 
 	BOOLEAN isRunning();
