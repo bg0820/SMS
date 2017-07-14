@@ -118,6 +118,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="data\DataManager.hpp" />
+    <ClInclude Include="json\autolink.h" />
+    <ClInclude Include="json\config.h" />
+    <ClInclude Include="json\features.h" />
+    <ClInclude Include="json\forwards.h" />
+    <ClInclude Include="json\json.h" />
+    <ClInclude Include="json\reader.h" />
+    <ClInclude Include="json\value.h" />
+    <ClInclude Include="json\writer.h" />
     <ClInclude Include="main.hpp" />
     <ClInclude Include="network socket\NetworkListener.hpp" />
     <ClInclude Include="network socket\NetworkManager.hpp" />
