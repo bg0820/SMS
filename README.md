@@ -1,6 +1,6 @@
 # SMS - Server Monitoring Service
 
-### 현재 이 프로젝트는 개발 진행중인 프로젝트 입니다.
+### 현재 이 프로젝트는 개발중 입니다.
 ### (this project is not a finished project.)
 ### Server Monitoring Service
 #### > SMS Agent
