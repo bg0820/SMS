@@ -110,7 +110,7 @@ TCHAR * SystemNetwork::getStateName(ULONG state)
 	}
 }
 
-int SystemNetwork::getConnectionTable(NetworkConnection *&paramConnection, ULONG &paramCount)
+int SystemNetwork::getConnectionTable(NetworkConnection *&paramConnection, ULONG &paramTotalCount)
 {
 	int nResult = 1;
 
@@ -122,7 +122,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&paramConnection, ULONG
 	MIB_UDPTABLE_OWNER_MODULE *udp4Table = NULL;
 	MIB_TCP6TABLE_OWNER_MODULE *tcp6Table = NULL;
 	MIB_UDP6TABLE_OWNER_MODULE *udp6Table = NULL;
-	NetworkConnection *connections;
+	NetworkConnection *connections = NULL;
 
 	//PMIB_TCP6TABLE tcp6Table;
 	//PMIB_UDP6TABLE udp6Table;
@@ -239,7 +239,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&paramConnection, ULONG
 			index++;
 		}
 
-		delete tcp4Table;
+		delete[] tcp4Table;
 		tcp4Table = nullptr;
 	}
 	else
@@ -263,7 +263,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&paramConnection, ULONG
 			index++;
 		}
 
-		delete tcp6Table;
+		delete[] tcp6Table;
 		tcp6Table = nullptr;
 	}
 	else
@@ -285,7 +285,7 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&paramConnection, ULONG
 			index++;
 		}
 
-		delete udp4Table;
+		delete[] udp4Table;
 		udp4Table = nullptr;
 	}
 	else
@@ -307,14 +307,14 @@ int SystemNetwork::getConnectionTable(NetworkConnection *&paramConnection, ULONG
 			index++;
 		}
 
-		delete udp6Table;
+		delete[] udp6Table;
 		udp6Table = nullptr;
 	}
 	else
 		nResult = 0;
 
 	paramConnection = connections;
-	paramCount = totalCount;
+	paramTotalCount = totalCount;
 
 	return nResult;
 }
@@ -353,10 +353,8 @@ int SystemNetwork::getInterfaces(PIP_ADAPTER_INFO &paramAdapter, int &outCount)
 			nResult = -2;
 	}
 
-	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)))
-	{
+	if ((dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen)) == ERROR_SUCCESS)
 		paramAdapter = pAdapterInfo;
-	}
 	else
 		nResult = dwRetVal; // set return value
 

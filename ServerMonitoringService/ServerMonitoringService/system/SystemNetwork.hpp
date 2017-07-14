@@ -58,7 +58,7 @@ public:
 	void formatToMacAddress(TCHAR *param, BYTE addr[]);
 	int getInterfaces(PIP_ADAPTER_INFO &pAdapter, int &outCount);
 	TCHAR* getInterfaceTypeName(IP_ADAPTER_INFO paramAdapterInfo);
-	int getConnectionTable(NetworkConnection *&paramConnection, ULONG &paramCount);
+	int getConnectionTable(NetworkConnection *&paramConnection, ULONG &paramTotalCount);
 	TCHAR* getProtocolTypeName(ULONG protocolType);
 	TCHAR* getStateName(ULONG state);
 	int getNetworkSendBytes();

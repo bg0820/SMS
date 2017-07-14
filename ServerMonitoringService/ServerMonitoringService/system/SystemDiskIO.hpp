@@ -53,6 +53,8 @@ public:
 
 	~SystemDiskIO()
 	{
+		this->Stop();
+
 		if (diskList)
 		{
 			delete[] diskList;

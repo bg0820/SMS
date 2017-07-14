@@ -29,17 +29,17 @@ public:
 	{
 		if (userName)
 		{
-			delete userName;
+			delete[] userName;
 			userName = nullptr;
 		}
 		if (computerName)
 		{
-			delete computerName;
+			delete[] computerName;
 			computerName = nullptr;
 		}
 		if (osVersionName)
 		{
-			delete osVersionName;
+			delete[] osVersionName;
 			osVersionName = nullptr;
 		}
 	}

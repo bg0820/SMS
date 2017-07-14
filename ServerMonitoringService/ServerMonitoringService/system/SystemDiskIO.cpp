@@ -163,7 +163,11 @@ Disk * SystemDiskIO::getDiskList(int &count)
 	return this->diskList;
 }
 
-// call update function after recall getDiskList() function
+/*
+	getDiskList function Call -> Update function Call
+	Low call frequency function
+	this function purpose is partition update
+*/
 int SystemDiskIO::Update()
 {
 	int nResult = 1;

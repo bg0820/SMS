@@ -101,7 +101,7 @@ TCHAR* Process::initCommandLine()
 
 	int size = commandLine.Length / 2;
 	TCHAR *strCommandLine = new TCHAR[size + 1];
-	memset(strCommandLine, NULL, size);
+	memset(strCommandLine, NULL, size + 1);
 
 	for (int i = 0; i < commandLine.Length; i++)
 	{
@@ -118,7 +118,7 @@ TCHAR* Process::initCommandLine()
 
 
 	if (nResult != 1)
-		return "";
+		return NULL;
 	//	throw nResult;
 
 	return strCommandLine;

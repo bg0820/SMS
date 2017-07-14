@@ -19,16 +19,16 @@ typedef struct system_info
 {
 	double cpuUsageVal;
 	double cpuIdleVal;
-	string cpuModel;
+	TCHAR cpuModel[1024];
 
 	DWORD memoryLoadPercent;
 	DWORDLONG memoryUsedByte;
 	DWORDLONG memoryFreeByte;
 	DWORDLONG memoryTotalByte;
 
-	string userName;
-	string computerName;
-	string osVersion;
+	TCHAR userName[MAX_PATH];
+	TCHAR computerName[MAX_PATH];
+	TCHAR osVersion[MAX_PATH];
 
 	Disk *disk = NULL;
 	int diskCount = 0;
@@ -37,14 +37,13 @@ typedef struct system_info
 	NetworkConnection *networkConnection = NULL;
 	ULONG networkConnectionCount;
 
-	PIP_ADAPTER_INFO adapterInfo;
+	IP_ADAPTER_INFO *adapterInfo = NULL;
 	int adapterCount = 0;
 }SystemInfo;
 
 class DataManager
 {
 private:
-	DWORD *processes = NULL;
 	SystemInfo *systemInfo = NULL;
 	TQTimer *tqTimer = NULL;
 
@@ -66,10 +65,14 @@ public:
 	{
 		systemInfo = new SystemInfo;
 		// fixed variable
-		systemInfo->cpuModel = systemCpu.getCpuModeInfo();
+		strcpy(systemInfo->cpuModel, systemCpu.getCpuModeInfo());
+		strcpy(systemInfo->computerName, systemOS.getComputerName());
+		strcpy(systemInfo->userName, systemOS.getUserName());
+		strcpy(systemInfo->osVersion, systemOS.getOSVersionName());
+		/*systemInfo->cpuModel = systemCpu.getCpuModeInfo();
 		systemInfo->computerName = systemOS.getComputerName();
 		systemInfo->userName = systemOS.getUserName();
-		systemInfo->osVersion = systemOS.getOSVersionName();
+		systemInfo->osVersion = systemOS.getOSVersionName();*/
 
 		// first Call
 		this->Update();
@@ -81,24 +84,41 @@ public:
 
 	~DataManager()
 	{
+		cout << "~DataManager()" << endl;
 		systemDiskIO.Stop();
 		this->Stop();
 
 		if (systemInfo)
 		{
+			// ~SystemDiskIO()
+			/*
 			if (systemInfo->disk)
 			{
 				delete[] systemInfo->disk;
 				systemInfo->disk = nullptr;
-			}
-			
+			}*/
+
 			if (systemInfo->process)
 			{
+				for (int i = 0; i<systemInfo->processCount; i++)
+					delete systemInfo->process[i];
 				delete[] systemInfo->process;
 				systemInfo->process = nullptr;
 			}
 
-			if (systemInfo->process)
+			if (systemInfo->networkConnection)
+			{
+				delete[] systemInfo->networkConnection;
+				systemInfo->networkConnection = nullptr;
+			}
+
+			if (systemInfo->adapterInfo)
+			{
+				delete[] systemInfo->adapterInfo;
+				systemInfo->adapterInfo = nullptr;
+			}
+
+			if (systemInfo->networkConnection)
 			{
 				delete[] systemInfo->networkConnection;
 				systemInfo->networkConnection = nullptr;
