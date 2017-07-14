@@ -15,7 +15,7 @@ int main()
 #endif
 
 	DataManager dataManager = DataManager();
-	//SystemInfo* systemInfo = dataManager->getSystem();
+	SystemInfo* systemInfo = dataManager.getSystem();
 
 
 
@@ -47,6 +47,9 @@ void DataManager::Update()
 	{
 		int pid = processListObj.getPID(i);
 		systemInfo->process[i] = new Process(pid);
+//		cout << systemInfo->process[i]->getName() << endl;
+//		cout << systemInfo->process[i]->getCommandLine() << endl;
+//		cout << systemInfo->process[i]->getPath() << endl;
 	}	
 
 	// Cpu Usage Update
@@ -97,7 +100,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(1000); // 1Sec
+		this->tqTimer->setInterval(100000); // 100Sec
 		this->tqTimer->Start();
 	}
 }

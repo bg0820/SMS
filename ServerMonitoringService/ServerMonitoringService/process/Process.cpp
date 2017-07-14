@@ -2,9 +2,13 @@
 
 TCHAR* Process::initName()
 {
+	if (this->handle == NULL)
+		return "";
+
 	int nResult = 1;
 
 	TCHAR szProcessName[MAX_PATH];
+
 	//HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->pid);
 
 	if (this->handle != NULL)
@@ -15,9 +19,9 @@ TCHAR* Process::initName()
 		if (!EnumProcessModulesEx(this->handle, &hMod, sizeof(hMod), &cbNeeded, LIST_MODULES_ALL))
 			nResult = 0;
 
-
 		if (GetModuleBaseName(this->handle, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR)) == 0)
 			nResult = 0;
+
 	}
 	else
 		nResult = 0;
@@ -30,6 +34,9 @@ TCHAR* Process::initName()
 
 TCHAR* Process::initPath()
 {
+	if (this->handle == NULL)
+		return "";
+
 	int nResult = 1;
 
 	TCHAR szProcessPath[MAX_PATH];
@@ -225,22 +232,34 @@ DWORD Process::getPid()
 
 TCHAR * Process::getName()
 {
-	return this->name;
+	if (this->name)
+		return this->name;
+	else
+		return "";
 }
 
 TCHAR * Process::getPath()
 {
-	return this->path;
+	if (this->path)
+		return this->path;
+	else
+		return "";
 }
 
 TCHAR * Process::getCommandLine()
 {
-	return this->commandLine;
+	if (this->commandLine)
+		return this->commandLine;
+	else
+		return "";
 }
 
 TCHAR * Process::getOwner()
 {
-	return this->owner;
+	if (this->owner)
+		return this->owner;
+	else
+		return "";
 }
 
 HICON Process::getIcon()

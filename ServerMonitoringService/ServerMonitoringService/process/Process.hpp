@@ -28,13 +28,13 @@ class Process
 {
 private:
 	DWORD pid;
-	HICON icon;
+	HICON icon = NULL;
 	HANDLE handle = NULL;
 	HWND hWnd = NULL;
+	TCHAR *commandLine = NULL;
 	TCHAR name[MAX_PATH];
 	TCHAR path[MAX_PATH];
 	TCHAR owner[MAX_PATH];
-	TCHAR *commandLine = NULL;
 	tm createTime = { 0 };
 private:
 	HWND getHwndFromPid();
@@ -48,8 +48,6 @@ private:
 public:
 	Process(const DWORD pid = 0) : pid(pid)
 	{
-		//StopWatch stopWatch;
-
 		// fixed value Init
 		this->handle = getHandleFromPid(); // 0.005 ~ 0.01ms
 		this->hWnd = getHwndFromPid(); // 0.2 ~ 3.0 ms
@@ -58,14 +56,16 @@ public:
 		strcpy_s(this->name, initName()); // 0.05 ~ 1.3 ms
 		strcpy_s(this->path, initPath()); // 0.4 ~ 0.5 ms
 
-	//	stopWatch.Start();
 		this->commandLine = initCommandLine();
 
-		this->icon = initIcon(TRUE);
-		this->createTime = initCreateTime();
-		//stopWatch.Stop();
-		//stopWatch.milliPrint();
+		cout << "Owner : " << getOwner() << endl;
+		cout << "Name : " << getName() << endl;
+		cout << "Path : " << getPath() << endl;
+		cout << "Cmd : " << getCommandLine() << endl;
+		cout << "=========================================" << endl<< endl;
 
+		// this->icon = initIcon(TRUE); // cpu time 69.4% usage
+		this->createTime = initCreateTime();
 	}
 
 	~Process()
