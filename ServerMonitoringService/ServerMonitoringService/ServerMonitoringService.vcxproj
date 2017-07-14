@@ -152,6 +152,9 @@
     <ClCompile Include="util\TQTimer.cpp" />
     <ClCompile Include="util\Util.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="json\json_vc71_libmt.lib" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

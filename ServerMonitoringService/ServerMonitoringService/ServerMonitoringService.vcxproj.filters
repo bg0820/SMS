@@ -129,4 +129,7 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="json\json_vc71_libmt.lib" />
+  </ItemGroup>
 </Project>
