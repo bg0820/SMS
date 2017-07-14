@@ -1,22 +1,5 @@
 #include "SystemNetwork.hpp"
 
-/*
-int main()
-{
-	ULONG count;
-	SystemNetwork sn;
-	NetworkConnection *networkConnection;
-	sn.getConnectionTable(networkConnection, count);
-
-	for (ULONG i = 0; i < count; i++)
-	{
-		cout << networkConnection[i].processID << endl;
-	}
-
-	system("pause");
-}
-*/
-
 TCHAR* SystemNetwork::getInterfaceTypeName(IP_ADAPTER_INFO paramAdapterInfo)
 {
 	switch (paramAdapterInfo.Type) {

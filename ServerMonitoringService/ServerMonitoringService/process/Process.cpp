@@ -35,8 +35,8 @@ void Process::initFileNamePath()
 
 	this->name = new TCHAR[MAX_PATH];
 	this->path = new TCHAR[MAX_PATH];
-	strcpy(this->name, szProcessName);
-	strcpy(this->path, szProcessPath);
+	strcpy_s(this->name, MAX_PATH, szProcessName);
+	strcpy_s(this->path, MAX_PATH, szProcessPath);
 }
 
 void Process::initCommandLine()
@@ -263,6 +263,7 @@ BOOLEAN Process::isRunning()
 			return FALSE; // process is not responsed
 		}
 	}
+	return TRUE;
 }
 
 int Process::getHandleCount(DWORD &val)

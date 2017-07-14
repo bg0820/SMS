@@ -65,14 +65,10 @@ public:
 	{
 		systemInfo = new SystemInfo;
 		// fixed variable
-		strcpy(systemInfo->cpuModel, systemCpu.getCpuModeInfo());
-		strcpy(systemInfo->computerName, systemOS.getComputerName());
-		strcpy(systemInfo->userName, systemOS.getUserName());
-		strcpy(systemInfo->osVersion, systemOS.getOSVersionName());
-		/*systemInfo->cpuModel = systemCpu.getCpuModeInfo();
-		systemInfo->computerName = systemOS.getComputerName();
-		systemInfo->userName = systemOS.getUserName();
-		systemInfo->osVersion = systemOS.getOSVersionName();*/
+		strcpy_s(systemInfo->cpuModel, systemCpu.getCpuModeInfo());
+		strcpy_s(systemInfo->computerName, systemOS.getComputerName());
+		strcpy_s(systemInfo->userName, systemOS.getUserName());
+		strcpy_s(systemInfo->osVersion, systemOS.getOSVersionName());
 
 		// first Call
 		this->Update();

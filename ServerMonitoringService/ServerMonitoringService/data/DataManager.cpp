@@ -1,25 +1,5 @@
 #include "DataManager.hpp"
 
-#ifdef _DEBUG
-#include <crtdbg.h>
-#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
-#endif
-
-int main()
-{
-	// 메모리 누수 디버깅
-#ifdef _DEBUG
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	// 메모리 누수 찾기
-	// _CrtSetBreakAlloc(165);
-#endif
-
-	DataManager dataManager = DataManager();
-	SystemInfo* systemInfo = dataManager.getSystem();
-
-	system("pause");
-}
-
 void DataManager::Update()
 {
 	StopWatch stopWatch;
@@ -103,7 +83,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(10); // 100Sec
+		this->tqTimer->setInterval(200); // 100Sec
 		this->tqTimer->Start();
 	}
 }

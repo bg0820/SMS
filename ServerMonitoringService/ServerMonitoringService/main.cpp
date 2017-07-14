@@ -1,15 +1,4 @@
-#include <iostream>
-#include <windows.h>	
-#include <Shlobj.h>
-#include "system/SystemNetwork.hpp"
-#include "network socket/NetworkManager.hpp"
-
-#define DIV				1024						// KB
-#define DIV_TWO			1024 / 1024					// MB
-#define DIV_THREE		1024 / 1024 / 1024			// GB
-
-
-using namespace std;
+#include "main.hpp"
 
 void onShellExecute()
 {
@@ -38,23 +27,25 @@ void onShellExecute()
 		// else if (dwStatus == ERROR_FILE_NOT_FOUND) { // TODO : lpFile is not founded; }
 	}
 }
-#include "process/Process.hpp"
 
 void mainStart()
 {
-	//Process pro = Process(6908);
-	/*
-	NetworkManager *networkManager;
-	networkManager = new NetworkManager();
-	networkManager->Init();
-	networkManager->Start();*/
+	DataManager dataManager = DataManager();
+	SystemInfo* systemInfo = dataManager.getSystem();
 
 	system("pause");
 }
 
-/*
 int main(int argc, char* argv[])
 {
+	// 메모리 누수 디버깅
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	// 메모리 누수 찾기
+	// _CrtSetBreakAlloc(165);
+#endif
+
+
 	if (IsUserAnAdmin())
 	{
 		mainStart();
@@ -66,4 +57,3 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
-*/
