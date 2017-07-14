@@ -19,7 +19,6 @@ private:
 	SERVICE_STATUS_HANDLE	mServiceStatusHandle;
 
 	TCHAR					mServiceName[MAX_PATH];
-
 protected:
 	virtual VOID			OnStarted(VOID) = 0;
 	virtual VOID			OnStopped(VOID) = 0;

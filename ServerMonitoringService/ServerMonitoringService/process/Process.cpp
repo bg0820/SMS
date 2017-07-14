@@ -215,8 +215,6 @@ TCHAR * Process::getOwner()
 		return "";
 }
 
-
-
 HICON Process::getIcon(BOOLEAN LargeIcon)
 {
 	/*

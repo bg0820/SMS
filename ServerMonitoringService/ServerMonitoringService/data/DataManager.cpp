@@ -29,6 +29,20 @@ void DataManager::Update()
 	{
 		int pid = processListObj.getPID(i);
 		systemInfo->process[i] = new Process(pid);
+		systemInfo->process[i]->getOwner();
+		systemInfo->process[i]->getName();
+		systemInfo->process[i]->getPath();
+		systemInfo->process[i]->getCommandLine();
+
+		double cpuVal;
+		DWORD memoryVal;
+		DWORD handleCount;
+		int toTalCount, currentCount;
+		systemInfo->process[i]->getCpuUsage(cpuVal);
+		systemInfo->process[i]->getMemoryUsage(memoryVal);
+		systemInfo->process[i]->getHandleCount(handleCount);
+		systemInfo->process[i]->getThreadCount(toTalCount, currentCount);
+
 		/*cout << "Owner : " << systemInfo->process[i]->getOwner() << endl;
 		cout << "Name : " << systemInfo->process[i]->getName()  << endl;
 		cout << "Path : " << systemInfo->process[i]->getPath() << endl;
@@ -83,7 +97,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(200); // 100Sec
+		this->tqTimer->setInterval(1000); // 1Sec
 		this->tqTimer->Start();
 	}
 }

@@ -5,6 +5,7 @@
 #include <windows.h>	
 #include <Shlobj.h>
 #include "data/DataManager.hpp"
+#include "util/CSerivce.hpp"
 
 #ifdef _DEBUG
 #include <crtdbg.h>
