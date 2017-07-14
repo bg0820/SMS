@@ -118,9 +118,9 @@ void Process::initOwner()
 
 	this->owner = new TCHAR[MAX_PATH];
 	// copy info to our static buffer
-	strcpy(this->owner, dom);
-	strcat(this->owner, "/");
-	strcat(this->owner, name);
+	strcpy_s(this->owner, MAX_PATH, dom);
+	strcat_s(this->owner, MAX_PATH, "/");
+	strcat_s(this->owner, MAX_PATH, name);
 
 
 	if (tokenHandle)

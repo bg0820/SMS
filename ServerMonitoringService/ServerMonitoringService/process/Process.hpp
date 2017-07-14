@@ -36,7 +36,7 @@ class Process
 private:
 	DWORD pid;
 	HANDLE handle = NULL;
-	// HWND hWnd = NULL; Call only when needed
+	// HWND hWnd = NULL; // Call only when needed
 	TCHAR *commandLine = NULL;
 	TCHAR *name = NULL;
 	TCHAR *path = NULL;

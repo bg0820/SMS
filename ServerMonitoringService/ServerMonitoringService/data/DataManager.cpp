@@ -11,7 +11,7 @@ int main()
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	// 메모리 누수 찾기
-	//_CrtSetBreakAlloc(163);
+	// _CrtSetBreakAlloc(165);
 #endif
 
 	DataManager dataManager = DataManager();
@@ -32,7 +32,11 @@ void DataManager::Update()
 	if (systemInfo->process)
 	{
 		for (int i = 0; i < systemInfo->processCount; i++)
+		{
 			delete systemInfo->process[i];
+			systemInfo->process[i] = nullptr;
+		}
+		
 		delete[] systemInfo->process;
 		systemInfo->process = nullptr;
 	}
@@ -45,7 +49,6 @@ void DataManager::Update()
 	{
 		int pid = processListObj.getPID(i);
 		systemInfo->process[i] = new Process(pid);
-
 		/*cout << "Owner : " << systemInfo->process[i]->getOwner() << endl;
 		cout << "Name : " << systemInfo->process[i]->getName()  << endl;
 		cout << "Path : " << systemInfo->process[i]->getPath() << endl;
@@ -100,7 +103,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(1000); // 100Sec
+		this->tqTimer->setInterval(10); // 100Sec
 		this->tqTimer->Start();
 	}
 }
