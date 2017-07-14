@@ -17,6 +17,7 @@ class NetworkManager
 private:
 	NetworkListener* networkListener = NULL;
 	SOCKET socket;
+	TCHAR buf[SEND_BUFFER_SIZE];
 public:
 	NetworkManager()
 	{

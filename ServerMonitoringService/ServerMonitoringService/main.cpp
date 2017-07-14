@@ -31,11 +31,12 @@ void onShellExecute()
 void mainStart()
 {
 	DataManager dataManager = DataManager();
-	SystemInfo* systemInfo = dataManager.getSystem();
+	// SystemInfo* systemInfo = dataManager.getSystem();
 
 	system("pause");
 }
 
+/*
 int main(int argc, char* argv[])
 {
 	// 메모리 누수 디버깅
@@ -56,4 +57,4 @@ int main(int argc, char* argv[])
 	}
 
 	return 0;
-}
+}*/

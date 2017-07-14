@@ -78,28 +78,109 @@
     <ClInclude Include="util\CSerivce.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="json\autolink.h">
+    <ClInclude Include="rapidjson\error\en.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="json\config.h">
+    <ClInclude Include="rapidjson\error\error.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="json\features.h">
+    <ClInclude Include="rapidjson\internal\biginteger.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="json\forwards.h">
+    <ClInclude Include="rapidjson\internal\diyfp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="json\json.h">
+    <ClInclude Include="rapidjson\internal\dtoa.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="json\reader.h">
+    <ClInclude Include="rapidjson\internal\ieee754.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="json\value.h">
+    <ClInclude Include="rapidjson\internal\itoa.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="json\writer.h">
+    <ClInclude Include="rapidjson\internal\meta.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\internal\pow10.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\internal\regex.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\internal\stack.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\internal\strfunc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\internal\strtod.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\internal\swap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\msinttypes\inttypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\msinttypes\stdint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\allocators.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\document.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\encodedstream.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\encodings.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\filereadstream.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\filewritestream.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\fwd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\istreamwrapper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\memorybuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\memorystream.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\ostreamwrapper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\pointer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\prettywriter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\rapidjson.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\reader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\schema.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\stream.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\stringbuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="rapidjson\writer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -152,8 +233,5 @@
     <ClCompile Include="util\CSerive.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="json\json_vc71_libmt.lib" />
   </ItemGroup>
 </Project>

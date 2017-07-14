@@ -17,10 +17,8 @@ int NetworkManager::Start()
 
 	while (true)
 	{
-		//std::cout << "SEND()" << std::endl;
-		char * buf = "1\0";
-
-		if (!NetworkListener::Send(socket, buf,10))
+		int len = sizeof(buf);
+		if (!NetworkListener::Send(socket, buf, len))
 		{
 			return 0;
 		}
