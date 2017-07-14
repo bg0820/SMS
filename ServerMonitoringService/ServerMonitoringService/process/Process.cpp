@@ -226,21 +226,25 @@ HICON Process::getIcon(BOOLEAN LargeIcon)
 	*/
 
 	SHFILEINFO sfi;
-	if (!SHGetFileInfo(this->path, 0, &sfi, sizeof(sfi), SHGFI_SYSICONINDEX)) return NULL;
-
-	// Get the jumbo image list
-	IImageList *piml;
-	if (FAILED(SHGetImageList(SHIL_JUMBO, IID_PPV_ARGS(&piml)))) 
+	if (!SHGetFileInfo(this->path, 0, &sfi, sizeof(sfi), SHGFI_SYSICONINDEX))
 		return NULL;
 
-	// Extract an icon
-	HICON hico;
-	piml->GetIcon(sfi.iIcon, 0x00000001, &hico);
+	// Retrieve the system image list.
+	// To get the 48x48 icons, use SHIL_EXTRALARGE
+	// To get the 256x256 icons (Vista only), use SHIL_JUMBO
+	HIMAGELIST* imageList;
+	if (SHGetImageList(SHIL_JUMBO, IID_IImageList, (void**)&imageList) != S_OK)
+		return NULL;
 
-	// Clean up
-	piml->Release();
+	// Get the icon we need from the list. Note that the HIMAGELIST we retrieved
+	// earlier needs to be casted to the IImageList interface before use.
+	HICON hIcon;
+	HRESULT hResult = ((IImageList*)imageList)->GetIcon(sfi.iIcon, ILD_TRANSPARENT, &hIcon);
 
-	return hico;
+	if (hResult == S_OK)
+		return hIcon;
+
+	return NULL;
 }
 
 BOOLEAN Process::isRunning()

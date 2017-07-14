@@ -1,14 +1,20 @@
 #ifndef _PROCESS_H_
 #define _PROCESS_H_
 
-#include <iostream>
+#include <shlobj.h>
+#include <shlguid.h>
+#include <shellapi.h>
+#include <commctrl.h>
+#include <commoncontrols.h>
+
 #include <Windows.h>
 #include <Psapi.h>
 #include <tlhelp32.h>
-#include "Winternl.h"
+#include <Winternl.h>
 #include <time.h>
-#include <commoncontrols.h>
 #include "../util/StopWatch.hpp"
+
+#include <iostream>
 
 #pragma comment(lib, "psapi.lib")
 
@@ -53,7 +59,7 @@ public:
 		initFileNamePath();
 		initCommandLine();
 		initCreateTime();
-		// this->icon = getIcon(TRUE); // cpu time 81.4% usage
+		//this->icon = getIcon(TRUE); // cpu time 81.4% usage
 	}
 
 	~Process()
