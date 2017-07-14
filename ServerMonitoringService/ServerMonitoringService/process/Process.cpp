@@ -215,18 +215,32 @@ TCHAR * Process::getOwner()
 		return "";
 }
 
+
+
 HICON Process::getIcon(BOOLEAN LargeIcon)
 {
-	SHFILEINFO shFileInfo;
-	ZeroMemory(&shFileInfo, sizeof(SHFILEINFO));
+	/*
+		Get High Resolution ICON
+		Vista and higer, 256 * 256
+		lower 48 * 48
+	*/
 
-	ULONG iconFlag;
-	iconFlag = LargeIcon ? SHGFI_LARGEICON : SHGFI_SMALLICON;
+	SHFILEINFO sfi;
+	if (!SHGetFileInfo(this->path, 0, &sfi, sizeof(sfi), SHGFI_SYSICONINDEX)) return NULL;
 
-	if (!SHGetFileInfo(this->path, 0, &shFileInfo, sizeof(SHFILEINFO), SHGFI_ICON | iconFlag))
+	// Get the jumbo image list
+	IImageList *piml;
+	if (FAILED(SHGetImageList(SHIL_JUMBO, IID_PPV_ARGS(&piml)))) 
 		return NULL;
 
-	return shFileInfo.hIcon;
+	// Extract an icon
+	HICON hico;
+	piml->GetIcon(sfi.iIcon, 0x00000001, &hico);
+
+	// Clean up
+	piml->Release();
+
+	return hico;
 }
 
 BOOLEAN Process::isRunning()

@@ -7,6 +7,7 @@
 #include <tlhelp32.h>
 #include "Winternl.h"
 #include <time.h>
+#include <commoncontrols.h>
 #include "../util/StopWatch.hpp"
 
 #pragma comment(lib, "psapi.lib")
@@ -28,7 +29,6 @@ class Process
 {
 private:
 	DWORD pid;
-	HICON icon = NULL;
 	HANDLE handle = NULL;
 	// HWND hWnd = NULL; Call only when needed
 	TCHAR *commandLine = NULL;
@@ -53,7 +53,7 @@ public:
 		initFileNamePath();
 		initCommandLine();
 		initCreateTime();
-		 this->icon = getIcon(TRUE); // cpu time 69.4% usage
+		// this->icon = getIcon(TRUE); // cpu time 81.4% usage
 	}
 
 	~Process()
@@ -85,8 +85,10 @@ public:
 			this->commandLine = nullptr;
 		}
 
-		if (this->icon)
-			DestroyIcon(this->icon);
+		/*
+			if (this->icon)
+				DestroyIcon(this->icon);
+		*/
 	}
 
 	BOOLEAN isRunning();
