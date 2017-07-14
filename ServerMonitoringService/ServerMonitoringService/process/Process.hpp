@@ -32,14 +32,13 @@ private:
 	HANDLE handle = NULL;
 	// HWND hWnd = NULL; Call only when needed
 	TCHAR *commandLine = NULL;
-	TCHAR *name = new TCHAR[MAX_PATH];
-	TCHAR *path = new TCHAR[MAX_PATH];
-	TCHAR *owner = new TCHAR[MAX_PATH];
+	TCHAR *name = NULL;
+	TCHAR *path = NULL;
+	TCHAR *owner = NULL;
 	tm createTime = { 0 };
 private:
 	HWND getHwndFromPid();
 	HANDLE getHandleFromPid();
-	void initIcon(BOOLEAN LargeIcon = FALSE);
 	void initFileNamePath();
 	void initOwner();
 	void initCommandLine();
@@ -54,13 +53,7 @@ public:
 		initFileNamePath();
 		initCommandLine();
 		initCreateTime();
-		// this->icon = initIcon(TRUE); // cpu time 69.4% usage
-
-		cout << "Owner : " << getOwner() << endl;
-		cout << "Name : " << getName() << endl;
-		cout << "Path : " << getPath() << endl;
-		cout << "Cmd : " << getCommandLine() << endl;
-		cout << "=========================================" << endl<< endl;
+		 this->icon = getIcon(TRUE); // cpu time 69.4% usage
 	}
 
 	~Process()
@@ -102,8 +95,7 @@ public:
 	TCHAR* getPath();
 	TCHAR* getCommandLine();
 	TCHAR* getOwner();
-	HICON getIcon();
-
+	HICON getIcon(BOOLEAN LargeIcon);
 	int getHandleCount(DWORD &val);
 	int getThreadCount(int &paramTotalThreadCount, int &paramCurrentProcessThreadCount);
 	int getNetworkUsage(double &val);

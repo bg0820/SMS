@@ -33,23 +33,10 @@ void Process::initFileNamePath()
 	else
 		nResult = -4;
 
+	this->name = new TCHAR[MAX_PATH];
+	this->path = new TCHAR[MAX_PATH];
 	strcpy(this->name, szProcessName);
 	strcpy(this->path, szProcessPath);
-}
-
-void Process::initIcon(BOOLEAN LargeIcon)
-{
-	SHFILEINFO shFileInfo;
-
-	ZeroMemory(&shFileInfo, sizeof(SHFILEINFO));
-
-	ULONG iconFlag;
-	iconFlag = LargeIcon ? SHGFI_LARGEICON : SHGFI_SMALLICON;
-
-	if (!SHGetFileInfo(this->path, 0, &shFileInfo, sizeof(SHFILEINFO), SHGFI_ICON | iconFlag))
-		return;
-
-	this->icon = shFileInfo.hIcon;
 }
 
 void Process::initCommandLine()
@@ -129,6 +116,7 @@ void Process::initOwner()
 	if (!LookupAccountSidA(0, tokenUser->User.Sid, name, &nlen, dom, &dlen, (PSID_NAME_USE)&iUse))
 		nResult = -3;
 
+	this->owner = new TCHAR[MAX_PATH];
 	// copy info to our static buffer
 	strcpy(this->owner, dom);
 	strcat(this->owner, "/");
@@ -227,9 +215,18 @@ TCHAR * Process::getOwner()
 		return "";
 }
 
-HICON Process::getIcon()
+HICON Process::getIcon(BOOLEAN LargeIcon)
 {
-	return this->icon;
+	SHFILEINFO shFileInfo;
+	ZeroMemory(&shFileInfo, sizeof(SHFILEINFO));
+
+	ULONG iconFlag;
+	iconFlag = LargeIcon ? SHGFI_LARGEICON : SHGFI_SMALLICON;
+
+	if (!SHGetFileInfo(this->path, 0, &shFileInfo, sizeof(SHFILEINFO), SHGFI_ICON | iconFlag))
+		return NULL;
+
+	return shFileInfo.hIcon;
 }
 
 BOOLEAN Process::isRunning()

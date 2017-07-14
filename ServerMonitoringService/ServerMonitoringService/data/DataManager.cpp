@@ -11,13 +11,11 @@ int main()
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	// 메모리 누수 찾기
-	//_CrtSetBreakAlloc(164);
+	//_CrtSetBreakAlloc(163);
 #endif
 
 	DataManager dataManager = DataManager();
 	SystemInfo* systemInfo = dataManager.getSystem();
-
-
 
 	system("pause");
 }
@@ -47,9 +45,12 @@ void DataManager::Update()
 	{
 		int pid = processListObj.getPID(i);
 		systemInfo->process[i] = new Process(pid);
-		//		cout << systemInfo->process[i]->getName() << endl;
-		//		cout << systemInfo->process[i]->getCommandLine() << endl;
-		//		cout << systemInfo->process[i]->getPath() << endl;
+
+		/*cout << "Owner : " << systemInfo->process[i]->getOwner() << endl;
+		cout << "Name : " << systemInfo->process[i]->getName()  << endl;
+		cout << "Path : " << systemInfo->process[i]->getPath() << endl;
+		cout << "Cmd : " << systemInfo->process[i]->getCommandLine() << endl;
+		cout << "=========================================" << endl<< endl;*/
 	}
 
 	// Cpu Usage Update
