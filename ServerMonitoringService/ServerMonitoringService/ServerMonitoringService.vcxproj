@@ -125,7 +125,6 @@
     <ClInclude Include="process\ProcessList.hpp" />
     <ClInclude Include="process\ProcessManager.hpp" />
     <ClInclude Include="util\CSerivce.hpp" />
-    <ClInclude Include="stdafx.h" />
     <ClInclude Include="util\StopWatch.hpp" />
     <ClInclude Include="system\SystemCPU.hpp" />
     <ClInclude Include="system\SystemDiskIO.hpp" />
@@ -144,7 +143,6 @@
     <ClCompile Include="process\ProcessList.cpp" />
     <ClCompile Include="process\ProcessManager.cpp" />
     <ClCompile Include="util\CSerive.cpp" />
-    <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="util\StopWatch.cpp" />
     <ClCompile Include="system\SystemCPU.cpp" />
     <ClCompile Include="system\SystemDiskIO.cpp" />
