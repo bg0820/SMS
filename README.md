@@ -66,8 +66,6 @@
 #### **Network Adapter Info**
 >##### AdapterCount
 
----
-
 ## Network Protocol
 
 #### SMS Agent -> (TCP)
@@ -78,4 +76,5 @@
 
 ##### Cross-platform support be expected. Currently, only Windows is supported.
 
+## Info
 [![npm](https://img.shields.io/badge/email-bg0820%40naver.com-red.svg)]()
