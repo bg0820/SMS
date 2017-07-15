@@ -1,5 +1,19 @@
 #include "DataManager.hpp"
 
+int main()
+{
+	// 메모리 누수 디버깅
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	// 메모리 누수 찾기
+	// _CrtSetBreakAlloc(165);
+#endif
+
+	DataManager dataManager =DataManager();
+	system("pause");
+}
+
+
 void DataManager::Update()
 {
 	StopWatch stopWatch;
@@ -13,8 +27,11 @@ void DataManager::Update()
 	{
 		for (int i = 0; i < systemInfo->processCount; i++)
 		{
-			delete systemInfo->process[i];
-			systemInfo->process[i] = nullptr;
+			if (systemInfo->process[i])
+			{
+				delete systemInfo->process[i];
+				systemInfo->process[i] = nullptr;
+			}
 		}
 		
 		delete[] systemInfo->process;
@@ -39,9 +56,9 @@ void DataManager::Update()
 		DWORD handleCount;
 		int toTalCount, currentCount;
 		systemInfo->process[i]->getCpuUsage(cpuVal);
-		systemInfo->process[i]->getMemoryUsage(memoryVal);
-		systemInfo->process[i]->getHandleCount(handleCount);
-		systemInfo->process[i]->getThreadCount(toTalCount, currentCount);
+		//systemInfo->process[i]->getMemoryUsage(memoryVal);
+		//systemInfo->process[i]->getHandleCount(handleCount);
+		//systemInfo->process[i]->getThreadCount(toTalCount, currentCount);
 
 		/*cout << "Owner : " << systemInfo->process[i]->getOwner() << endl;
 		cout << "Name : " << systemInfo->process[i]->getName()  << endl;

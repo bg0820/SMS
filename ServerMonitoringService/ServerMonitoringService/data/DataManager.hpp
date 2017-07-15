@@ -90,18 +90,22 @@ public:
 
 		if (systemInfo)
 		{
-			// ~SystemDiskIO()
 			/*
-			if (systemInfo->disk)
-			{
+				~SystemDiskIO()
 				delete[] systemInfo->disk;
-				systemInfo->disk = nullptr;
-			}*/
+			*/
 
 			if (systemInfo->process)
 			{
-				for (int i = 0; i<systemInfo->processCount; i++)
-					delete systemInfo->process[i];
+				for (int i = 0; i < systemInfo->processCount; i++)
+				{
+					if (systemInfo->process[i])
+					{
+						delete systemInfo->process[i];
+						systemInfo->process[i] = nullptr;
+					}
+				}
+
 				delete[] systemInfo->process;
 				systemInfo->process = nullptr;
 			}
