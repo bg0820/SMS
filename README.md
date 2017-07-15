@@ -11,8 +11,6 @@
 ##### 크로스 플랫폼 지원 예정입니다. 현재는 윈도우만 지원중
 ##### Cross-platform support be expected. Currently, only Windows is supported.
 
----
-
 ## List Collected by Agent
 
 * Cpu
