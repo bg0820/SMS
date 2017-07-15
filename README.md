@@ -10,6 +10,66 @@
 
 ---
 
+## List Collected by Agent
+#### **Cpu**
+>###### CpuUsage
+>###### CpuIdle
+>###### CpuModel
+#### **Memory**
+>##### MemoryLoadPercent
+>##### MemoryUsedByte
+>##### MemoryFreeByte
+>##### MemoryTotalByte
+#### **System**
+>##### UserName
+>##### ComputerName
+>##### OsVersionName
+#### **Disk**
+>##### Path
+>##### Name
+>##### FileFormat
+>##### UsedBytes
+>##### TotalBytes
+>##### FreeBytes
+>##### Type
+>##### DiskPerformance
+>##### ReadSec
+>##### WriteSec
+>##### DiskCount
+#### **Process**
+>##### PID
+>##### CommandLine
+>##### Name
+>##### Path
+>##### Owner
+>##### CreateTime
+>##### HandleCount
+>##### ThreadCount
+>##### MemoryUsage
+>##### CpuUsage
+>##### TotalThreadCount
+#### **Network Connection Info**
+>##### ProtocolType
+>##### LocalEndpoint
+>>##### IPV4
+>>##### IPV6
+>>##### Port
+>##### RemoteEndpoint
+>>##### IPV4
+>>##### IPV6
+>>##### Port
+>##### State
+>##### ProcessID
+>##### CreateTime
+>##### OwnerInfo
+>##### NetworkConnectionCount
+#### **Network Adapter Info**
+>##### AdapterCount
+
+---
+
+## Network Protocol
+
 #### SMS Agent -> (TCP)
 #### (TCP) Data Server -> (WebSocket)
 #### (WebSocket) Web Server
