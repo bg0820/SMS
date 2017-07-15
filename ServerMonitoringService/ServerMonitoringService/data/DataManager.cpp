@@ -54,21 +54,21 @@ void DataManager::Update()
 		double cpuVal;
 		DWORD memoryVal;
 		DWORD handleCount;
-		int toTalCount, currentCount;
-		systemInfo->process[i]->getCpuUsage(cpuVal);
-		systemInfo->process[i]->getMemoryUsage(memoryVal);
+		systemInfo->process[i]->getCpuUsage(cpuVal); // 1.7 Sec
+	    // systemInfo->process[i]->getMemoryUsage(memoryVal); // 0.6 Sec
 		systemInfo->process[i]->getHandleCount(handleCount);
-		//systemInfo->process[i]->getThreadCount(toTalCount, currentCount);
+		processListObj.getProcessThreadCount(pid);
+		processListObj.getTotalThreadCount();
 
-	/*	cout << "Owner : " << systemInfo->process[i]->getOwner() << endl;
+		/*cout << "Owner : " << systemInfo->process[i]->getOwner() << endl;
 		cout << "Name : " << systemInfo->process[i]->getName()  << endl;
 		cout << "Path : " << systemInfo->process[i]->getPath() << endl;
 		cout << "Cmd : " << systemInfo->process[i]->getCommandLine() << endl;
 		cout << "Cpu Usage : " << cpuVal << endl;
 		cout << "Memory Usage : " << memoryVal  / 1024.0 << "MB" << endl;
 		cout << "Handle Count : " << handleCount << endl;
-		cout << "Thread Count : " << currentCount << endl;
-		cout << "Total Thread Count : " << toTalCount << endl;
+		cout << "Thread Count : " << processListObj.getProcessThreadCount(pid) << endl;
+		cout << "Total Thread Count : " << processListObj.getTotalThreadCount() << endl;
 		cout << "=========================================" << endl<< endl;*/
 	}
 
@@ -119,7 +119,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(300000); // 300Sec
+		this->tqTimer->setInterval(1500); // 5Sec
 		this->tqTimer->Start();
 	}
 }

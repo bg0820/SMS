@@ -67,3 +67,9 @@ string Util::getStringToAddr(SOCKADDR_IN paramAddr)
 {
 	return Util::format("%s:%d", inet_ntoa(paramAddr.sin_addr), ntohs(paramAddr.sin_port));
 }
+
+void Util::microDelay(ULONG time)
+{
+	time_point<steady_clock> start = high_resolution_clock::now();
+	while ((high_resolution_clock::now() - start).count() / 1000.0 < time);
+}

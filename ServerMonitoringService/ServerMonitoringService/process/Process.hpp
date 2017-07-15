@@ -12,6 +12,7 @@
 #include <Winternl.h>
 #include <time.h>
 #include "../util/StopWatch.hpp"
+#include "../util/Util.hpp"
 
 #include <iostream>
 

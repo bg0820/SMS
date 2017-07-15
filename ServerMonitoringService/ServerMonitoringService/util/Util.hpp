@@ -3,14 +3,14 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <time.h>
 #include <string>
 #include <Windows.h>
-#include <cstdarg>
+#include <time.h>
+#include <chrono>
 #include <memory>
 
 using namespace std;
-
+using namespace chrono;
 class Util
 {
 public:
@@ -19,6 +19,7 @@ public:
 	static string getLocalIp();
 	static string getStringToAddr(SOCKADDR_IN paramAddr);
 	static void stringReplace(string& subject, const string& search, const string& replace);
+	static void microDelay(ULONG time);
 };
 
 #endif

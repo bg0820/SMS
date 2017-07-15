@@ -397,13 +397,13 @@ int Process::getCpuUsage(double &val)
 		LastPCounter = qpcLastInt;
 		LastCycleTime = CycleTime;
 
-		if (count > 3)
+		if (count >= 2)
 		{
 			val = Usage;
 			break;
 		}
-
-		Sleep(1); // QueryPerformanceCounter Function Resolution is 1 microsecond
+		
+		Util::microDelay(30); // QueryPerformanceCounter Function Resolution is 1 microsecond
 
 		count++;
 	}
