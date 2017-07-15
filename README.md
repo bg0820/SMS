@@ -1,13 +1,13 @@
 # SMS - Server Monitoring Service
 
-### 현재 이 프로젝트는 개발중 입니다.
-### (this project is not a finished)
 
-### **Server Monitoring Service**
+### **Server Monitoring Service (SMS)**
 >#### SMS Agent
 >#### Data Server
 >#### Web Server (Visualization)
-### 
+---
+##### 현재 이 프로젝트는 개발중 입니다.
+##### this project is not a finished.
 ##### 크로스 플랫폼 지원 예정입니다. 현재는 윈도우만 지원중
 ##### Cross-platform support be expected. Currently, only Windows is supported.
 
