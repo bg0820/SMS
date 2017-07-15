@@ -332,6 +332,10 @@ int Process::getNetworkUsage(double &val)
 	return 1;
 }
 
+/*
+	val = kbyte
+	Not working properly in operate on 64bit system
+*/
 int Process::getMemoryUsage(DWORD &val)
 {
 	DWORD workingSetPages[1024 * 128]; // 512KB
@@ -342,12 +346,10 @@ int Process::getMemoryUsage(DWORD &val)
 	DWORD pageTablePages = 0;
 
 	if (this->handle == NULL)
-		return 0;
-
-	char szBuffer[MAX_PATH * 4];
+		return -1;
 
 	if (!QueryWorkingSet(this->handle, workingSetPages, sizeof(workingSetPages)))
-		return 0;
+		return -2;
 
 	DWORD pages = workingSetPages[0];
 	qsort(&workingSetPages[1], pages, sizeof(DWORD), Compare);
@@ -358,8 +360,8 @@ int Process::getMemoryUsage(DWORD &val)
 		DWORD currentPageAddress;
 		DWORD nextPageAddress;
 		DWORD nextPageFlags;
-		DWORD pageAddress = workingSetPages[i] & 0xFFFFF000;
-		DWORD pageFlags = workingSetPages[i] & 0x00000FFF;
+		ULONGLONG pageAddress = workingSetPages[i] & 0xFFFFF000;
+		ULONGLONG pageFlags = workingSetPages[i] & 0x00000FFF;
 
 		while (i <= pages) // iterate all pages
 		{
@@ -396,7 +398,13 @@ int Process::getMemoryUsage(DWORD &val)
 	DWORD sharedMemory = sharedPages * 4;
 	DWORD privateMemory = totalMemory - sharedMemory;
 
+	cout << "totalMemory : " << totalMemory << endl;
+	cout << "sharedMemory : " << sharedMemory << endl;
+	cout << "privateMemory : " << privateMemory << endl;
+
 	val = privateMemory; //ref
+
+	return 1;
 }
 
 int Process::getCpuUsage(double &val)
