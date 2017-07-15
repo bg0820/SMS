@@ -7,7 +7,7 @@
 #### > Data Server
 #### > Web Server (Visualization)
 ### 
-
+##### Cross-platform support be expected. Currently, only Windows is supported.
 ---
 
 ## List Collected by Agent
@@ -71,10 +71,6 @@
 #### SMS Agent -> (TCP)
 #### (TCP) Data Server -> (WebSocket)
 #### (WebSocket) Web Server
-
-
-
-##### Cross-platform support be expected. Currently, only Windows is supported.
 
 ## Info
 [![npm](https://img.shields.io/badge/email-bg0820%40naver.com-red.svg)]()
