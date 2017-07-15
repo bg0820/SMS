@@ -42,7 +42,7 @@ public:
 	int getCount(); // update -> return value is processList count
 	int getPID(const int i); // return value is num i to process PID value
 	int getProcessThreadCount(const int paramPID);
-
+	int getTotalThreadCount();
 };
 
 #endif

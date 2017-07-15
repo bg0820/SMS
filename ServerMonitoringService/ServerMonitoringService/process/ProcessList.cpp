@@ -96,6 +96,11 @@ int ProcessList::getProcessThreadCount(const int paramPID)
 	return threadCount;
 }
 
+int ProcessList::getTotalThreadCount()
+{
+	return this->threadCounting.size();
+}
+
 int ProcessList::getCount()
 {
 	if (processListSize != NULL)
