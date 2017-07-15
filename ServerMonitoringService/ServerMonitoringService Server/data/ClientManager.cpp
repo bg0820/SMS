@@ -15,7 +15,7 @@ Client* ClientManager::add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket)
 		client->recvBytes = 0;
 		client->sendBytes = 0;
 
-		clientList.insert(hash_map<string, Client*>::value_type(ip, client));
+		clientList.insert(unordered_map<string, Client*>::value_type(ip, client));
 
 		string str = Util::format("Client Connected [%s], Count : %d", ip.c_str(), getCount());
 		Log::printLog(str);

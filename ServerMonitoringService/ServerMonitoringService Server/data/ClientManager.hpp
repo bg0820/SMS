@@ -5,15 +5,14 @@
 
 #include "../util/Log.hpp"
 #include <Windows.h>
-#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS 1
-#include <hash_map>
+#include <unordered_map>
 
 using namespace std;
 
 class ClientManager
 {
 private:
-	hash_map<string, Client*> clientList;
+	unordered_map<string, Client*> clientList;
 	int clientCount = 0;
 public:
 	Client* add(SOCKADDR_IN paramAddr, SOCKET paramClientSocket);
