@@ -1,5 +1,5 @@
 #include "DataManager.hpp"
-
+/*
 int main()
 {
 	// 메모리 누수 디버깅
@@ -9,10 +9,10 @@ int main()
 	// _CrtSetBreakAlloc(165);
 #endif
 
-	DataManager dataManager =DataManager();
+	DataManager dataManager = DataManager();
 	system("pause");
 }
-
+*/
 
 void DataManager::Update()
 {
@@ -56,14 +56,19 @@ void DataManager::Update()
 		DWORD handleCount;
 		int toTalCount, currentCount;
 		systemInfo->process[i]->getCpuUsage(cpuVal);
-		//systemInfo->process[i]->getMemoryUsage(memoryVal);
-		//systemInfo->process[i]->getHandleCount(handleCount);
+		systemInfo->process[i]->getMemoryUsage(memoryVal);
+		systemInfo->process[i]->getHandleCount(handleCount);
 		//systemInfo->process[i]->getThreadCount(toTalCount, currentCount);
 
-		/*cout << "Owner : " << systemInfo->process[i]->getOwner() << endl;
+	/*	cout << "Owner : " << systemInfo->process[i]->getOwner() << endl;
 		cout << "Name : " << systemInfo->process[i]->getName()  << endl;
 		cout << "Path : " << systemInfo->process[i]->getPath() << endl;
 		cout << "Cmd : " << systemInfo->process[i]->getCommandLine() << endl;
+		cout << "Cpu Usage : " << cpuVal << endl;
+		cout << "Memory Usage : " << memoryVal  / 1024.0 << "MB" << endl;
+		cout << "Handle Count : " << handleCount << endl;
+		cout << "Thread Count : " << currentCount << endl;
+		cout << "Total Thread Count : " << toTalCount << endl;
 		cout << "=========================================" << endl<< endl;*/
 	}
 
@@ -114,7 +119,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(1000); // 1Sec
+		this->tqTimer->setInterval(300000); // 300Sec
 		this->tqTimer->Start();
 	}
 }

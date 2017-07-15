@@ -9,7 +9,6 @@
 
 #include <Windows.h>
 #include <Psapi.h>
-#include <tlhelp32.h>
 #include <Winternl.h>
 #include <time.h>
 #include "../util/StopWatch.hpp"
@@ -105,7 +104,6 @@ public:
 	TCHAR* getOwner();
 	HICON getIcon(BOOLEAN LargeIcon);
 	int getHandleCount(DWORD &val);
-	int getThreadCount(int &paramTotalThreadCount, int &paramCurrentProcessThreadCount);
 	int getNetworkUsage(double &val);
 	int getMemoryUsage(DWORD &val);
 	int getCpuUsage(double &val);

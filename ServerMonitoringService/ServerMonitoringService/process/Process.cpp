@@ -276,56 +276,6 @@ int Process::getHandleCount(DWORD &val)
 	return 1;
 }
 
-int Process::getThreadCount(int &paramTotalThreadCount, int &paramCurrentProcessThreadCount)
-{
-	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
-	THREADENTRY32 te32;
-	int totalThreadCount = 0;
-	int processThreadCount = 0;
-
-	// Take a snapshot of all running threads  
-	hThreadSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-
-	if (hThreadSnap == INVALID_HANDLE_VALUE)
-		return 0;
-
-	// Fill in the size of the structure before using it. 
-	te32.dwSize = sizeof(THREADENTRY32);
-
-	// Retrieve information about the first thread,
-	// and exit if unsuccessful
-	if (!Thread32First(hThreadSnap, &te32))
-	{
-		if (hThreadSnap != INVALID_HANDLE_VALUE)
-			CloseHandle(hThreadSnap);     // Must clean up the snapshot object!
-		return 0;
-	}
-
-	// Now walk the thread list of the system,
-	// and display information about each thread
-	// associated with the specified process
-	do // Thread32First
-	{
-		totalThreadCount++;
-		if (te32.th32OwnerProcessID == this->pid)
-		{
-			processThreadCount++;
-			//printf(TEXT("\n     THREAD ID      = 0x%08X"), te32.th32ThreadID);
-			//printf(TEXT("\n     base priority  = %d"), te32.tpBasePri);
-			//printf(TEXT("\n     delta priority = %d"), te32.tpDeltaPri);
-		}
-	} while (Thread32Next(hThreadSnap, &te32));
-
-	//  Don't forget to clean up the snapshot object.
-	if (hThreadSnap != INVALID_HANDLE_VALUE)
-		CloseHandle(hThreadSnap);
-
-	paramTotalThreadCount = totalThreadCount;
-	paramCurrentProcessThreadCount = processThreadCount;
-
-	return 1;
-}
-
 int Process::getNetworkUsage(double &val)
 {
 	// TODO : 
@@ -338,6 +288,14 @@ int Process::getNetworkUsage(double &val)
 */
 int Process::getMemoryUsage(DWORD &val)
 {
+	/*#if _WIN32 || _WIN64
+	#if _WIN64
+		// TODO : 64Bit Compile
+	#else
+		// TODO : 32Bit Compile
+	#endif
+	#endif*/
+
 	DWORD workingSetPages[1024 * 128]; // 512KB
 	DWORD pageSize = 0x1000;
 
@@ -397,10 +355,6 @@ int Process::getMemoryUsage(DWORD &val)
 	DWORD totalMemory = pages * 4;
 	DWORD sharedMemory = sharedPages * 4;
 	DWORD privateMemory = totalMemory - sharedMemory;
-
-	cout << "totalMemory : " << totalMemory << endl;
-	cout << "sharedMemory : " << sharedMemory << endl;
-	cout << "privateMemory : " << privateMemory << endl;
 
 	val = privateMemory; //ref
 

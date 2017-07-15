@@ -4,6 +4,8 @@
 #include <iostream>
 #include <Windows.h>
 #include <Psapi.h>
+#include <tlhelp32.h>
+#include <unordered_map>
 
 #pragma comment(lib, "psapi.lib")
 
@@ -14,15 +16,18 @@ typedef unsigned long       DWORD;
 class ProcessList
 {
 private:
-	int processListCount = 0;
+	int processListCount = 128; // += 128
 	DWORD *processList;
 	DWORD processListSize = NULL;
+	unordered_map<int, int> threadCounting;
+private:
+	int getThreadCount();
+	BOOLEAN isContainsKey(int paramPID);
 public:
 	ProcessList()
 	{
-		//processList.reserve(128);
-		processListCount = 128;
 		processList = new DWORD[processListCount];
+		getThreadCount();
 	}
 
 	~ProcessList()
@@ -36,9 +41,8 @@ public:
 	void Update(); // process list update
 	int getCount(); // update -> return value is processList count
 	int getPID(const int i); // return value is num i to process PID value
-							 // TODO: function Add
-							 // getProcessUser, getProcessStatus, getProcessNetworkSend, 
-							 // getProcessNetworkReceive, getProcessDescription
+	int getProcessThreadCount(const int paramPID);
+
 };
 
 #endif
