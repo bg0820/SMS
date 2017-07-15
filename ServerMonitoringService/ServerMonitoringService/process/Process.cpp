@@ -334,65 +334,69 @@ int Process::getNetworkUsage(double &val)
 
 int Process::getMemoryUsage(DWORD &val)
 {
-	int nResult = 1;
+	DWORD workingSetPages[1024 * 128]; // 512KB
+	DWORD pageSize = 0x1000;
 
-	DWORD dWorkingSetPages[1024 * 128]; // 512KB
-	DWORD dPageSize = 0x1000;
-	DWORD dSharedPages = 0;
-	DWORD dPrivatePages = 0;
-	DWORD dPageTablePages = 0;
+	DWORD sharedPages = 0;
+	DWORD privatePages = 0;
+	DWORD pageTablePages = 0;
 
-	if (!QueryWorkingSet(this->handle, dWorkingSetPages, sizeof(dWorkingSetPages)))
-		nResult = 0;
+	if (this->handle == NULL)
+		return 0;
 
-	DWORD dPages = dWorkingSetPages[0];
+	char szBuffer[MAX_PATH * 4];
 
-	qsort(&dWorkingSetPages[1], dPages, sizeof(DWORD), Compare);
+	if (!QueryWorkingSet(this->handle, workingSetPages, sizeof(workingSetPages)))
+		return 0;
 
-	for (DWORD i = 1; i <= dPages; i++)
+	DWORD pages = workingSetPages[0];
+	qsort(&workingSetPages[1], pages, sizeof(DWORD), Compare);
+
+	for (DWORD i = 1; i <= pageSize; i++)
 	{
-		DWORD dCurrentPageStatus = 0;
-		DWORD dCurrentPageAddress;
-		DWORD dNextPageAddress;
-		DWORD dNextPageFlags;
-		DWORD dPageAddress = dWorkingSetPages[i] & 0xFFFFF000;
-		DWORD dPageFlags = dWorkingSetPages[i] & 0x00000FFF;
+		DWORD currentPageStatus = 0;
+		DWORD currentPageAddress;
+		DWORD nextPageAddress;
+		DWORD nextPageFlags;
+		DWORD pageAddress = workingSetPages[i] & 0xFFFFF000;
+		DWORD pageFlags = workingSetPages[i] & 0x00000FFF;
 
-		while (i <= dPages)   // iterate all pages
+		while (i <= pages) // iterate all pages
 		{
-			dCurrentPageStatus++;
+			currentPageStatus++;
 
-			if (i == dPages)  //if last page
+			if (i == pages) //if last page
 				break;
 
-			dCurrentPageAddress = dWorkingSetPages[i] & 0xFFFFF000;
-			dNextPageAddress = dWorkingSetPages[i + 1] & 0xFFFFF000;
-			dNextPageFlags = dWorkingSetPages[i + 1] & 0x00000FFF;
+			currentPageAddress = workingSetPages[i] & 0xFFFFF000;
+			nextPageAddress = workingSetPages[i + 1] & 0xFFFFF000;
+			nextPageFlags = workingSetPages[i + 1] & 0x00000FFF;
 
-			//decide whether iterate further or exit(this is non-contiguous page or have different flags) 
-			if ((dNextPageAddress == (dCurrentPageAddress + dPageSize)) && (dNextPageFlags == dPageFlags))
+			//decide whether iterate further or exit
+			//(this is non-contiguous page or have different flags) 
+			if ((nextPageAddress == (currentPageAddress + pageSize)) && (nextPageFlags == pageFlags))
 				i++;
 			else
 				break;
 		}
 
-		if ((dPageAddress < 0xC0000000) || (dPageAddress > 0xE0000000))
+		if ((pageAddress < 0xC0000000) || (pageAddress > 0xE0000000))
 		{
-			if (dPageFlags & 0x100)            // this is shared one
-				dSharedPages += dCurrentPageStatus;
-			else                                // private one
-				dPrivatePages += dCurrentPageStatus;
+			if (pageFlags & 0x100) // this is shared one
+				sharedPages += currentPageStatus;
+
+			else // private one
+				privatePages += currentPageStatus;
 		}
 		else
-			dPageTablePages += dCurrentPageStatus;  //page table region 
+			pageTablePages += currentPageStatus; //page table region 
 	}
 
-	DWORD dTotal = dPages;
-	DWORD dShared = dSharedPages;
+	DWORD totalMemory = pages * 4;
+	DWORD sharedMemory = sharedPages * 4;
+	DWORD privateMemory = totalMemory - sharedMemory;
 
-	val = (dTotal - dShared) * 4; //ref
-
-	return nResult;
+	val = privateMemory; //ref
 }
 
 int Process::getCpuUsage(double &val)
