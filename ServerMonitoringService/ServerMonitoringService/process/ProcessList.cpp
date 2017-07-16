@@ -1,14 +1,5 @@
 #include "ProcessList.hpp"
 
-int main()
-{
-
-	ProcessList processList;
-
-	cout << processList.getProcessHwnd(3692) << endl;
-	system("pause");
-}
-
 void ProcessList::Update()
 {
 	// Clear();
