@@ -10,7 +10,7 @@ int SystemMemory::memoryCall()
 	return 1;
 }
 
-int SystemMemory::getLoadPercent(DWORD &val)
+int SystemMemory::getLoadPercent(int &val)
 {
 	if (!memoryCall())
 		return  0;
