@@ -39,12 +39,9 @@ void ProcessList::getProcessList()
 		}
 	}
 }
-#include "../util/StopWatch.hpp"
 
 int ProcessList::getThreadCount()
 {
-	StopWatch sw;
-	sw.Start();
 	int nResult = 1;
 	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
 	THREADENTRY32 te32;
@@ -85,9 +82,6 @@ int ProcessList::getThreadCount()
 	//  Don't forget to clean up the snapshot object.
 	if (hThreadSnap != INVALID_HANDLE_VALUE)
 		CloseHandle(hThreadSnap);
-
-	sw.Stop();
-	sw.milliPrint();
 
 	return nResult;
 }
