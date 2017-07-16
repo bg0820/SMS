@@ -133,6 +133,9 @@ void Process::initOwner()
 
 void Process::initCreateTime()
 {
+	if (this->handle == NULL)
+		return;
+
 	FILETIME createTime, exitTime, kernelTime, userTime;
 	FILETIME localFileTime;
 	SYSTEMTIME sysTime;
@@ -200,6 +203,18 @@ TCHAR * Process::getOwner()
 		return this->owner;
 	else
 		return "";
+}
+
+string Process::getCreateTime()
+{
+	if (this->handle == NULL)
+		return "";
+
+	tm t = this->createTime;
+	string str = Util::format("%04d-%02d-%02d %02d:%02d:%02d",
+		t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
+
+	return str;
 }
 
 HICON Process::getIcon(BOOLEAN LargeIcon)

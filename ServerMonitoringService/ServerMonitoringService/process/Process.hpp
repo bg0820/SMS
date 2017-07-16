@@ -102,6 +102,7 @@ public:
 	TCHAR* getPath();
 	TCHAR* getCommandLine();
 	TCHAR* getOwner();
+	string getCreateTime();
 	HICON getIcon(BOOLEAN LargeIcon);
 	int getHandleCount(DWORD &val);
 	int getNetworkUsage(double &val);
