@@ -1,6 +1,8 @@
 #include "SystemOS.hpp"
 
-// When you are finished with the TCHAR, be sure to delete it. 
+/*
+	When you are finished with the TCHAR, be sure to delete it. 
+*/
 int SystemOS::initUserName(TCHAR *&val)
 {
 	TCHAR charBuf[BUFFER_SIZE];
@@ -9,13 +11,17 @@ int SystemOS::initUserName(TCHAR *&val)
 	if (!GetUserName(charBuf, &bufCharSize)) // GetUserName Func Failed return value is ZERO
 		return 0;
 
-	val = new TCHAR[bufCharSize];
-	memcpy(val, charBuf, bufCharSize);
+	int len = bufCharSize + 1; // Last Null char
+	val = new TCHAR[len];
+	memset(val, NULL, len);
+	strcpy_s(val, len, charBuf);
 
 	return 1;
 }
 
-// When you are finished with the TCHAR, be sure to delete it. 
+/*
+When you are finished with the TCHAR, be sure to delete it.
+*/
 int SystemOS::initComputerName(TCHAR *&val)
 {
 	TCHAR charBuf[BUFFER_SIZE];
@@ -24,16 +30,19 @@ int SystemOS::initComputerName(TCHAR *&val)
 	if (!GetComputerName(charBuf, &bufCharSize)) // GetComputerName Func Failed return value is ZERO
 		return 0;
 
-	val = new TCHAR[bufCharSize];
-	memcpy(val, charBuf, bufCharSize);
+	int len = bufCharSize + 1; // Last Null char
+	val = new TCHAR[len];
+	memset(val, NULL, len);
+	strcpy_s(val, len, charBuf);
 
 	return 1;
 }
 
-// When you are finished with the TCHAR, be sure to delete it. 
+/*
+When you are finished with the TCHAR, be sure to delete it.
+*/
 int SystemOS::initOSVersionName(TCHAR *&val)
 {
-	//Software\\Microsoft\\Windows NT\\CurrentVersio
 	HKEY key;
 	TCHAR data[1024];
 	DWORD dwSize;
@@ -47,8 +56,10 @@ int SystemOS::initOSVersionName(TCHAR *&val)
 
 	RegCloseKey(key);
 
-	val = new TCHAR[1024];
-	memcpy(val, data, sizeof(data) / sizeof(TCHAR));
+	int len = dwSize + 1; // Last Null char
+	val = new TCHAR[len];
+	memset(val, NULL, len);
+	strcpy_s(val, len, data);
 
 	return 1;
 }

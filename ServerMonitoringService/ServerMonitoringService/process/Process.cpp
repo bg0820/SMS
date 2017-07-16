@@ -38,6 +38,8 @@ void Process::initFileNamePath()
 
 	this->name = new TCHAR[MAX_PATH];
 	this->path = new TCHAR[MAX_PATH];
+	memset(this->name, NULL, MAX_PATH);
+	memset(this->path, NULL, MAX_PATH);
 	strcpy_s(this->name, MAX_PATH, szProcessName);
 	strcpy_s(this->path, MAX_PATH, szProcessPath);
 }
@@ -119,11 +121,14 @@ void Process::initOwner()
 	if (!LookupAccountSidA(0, tokenUser->User.Sid, name, &nlen, dom, &dlen, (PSID_NAME_USE)&iUse))
 		nResult = -3;
 
-	this->owner = new TCHAR[MAX_PATH];
+	int len = dlen + nlen + 2; // Last Null char + '/'
+	this->owner = new TCHAR[len];
+	memset(this->owner, NULL, len);
+
 	// copy info to our static buffer
-	strcpy_s(this->owner, MAX_PATH, dom);
-	strcat_s(this->owner, MAX_PATH, "/");
-	strcat_s(this->owner, MAX_PATH, name);
+	strcpy_s(this->owner, len, dom);
+	strcat_s(this->owner, len, "/");
+	strcat_s(this->owner, len, name);
 
 
 	if (tokenHandle)
