@@ -25,23 +25,33 @@ void DataManager::jsonUpdate()
 	json.AddMember("CpuUsage", systemInfo->cpuUsageVal, alloc);
 	json.AddMember("CpuIdle", systemInfo->cpuIdleVal, alloc);
 	string strCpuModel = systemInfo->cpuModel;
-	Value vCpuModel(strCpuModel.c_str(), strCpuModel.size(), alloc);
+	Value vCpuModel(kStringType);
+	vCpuModel.SetString(strCpuModel.c_str(), strCpuModel.size(), alloc);
 	json.AddMember("CpuModel", vCpuModel, alloc);
 
 	// json Memory
-	json.AddMember("MemoryLoadPercent", systemInfo->memoryLoadPercent, alloc);
+	//json.AddMember("MemoryLoadPercent", systemInfo->memoryLoadPercent, alloc);
 	json.AddMember("MemoryUsedByte", systemInfo->memoryUsedByte, alloc);
 	json.AddMember("MemoryFreeByte", systemInfo->memoryFreeByte, alloc);
 	json.AddMember("MemoryTotalByte", systemInfo->memoryTotalByte, alloc);
 
 	// json System Info
-/*	string strUserName = systemInfo->userName;
-	string strComputerName = systemInfo->computerName;
-	string strOSVerisonName = systemInfo->osVersion;
+	Value vUserName(kStringType);
+	Value vComputerName(kStringType);
+	Value vOSVersionName(kStringType);
 
-	json.AddMember("UserName", strUserName, alloc);
-	json.AddMember("ComputerName", strComputerName, alloc);
-	json.AddMember("OSVersionName", strOSVerisonName, alloc);*/
+	string strUserName = systemInfo->userName;
+	vUserName.SetString(strUserName.c_str(), strUserName.size(), alloc);
+
+	string strComputerName = systemInfo->computerName;
+	vComputerName.SetString(strComputerName.c_str(), strComputerName.size(), alloc);
+
+	string strOSVerisonName = systemInfo->osVersion;
+	vOSVersionName.SetString(strOSVerisonName.c_str(), strOSVerisonName.size(), alloc);
+
+	json.AddMember("UserName", vUserName, alloc);
+	json.AddMember("ComputerName", vComputerName, alloc);
+	json.AddMember("OSVersionName", vOSVersionName, alloc);
 
 	// json Disk list
 	Value jsonDiskList(kArrayType);
@@ -220,7 +230,7 @@ void DataManager::Update()
 
 	// Cpu Usage Update
 	systemCpu.getUsage(systemInfo->cpuUsageVal);
-	systemCpu.getIdleUsage(systemInfo->cpuIdleVal);
+	systemInfo->cpuIdleVal = (100.0 - systemInfo->cpuUsageVal);
 
 	// Disk Usage Update
 	systemInfo->disk = systemDiskIO.getDiskList(systemInfo->diskCount);

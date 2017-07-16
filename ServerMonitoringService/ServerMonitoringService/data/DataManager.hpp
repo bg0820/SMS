@@ -25,10 +25,10 @@ typedef struct system_info
 	double cpuIdleVal;
 	TCHAR cpuModel[1024];
 
-	DWORD memoryLoadPercent;
-	DWORDLONG memoryUsedByte;
-	DWORDLONG memoryFreeByte;
-	DWORDLONG memoryTotalByte;
+	ULONG memoryLoadPercent;
+	ULONGLONG memoryUsedByte;
+	ULONGLONG memoryFreeByte;
+	ULONGLONG memoryTotalByte;
 
 	TCHAR userName[MAX_PATH];
 	TCHAR computerName[MAX_PATH];
