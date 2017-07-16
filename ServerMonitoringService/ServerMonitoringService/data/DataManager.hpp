@@ -84,7 +84,6 @@ public:
 
 	~DataManager()
 	{
-		cout << "~DataManager()" << endl;
 		systemDiskIO.Stop();
 		this->Stop();
 

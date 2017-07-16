@@ -26,13 +26,13 @@ void DataManager::jsonUpdate()
 	json.AddMember("CpuIdle", systemInfo->cpuIdleVal, alloc);
 	string strCpuModel = systemInfo->cpuModel;
 	Value vCpuModel(strCpuModel.c_str(), strCpuModel.size(), alloc);
-
 	json.AddMember("CpuModel", vCpuModel, alloc);
+
 	// json Memory
-	/*json.AddMember("MemoryLoadPercent", systemInfo->memoryLoadPercent, alloc);
+	json.AddMember("MemoryLoadPercent", systemInfo->memoryLoadPercent, alloc);
 	json.AddMember("MemoryUsedByte", systemInfo->memoryUsedByte, alloc);
 	json.AddMember("MemoryFreeByte", systemInfo->memoryFreeByte, alloc);
-	json.AddMember("MemoryTotalByte", systemInfo->memoryTotalByte, alloc);*/
+	json.AddMember("MemoryTotalByte", systemInfo->memoryTotalByte, alloc);
 
 	// json System Info
 /*	string strUserName = systemInfo->userName;
