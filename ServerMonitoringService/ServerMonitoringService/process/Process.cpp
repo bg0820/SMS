@@ -69,15 +69,18 @@ void Process::initCommandLine()
 	if (!ReadProcessMemory(this->handle, commandLine.Buffer, commandLineContents, commandLine.Length, NULL))
 		nResult = -3;
 
-	int size = commandLine.Length / 2;
-	TCHAR *strCommandLine = new TCHAR[size + 1];
-	memset(strCommandLine, NULL, size + 1);
-
-	// char <-> w_char compatibility
-	for (int i = 0; i < commandLine.Length; i++)
+	if (nResult == 1)
 	{
-		if (commandLineContents[i] != NULL)
-			strCommandLine[i / 2] = commandLineContents[i];
+		int size = (commandLine.Length / 2) + 1; // Last Null Char
+		this->commandLine = new TCHAR[size];
+		memset(this->commandLine, NULL, size);
+
+		// char <-> w_char compatibility
+		for (int i = 0; i < commandLine.Length; i++)
+		{
+			if (commandLineContents[i] != NULL)
+				this->commandLine[i / 2] = commandLineContents[i];
+		}
 	}
 
 	if (commandLineContents)
@@ -85,12 +88,6 @@ void Process::initCommandLine()
 		delete[] commandLineContents;
 		commandLineContents = nullptr;
 	}
-
-	if (nResult != 1)
-		return;
-	//	throw nResult;
-
-	this->commandLine = strCommandLine;
 }
 
 void Process::initOwner()
@@ -129,7 +126,6 @@ void Process::initOwner()
 	strcpy_s(this->owner, len, dom);
 	strcat_s(this->owner, len, "/");
 	strcat_s(this->owner, len, name);
-
 
 	if (tokenHandle)
 		CloseHandle(tokenHandle);
@@ -410,7 +406,7 @@ int Process::getCpuUsage(double &val)
 			val = Usage;
 			break;
 		}
-		
+
 		Util::microDelay(30); // QueryPerformanceCounter Function Resolution is 1 microsecond
 
 		count++;
