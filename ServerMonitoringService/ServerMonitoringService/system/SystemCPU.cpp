@@ -46,18 +46,6 @@ int SystemCpu::getUsage(double &val)
 	return 1;
 }
 
-// 100 - total = IDLE CPU Usage
-int SystemCpu::getIdleUsage(double &val)
-{
-	double curUsage;
-	if (getUsage(curUsage) == 0)
-		return 0;
-
-	val = 100.0 - curUsage;
-
-	return 1;
-}
-
 // TIME DIFF FUNC
 ULONGLONG SystemCpu::SubtractTimes(const FILETIME one, const FILETIME two)
 {
