@@ -1,6 +1,27 @@
 #include "ProcessList.hpp"
 
+int main()
+{
+
+	ProcessList processList;
+
+	cout << processList.getProcessHwnd(3692) << endl;
+	system("pause");
+}
+
 void ProcessList::Update()
+{
+	// Clear();
+	hWndList.clear();
+	threadCounting.clear();
+
+	// Update
+	getProcessList();
+	getThreadCount();
+	getHwndList();
+}
+
+void ProcessList::getProcessList()
 {
 	while (true)
 	{
@@ -27,9 +48,12 @@ void ProcessList::Update()
 		}
 	}
 }
+#include "../util/StopWatch.hpp"
 
 int ProcessList::getThreadCount()
 {
+	StopWatch sw;
+	sw.Start();
 	int nResult = 1;
 	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
 	THREADENTRY32 te32;
@@ -37,7 +61,7 @@ int ProcessList::getThreadCount()
 	hThreadSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
 
 	if (hThreadSnap == INVALID_HANDLE_VALUE)
-		nResult = 0;
+		nResult = -1;
 
 	// Fill in the size of the structure before using it. 
 	te32.dwSize = sizeof(THREADENTRY32);
@@ -48,7 +72,7 @@ int ProcessList::getThreadCount()
 	{
 		if (hThreadSnap != INVALID_HANDLE_VALUE)
 			CloseHandle(hThreadSnap);     // Must clean up the snapshot object!
-		nResult = 0;
+		nResult = -2;
 	}
 
 	// Now walk the thread list of the system,
@@ -57,14 +81,10 @@ int ProcessList::getThreadCount()
 	do // Thread32First
 	{
 		int pid = te32.th32OwnerProcessID;
-		if (isContainsKey(pid)) // pid exist, 존재 하는 경우
-		{
+		if (isContainsKey(MAP_THREADCOUNT, pid)) // pid exist, 존재 하는 경우
 			threadCounting.find(pid)->second++; // +1			
-		}
 		else // 존재하지 않는 경우
-		{
 			threadCounting.insert(unordered_map<int, int>::value_type(pid, 1)); // first found = 1
-		}
 
 		//printf(TEXT("\n     THREAD ID      = 0x%08X"), te32.th32ThreadID);
 		//printf(TEXT("\n     base priority  = %d"), te32.tpBasePri);
@@ -75,25 +95,46 @@ int ProcessList::getThreadCount()
 	if (hThreadSnap != INVALID_HANDLE_VALUE)
 		CloseHandle(hThreadSnap);
 
+	sw.Stop();
+	sw.milliPrint();
+
 	return nResult;
 }
 
-BOOLEAN ProcessList::isContainsKey(int paramPID)
+void ProcessList::getHwndList()
 {
-	if (threadCounting.find(paramPID) == threadCounting.end())
-		return FALSE;
-	else
-		return TRUE;
+	HWND hWnd = FindWindow(NULL, NULL);
+	while (hWnd != NULL)
+	{
+		if (GetParent(hWnd) == NULL) {
+			DWORD dwProcId;
+			GetWindowThreadProcessId(hWnd, &dwProcId);
+
+			int pid = dwProcId;
+			hWndList.insert(unordered_map<int, HWND>::value_type(pid, hWnd));
+		}
+		hWnd = GetWindow(hWnd, GW_HWNDNEXT);
+	}
 }
 
 int ProcessList::getProcessThreadCount(const int paramPID)
 {
 	int threadCount = 0;
 
-	if (isContainsKey(paramPID))
+	if (isContainsKey(MAP_THREADCOUNT, paramPID))
 		threadCount = threadCounting.find(paramPID)->second;
 
 	return threadCount;
+}
+
+HWND ProcessList::getProcessHwnd(const int paramPID)
+{
+	HWND hWnd = NULL;
+
+	if (isContainsKey(MAP_HWNDLIST, paramPID))
+		hWnd = hWndList.find(paramPID)->second;
+
+	return hWnd;
 }
 
 int ProcessList::getTotalThreadCount()
@@ -101,6 +142,28 @@ int ProcessList::getTotalThreadCount()
 	return this->threadCounting.size();
 }
 
+int ProcessList::getTotalHwndCount()
+{
+	return this->hWndList.size();
+}
+
+BOOLEAN ProcessList::isContainsKey(const int mapType, int paramPID)
+{
+	if (mapType == MAP_THREADCOUNT)
+	{
+		if (threadCounting.find(paramPID) == threadCounting.end())
+			return FALSE;
+		else
+			return TRUE;
+	}
+	else if(mapType == MAP_HWNDLIST)
+	{
+		if (hWndList.find(paramPID) == hWndList.end())
+			return FALSE;
+		else
+			return TRUE;
+	}
+}
 int ProcessList::getCount()
 {
 	if (processListSize != NULL)

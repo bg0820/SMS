@@ -43,7 +43,6 @@ private:
 	TCHAR *owner = NULL;
 	tm createTime = { 0 };
 private:
-	HWND getHwndFromPid();
 	HANDLE getHandleFromPid();
 	void initFileNamePath();
 	void initOwner();
@@ -97,7 +96,7 @@ public:
 		*/
 	}
 
-	BOOLEAN isRunning();
+	BOOLEAN isRunning(const HWND hWnd);
 	DWORD getPid();
 	TCHAR* getName();
 	TCHAR* getPath();

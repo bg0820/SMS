@@ -11,7 +11,8 @@
 
 using namespace std;
 
-typedef unsigned long       DWORD;
+#define MAP_THREADCOUNT 1
+#define MAP_HWNDLIST 2
 
 class ProcessList
 {
@@ -19,15 +20,20 @@ private:
 	int processListCount = 128; // += 128
 	DWORD *processList;
 	DWORD processListSize = NULL;
+
 	unordered_map<int, int> threadCounting;
+	unordered_map<int, HWND> hWndList;
 private:
+	void getProcessList();
 	int getThreadCount();
-	BOOLEAN isContainsKey(int paramPID);
+	void getHwndList();
+	// template <typename MapType> - Very Slow
+	BOOLEAN isContainsKey(const int mapType, int paramPID);
 public:
 	ProcessList()
 	{
 		processList = new DWORD[processListCount];
-		getThreadCount();
+		Update();
 	}
 
 	~ProcessList()
@@ -42,7 +48,9 @@ public:
 	int getCount(); // update -> return value is processList count
 	int getPID(const int i); // return value is num i to process PID value
 	int getProcessThreadCount(const int paramPID);
+	HWND getProcessHwnd(const int paramPID);
 	int getTotalThreadCount();
+	int getTotalHwndCount();
 };
 
 #endif

@@ -155,23 +155,6 @@ void Process::initCreateTime()
 	this->createTime = tmTime;
 }
 
-HWND Process::getHwndFromPid()
-{
-	HWND hWnd = FindWindow(NULL, NULL);
-	while (hWnd != NULL)
-	{
-		if (GetParent(hWnd) == NULL) {
-			DWORD dwProcId;
-			GetWindowThreadProcessId(hWnd, &dwProcId);
-
-			if (this->pid == dwProcId)
-				return hWnd;
-		}
-		hWnd = GetWindow(hWnd, GW_HWNDNEXT);
-	}
-	return NULL;
-}
-
 // When you are finished with the handle, be sure to close it using the CloseHandle function.
 HANDLE Process::getHandleFromPid()
 {
@@ -249,10 +232,9 @@ HICON Process::getIcon(BOOLEAN LargeIcon)
 	return NULL;
 }
 
-BOOLEAN Process::isRunning()
+BOOLEAN Process::isRunning(const HWND hWnd)
 {
 	DWORD_PTR dw = 0;
-	HWND hWnd = getHwndFromPid();
 
 	// TimeOut 2sec
 	if (SendMessageTimeout(hWnd, NULL, NULL, NULL, SMTO_NORMAL, 2000, &dw))
