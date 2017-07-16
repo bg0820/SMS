@@ -58,9 +58,9 @@ private:
 	SystemNetwork systemNetwork;
 	SystemOS systemOS;
 
-
 private:
 	void Update();
+	void jsonUpdate();
 	void Start();
 	void Stop();
 	void CallbackProc();

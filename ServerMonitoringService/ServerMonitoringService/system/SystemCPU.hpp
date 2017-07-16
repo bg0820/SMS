@@ -12,7 +12,6 @@ private:
 	ULONGLONG SubtractTimes(FILETIME one, FILETIME two);
 public:
 	int getUsage(double &val);
-	int getIdleUsage(double &val);
 	TCHAR* getCpuModeInfo();
 	//int getSysUsage(double &val);
 };
