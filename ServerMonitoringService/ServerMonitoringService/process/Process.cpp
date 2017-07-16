@@ -33,6 +33,9 @@ void Process::initFileNamePath()
 	else
 		nResult = -4;
 
+	if (nResult != 1)
+		return;
+
 	this->name = new TCHAR[MAX_PATH];
 	this->path = new TCHAR[MAX_PATH];
 	strcpy_s(this->name, MAX_PATH, szProcessName);
