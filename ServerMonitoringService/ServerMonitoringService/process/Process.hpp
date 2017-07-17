@@ -63,6 +63,7 @@ public:
 
 	~Process()
 	{
+		// ERROR : 
 		if (this->handle != INVALID_HANDLE_VALUE)
 			CloseHandle(this->handle);
 

@@ -6,7 +6,7 @@ int main()
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	// 메모리 누수 찾기
-	// _CrtSetBreakAlloc(1243);
+	// _CrtSetBreakAlloc(147);
 #endif
 
 	DataManager dataManager = DataManager();
@@ -19,7 +19,7 @@ Value DataManager::getJsonDiskList(Document::AllocatorType &alloc)
 	Value jsonDiskList(kArrayType);
 	for (int i = 0; i < systemInfo->diskCount; i++)
 	{
-		// exception
+		// ERROR : 
 		Disk disk = systemInfo->disk[i];
 
 		Value jsonDisk(kObjectType);
@@ -77,12 +77,12 @@ Value DataManager::getJsonProcessList(Document::AllocatorType &alloc)
 		Value jsonProcess(kObjectType);
 		jsonProcess.AddMember("PID", (UINT)process->getPid(), alloc);
 
-	//	string strCommmand = process->getCommandLine();
-		//Value vCommand(strCommmand.c_str(), strCommmand.size(), alloc);
+		//	string strCommmand = process->getCommandLine();
+			//Value vCommand(strCommmand.c_str(), strCommmand.size(), alloc);
 		string strName = process->getName();
 		Value vName(strName.c_str(), strName.size(), alloc);
-	//	string strPath = process->getPath();
-		//Value vPath(strPath.c_str(), strPath.size(), alloc);
+		//	string strPath = process->getPath();
+			//Value vPath(strPath.c_str(), strPath.size(), alloc);
 		string strOwner = process->getOwner();
 		Value vOwner(strOwner.c_str(), strOwner.size(), alloc);
 
@@ -211,20 +211,20 @@ void DataManager::jsonUpdate()
 	json.AddMember("AdapterInfo List", jsonAdapterInfoList, alloc);
 
 	json.AddMember("AdapterCount", 2, alloc);
-
-	/*
+	
+	
 	StringBuffer buffer;
 	Writer<StringBuffer> writer(buffer);
 	json.Accept(writer);
 
-	std::cout << buffer.GetString() << std::endl;*/
+	std::cout << buffer.GetSize() << std::endl;
 }
 
 void DataManager::Update()
 {
 	StopWatch stopWatch;
 	stopWatch.Start();
-	
+
 	// ProcessList Update
 	processListObj.Update();
 
@@ -239,7 +239,7 @@ void DataManager::Update()
 				systemInfo->process[i] = nullptr;
 			}
 		}
-		
+
 		delete[] systemInfo->process;
 		systemInfo->process = nullptr;
 	}
@@ -257,7 +257,7 @@ void DataManager::Update()
 		DWORD memoryVal;
 		DWORD handleCount;
 		systemInfo->process[i]->getCpuUsage(cpuVal); // 1.7 Sec
-	    // systemInfo->process[i]->getMemoryUsage(memoryVal); // 0.6 Sec
+		// systemInfo->process[i]->getMemoryUsage(memoryVal); // 0.6 Sec
 		systemInfo->process[i]->getHandleCount(handleCount);
 		processListObj.getProcessThreadCount(pid);
 		processListObj.getTotalThreadCount();*/

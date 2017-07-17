@@ -78,109 +78,112 @@
     <ClInclude Include="util\CSerivce.hpp">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\error\en.h">
+    <ClInclude Include="lib\rapidjson\error\en.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\error\error.h">
+    <ClInclude Include="lib\rapidjson\error\error.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\biginteger.h">
+    <ClInclude Include="lib\rapidjson\internal\biginteger.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\diyfp.h">
+    <ClInclude Include="lib\rapidjson\internal\diyfp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\dtoa.h">
+    <ClInclude Include="lib\rapidjson\internal\dtoa.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\ieee754.h">
+    <ClInclude Include="lib\rapidjson\internal\ieee754.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\itoa.h">
+    <ClInclude Include="lib\rapidjson\internal\itoa.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\meta.h">
+    <ClInclude Include="lib\rapidjson\internal\meta.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\pow10.h">
+    <ClInclude Include="lib\rapidjson\internal\pow10.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\regex.h">
+    <ClInclude Include="lib\rapidjson\internal\regex.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\stack.h">
+    <ClInclude Include="lib\rapidjson\internal\stack.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\strfunc.h">
+    <ClInclude Include="lib\rapidjson\internal\strfunc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\strtod.h">
+    <ClInclude Include="lib\rapidjson\internal\strtod.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\internal\swap.h">
+    <ClInclude Include="lib\rapidjson\internal\swap.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\msinttypes\inttypes.h">
+    <ClInclude Include="lib\rapidjson\msinttypes\inttypes.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\msinttypes\stdint.h">
+    <ClInclude Include="lib\rapidjson\msinttypes\stdint.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\allocators.h">
+    <ClInclude Include="lib\rapidjson\allocators.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\document.h">
+    <ClInclude Include="lib\rapidjson\document.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\encodedstream.h">
+    <ClInclude Include="lib\rapidjson\encodedstream.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\encodings.h">
+    <ClInclude Include="lib\rapidjson\encodings.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\filereadstream.h">
+    <ClInclude Include="lib\rapidjson\filereadstream.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\filewritestream.h">
+    <ClInclude Include="lib\rapidjson\filewritestream.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\fwd.h">
+    <ClInclude Include="lib\rapidjson\fwd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\istreamwrapper.h">
+    <ClInclude Include="lib\rapidjson\istreamwrapper.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\memorybuffer.h">
+    <ClInclude Include="lib\rapidjson\memorybuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\memorystream.h">
+    <ClInclude Include="lib\rapidjson\memorystream.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\ostreamwrapper.h">
+    <ClInclude Include="lib\rapidjson\ostreamwrapper.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\pointer.h">
+    <ClInclude Include="lib\rapidjson\pointer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\prettywriter.h">
+    <ClInclude Include="lib\rapidjson\prettywriter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\rapidjson.h">
+    <ClInclude Include="lib\rapidjson\rapidjson.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\reader.h">
+    <ClInclude Include="lib\rapidjson\reader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\schema.h">
+    <ClInclude Include="lib\rapidjson\schema.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\stream.h">
+    <ClInclude Include="lib\rapidjson\stream.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\stringbuffer.h">
+    <ClInclude Include="lib\rapidjson\stringbuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="rapidjson\writer.h">
+    <ClInclude Include="lib\rapidjson\writer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\lz4\lz4.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -231,6 +234,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="util\CSerive.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\lz4\lz4.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

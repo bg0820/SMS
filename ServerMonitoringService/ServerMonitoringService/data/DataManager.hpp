@@ -12,9 +12,9 @@
 #include "../system/SystemOS.hpp"
 #include "../util/TQTimer.hpp"
 #include "../util/StopWatch.hpp"
-#include "../rapidjson/document.h"
-#include "../rapidjson/stringbuffer.h"
-#include "../rapidjson/writer.h"
+#include "../lib/rapidjson/document.h"
+#include "../lib/rapidjson/stringbuffer.h"
+#include "../lib/rapidjson/writer.h"
 
 using namespace rapidjson;
 using namespace std;
