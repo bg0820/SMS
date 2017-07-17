@@ -74,7 +74,7 @@
 #### (TCP) Data Server -> (WebSocket)
 #### (WebSocket) Web Server
 
-## Library
+## Used Library
 | Library Name | Link | License |
 | :---------------: | :-----------------: | :-------------------: |
 | RapidJson      | <https://github.com/miloyip/rapidjson/> | MIT |
