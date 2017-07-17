@@ -77,7 +77,7 @@
 ## Library
 | Library Name | Link | License |
 | :---------------: | :-----------------: | :-------------------: |
-| RapidJson      | <https://github.com/miloyip/rapidjson/> |  |
+| RapidJson      | <https://github.com/miloyip/rapidjson/> | MIT |
 
 ## Commit Message
 https://gitmoji.carloscuesta.me/
