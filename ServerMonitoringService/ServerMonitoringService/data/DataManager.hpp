@@ -12,9 +12,16 @@
 #include "../system/SystemOS.hpp"
 #include "../util/TQTimer.hpp"
 #include "../util/StopWatch.hpp"
+/*
+	Rapidjson json Library
+*/
 #include "../lib/rapidjson/document.h"
 #include "../lib/rapidjson/stringbuffer.h"
 #include "../lib/rapidjson/writer.h"
+/*
+	LZ4 Compress Library
+*/
+#include "../lib/lz4/lz4.h"
 
 using namespace rapidjson;
 using namespace std;
@@ -65,6 +72,7 @@ private:
 	void Start();
 	void Stop();
 	void CallbackProc();
+	int Compress(const char *src);
 public:
 	DataManager()
 	{
@@ -76,7 +84,7 @@ public:
 		strcpy_s(systemInfo->osVersion, systemOS.getOSVersionName());
 
 		// first Call
-		this->Update();
+		// this->Update();
 
 		// Start Function Call
 		systemDiskIO.Start();

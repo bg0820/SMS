@@ -14,6 +14,38 @@ int main()
 	system("pause");
 }
 
+int DataManager::Compress(const TCHAR *src)
+{
+	StopWatch stopWatch;
+	stopWatch.Start();
+	// 마지막 NULL 문자
+	// Last null char
+	const int src_size = (int)(strlen(src) + 1);
+	// 압축 된 출력의 최대 크기를 반환
+	const int max_dst_size = LZ4_compressBound(src_size);
+	// We will use that size for our destination boundary when allocating space.
+	TCHAR* compressed_data = new TCHAR[max_dst_size];
+	if (compressed_data == NULL)
+		return -1; // Failed to allocate memory for *compressed_data.
+
+	const int compressed_data_size = LZ4_compress_default(src, compressed_data, src_size, max_dst_size);
+
+	// Check return_value to determine what happened.
+	if (compressed_data_size < 0)
+		return -2; // A negative result from LZ4_compress_default indicates a failure trying to compress the data.  See exit code (echo $?) for value returned.
+	else if (compressed_data_size == 0)
+		return -3; // A result of 0 means compression worked, but was stopped because the destination buffer couldn't hold all the information.
+	if (compressed_data_size > 0)
+		printf("We successfully compressed some data!\n");
+
+	cout << "COMPRESS DATA SIZE : " << compressed_data_size << endl;
+
+	stopWatch.Stop();
+	stopWatch.milliPrint();
+
+	return 1;
+}
+
 Value DataManager::getJsonDiskList(Document::AllocatorType &alloc)
 {
 	Value jsonDiskList(kArrayType);
@@ -77,18 +109,18 @@ Value DataManager::getJsonProcessList(Document::AllocatorType &alloc)
 		Value jsonProcess(kObjectType);
 		jsonProcess.AddMember("PID", (UINT)process->getPid(), alloc);
 
-		//	string strCommmand = process->getCommandLine();
-			//Value vCommand(strCommmand.c_str(), strCommmand.size(), alloc);
+		string strCommmand = process->getCommandLine();	
 		string strName = process->getName();
-		Value vName(strName.c_str(), strName.size(), alloc);
-		//	string strPath = process->getPath();
-			//Value vPath(strPath.c_str(), strPath.size(), alloc);
+		string strPath = process->getPath();	
 		string strOwner = process->getOwner();
+		Value vCommand(strCommmand.c_str(), strCommmand.size(), alloc);
+		Value vName(strName.c_str(), strName.size(), alloc);
+		Value vPath(strPath.c_str(), strPath.size(), alloc);
 		Value vOwner(strOwner.c_str(), strOwner.size(), alloc);
 
-		//jsonProcess.AddMember("CommandLine", vCommand, alloc);
+		jsonProcess.AddMember("CommandLine", vCommand, alloc);
 		jsonProcess.AddMember("Name", vName, alloc);
-		//jsonProcess.AddMember("Path", vPath, alloc);
+		jsonProcess.AddMember("Path", vPath, alloc);
 		jsonProcess.AddMember("Owner", vOwner, alloc);
 		DWORD handleCount;
 		double cpuUsage;
@@ -217,13 +249,13 @@ void DataManager::jsonUpdate()
 	Writer<StringBuffer> writer(buffer);
 	json.Accept(writer);
 
-	std::cout << buffer.GetSize() << std::endl;
+	cout << endl << "RAW DATA SIZE : " << buffer.GetSize() << endl;
+	cout << "RETURN VALUE : " <<Compress(buffer.GetString()) << endl;
+	//std::cout << buffer.GetSize() << std::endl;
 }
 
 void DataManager::Update()
 {
-	StopWatch stopWatch;
-	stopWatch.Start();
 
 	// ProcessList Update
 	processListObj.Update();
@@ -309,8 +341,6 @@ void DataManager::Update()
 	// Json Update
 	jsonUpdate();
 
-	stopWatch.Stop();
-	stopWatch.secPrint();
 }
 
 void DataManager::CallbackProc()
@@ -324,7 +354,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(1000); // 5Sec
+		this->tqTimer->setInterval(100000); // 100Sec
 		this->tqTimer->Start();
 	}
 }
