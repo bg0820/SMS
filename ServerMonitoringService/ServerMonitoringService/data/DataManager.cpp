@@ -6,12 +6,107 @@ int main()
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	// 메모리 누수 찾기
-	// _CrtSetBreakAlloc(165);
+	// _CrtSetBreakAlloc(1243);
 #endif
 
 	DataManager dataManager = DataManager();
 
 	system("pause");
+}
+
+Value DataManager::getJsonDiskList(Document::AllocatorType &alloc)
+{
+	Value jsonDiskList(kArrayType);
+	for (int i = 0; i < systemInfo->diskCount; i++)
+	{
+		Disk disk = systemInfo->disk[i];
+
+		Value jsonDisk(kObjectType);
+		string strDiskPath = disk.path;
+		Value vDiskPath(strDiskPath.c_str(), strDiskPath.size(), alloc);
+		string strDiskName = disk.name;
+		Value vDiskName(strDiskPath.c_str(), strDiskPath.size(), alloc);
+		string strDiskFileFormat = disk.fileFormat;
+		Value vDiskFileFormat(strDiskPath.c_str(), strDiskPath.size(), alloc);
+		jsonDisk.AddMember("Path", vDiskPath, alloc);
+		jsonDisk.AddMember("Name", vDiskName, alloc);
+		jsonDisk.AddMember("FileFormat", vDiskFileFormat, alloc);
+		jsonDisk.AddMember("UsedBytes", disk.usedBytes, alloc);
+		jsonDisk.AddMember("TotalBytes", disk.totalBytes, alloc);
+		jsonDisk.AddMember("FreeBytes", disk.freeBytes, alloc);
+		jsonDisk.AddMember("Type", disk.type, alloc);
+
+		DISK_PERFORMANCE diskPerformance = disk.curDiskPerformance;
+		Value jsonDiskPerformance(kObjectType);
+		jsonDiskPerformance.AddMember("BytesRead", diskPerformance.BytesRead.QuadPart, alloc);
+		jsonDiskPerformance.AddMember("BytesWritten", diskPerformance.BytesWritten.QuadPart, alloc);
+		jsonDiskPerformance.AddMember("ReadTime", diskPerformance.ReadTime.QuadPart, alloc);
+		jsonDiskPerformance.AddMember("WriteTime", diskPerformance.WriteTime.QuadPart, alloc);
+		jsonDiskPerformance.AddMember("IdleTime", diskPerformance.IdleTime.QuadPart, alloc);
+		// DWORD > UINT
+		jsonDiskPerformance.AddMember("ReadCount", (UINT)diskPerformance.ReadCount, alloc);
+		jsonDiskPerformance.AddMember("WriteCount", (UINT)diskPerformance.WriteCount, alloc);
+		jsonDiskPerformance.AddMember("QueueDepth", (UINT)diskPerformance.QueueDepth, alloc);
+		jsonDiskPerformance.AddMember("SplitCount", (UINT)diskPerformance.SplitCount, alloc);
+		jsonDiskPerformance.AddMember("QueryTime", diskPerformance.QueryTime.QuadPart, alloc);
+		jsonDiskPerformance.AddMember("StorageDeviceNumber", (UINT)diskPerformance.StorageDeviceNumber, alloc);
+		/* Remove
+			wstring ws(diskPerformance.StorageManagerName);
+			cout << ws.c_str() << endl;
+			Value vDiskPerformanceManagerName(wsConvert.c_str(), wsConvert.size(), alloc);
+			jsonDiskPerformance.AddMember("StorageManagerName", "D", alloc);
+		*/
+
+		jsonDisk.AddMember("DiskPerformance", jsonDiskPerformance, alloc);
+		jsonDisk.AddMember("ReadSec", disk.readSec, alloc);
+		jsonDisk.AddMember("WriteSec", disk.writeSec, alloc);
+		jsonDiskList.PushBack(jsonDisk, alloc);
+	}
+
+	return jsonDiskList;
+}
+
+Value DataManager::getJsonProcessList(Document::AllocatorType &alloc)
+{
+	Value jsonProcessList(kArrayType);
+
+	for (int i = 0; i < systemInfo->processCount; i++)
+	{
+		Process *process = systemInfo->process[i];
+		Value jsonProcess(kObjectType);
+		jsonProcess.AddMember("PID", (UINT)process->getPid(), alloc);
+
+	//	string strCommmand = process->getCommandLine();
+		//Value vCommand(strCommmand.c_str(), strCommmand.size(), alloc);
+		string strName = process->getName();
+		Value vName(strName.c_str(), strName.size(), alloc);
+	//	string strPath = process->getPath();
+		//Value vPath(strPath.c_str(), strPath.size(), alloc);
+		string strOwner = process->getOwner();
+		Value vOwner(strOwner.c_str(), strOwner.size(), alloc);
+
+		//jsonProcess.AddMember("CommandLine", vCommand, alloc);
+		jsonProcess.AddMember("Name", vName, alloc);
+		//jsonProcess.AddMember("Path", vPath, alloc);
+		jsonProcess.AddMember("Owner", vOwner, alloc);
+		DWORD handleCount;
+		double cpuUsage;
+		process->getHandleCount(handleCount);
+		process->getCpuUsage(cpuUsage);
+		int threadCount = processListObj.getProcessThreadCount(process->getPid());
+		HWND hWnd = processListObj.getProcessHwnd(process->getPid());
+		string strCreateTime = process->getCreateTime();
+		Value vCreateTime(strCreateTime.c_str(), strCreateTime.size(), alloc);
+		jsonProcess.AddMember("CreateTime", vCreateTime, alloc);
+		jsonProcess.AddMember("HandleCount", (UINT)handleCount, alloc);
+		jsonProcess.AddMember("ThreadCount", threadCount, alloc);
+		//jsonProcess.AddMember("MemoryUsage", 123, alloc);
+		jsonProcess.AddMember("CpuUsage", cpuUsage, alloc);
+		jsonProcess.AddMember("Running", process->isRunning(hWnd), alloc);
+		jsonProcessList.PushBack(jsonProcess, alloc);
+	}
+
+	return jsonProcessList;
 }
 
 void DataManager::jsonUpdate()
@@ -25,82 +120,35 @@ void DataManager::jsonUpdate()
 	json.AddMember("CpuUsage", systemInfo->cpuUsageVal, alloc);
 	json.AddMember("CpuIdle", systemInfo->cpuIdleVal, alloc);
 	string strCpuModel = systemInfo->cpuModel;
-	Value vCpuModel(kStringType);
-	vCpuModel.SetString(strCpuModel.c_str(), strCpuModel.size(), alloc);
+	Value vCpuModel(strCpuModel.c_str(), strCpuModel.size(), alloc);
 	json.AddMember("CpuModel", vCpuModel, alloc);
 
 	// json Memory
-	//json.AddMember("MemoryLoadPercent", systemInfo->memoryLoadPercent, alloc);
+	json.AddMember("MemoryLoadPercent", systemInfo->memoryLoadPercent, alloc);
 	json.AddMember("MemoryUsedByte", systemInfo->memoryUsedByte, alloc);
 	json.AddMember("MemoryFreeByte", systemInfo->memoryFreeByte, alloc);
 	json.AddMember("MemoryTotalByte", systemInfo->memoryTotalByte, alloc);
 
 	// json System Info
-	Value vUserName(kStringType);
-	Value vComputerName(kStringType);
-	Value vOSVersionName(kStringType);
-
 	string strUserName = systemInfo->userName;
-	vUserName.SetString(strUserName.c_str(), strUserName.size(), alloc);
-
 	string strComputerName = systemInfo->computerName;
-	vComputerName.SetString(strComputerName.c_str(), strComputerName.size(), alloc);
-
 	string strOSVerisonName = systemInfo->osVersion;
-	vOSVersionName.SetString(strOSVerisonName.c_str(), strOSVerisonName.size(), alloc);
-
+	Value vUserName(strUserName.c_str(), strUserName.size(), alloc);
+	Value vComputerName(strComputerName.c_str(), strComputerName.size(), alloc);
+	Value vOSVersionName(strOSVerisonName.c_str(), strOSVerisonName.size(), alloc);
 	json.AddMember("UserName", vUserName, alloc);
 	json.AddMember("ComputerName", vComputerName, alloc);
 	json.AddMember("OSVersionName", vOSVersionName, alloc);
 
-	// json Disk list
-	Value jsonDiskList(kArrayType);
-	Value jsonDisk(kObjectType);
-	jsonDisk.AddMember("Path", "C:\\", alloc);
-	jsonDisk.AddMember("Name", "C:\\", alloc);
-	jsonDisk.AddMember("FileFormat", "C:\\", alloc);
-	jsonDisk.AddMember("UsedBytes", "C:\\", alloc);
-	jsonDisk.AddMember("TotalBytes", "C:\\", alloc);
-	jsonDisk.AddMember("FreeBytes", "C:\\", alloc);
-	jsonDisk.AddMember("Type", "C:\\", alloc);
+	// json Disk List
+	json.AddMember("Disk List", getJsonDiskList(alloc), alloc);
+	json.AddMember("DiskCount", systemInfo->diskCount, alloc);
 
-	Value jsonDiskPerformance(kObjectType);
-	jsonDiskPerformance.AddMember("BytesRead", 123, alloc);
-	jsonDiskPerformance.AddMember("BytesWritten", 31, alloc);
-	jsonDiskPerformance.AddMember("ReadTime", 123, alloc);
-	jsonDiskPerformance.AddMember("WriteTime", 123, alloc);
-	jsonDiskPerformance.AddMember("IdleTime", 1234, alloc);
-	jsonDiskPerformance.AddMember("ReadCount", 1234, alloc);
-	jsonDiskPerformance.AddMember("WriteCount", 1234, alloc);
-	jsonDiskPerformance.AddMember("QueueDepth", 1234, alloc);
-	jsonDiskPerformance.AddMember("SplitCount", 1234, alloc);
-	jsonDiskPerformance.AddMember("QueryTime", 1234, alloc);
-	jsonDiskPerformance.AddMember("StorageDeviceNumber", 2, alloc);
-	jsonDiskPerformance.AddMember("StorageManagerName", "Name", alloc);
-	jsonDisk.AddMember("DiskPerformance", jsonDiskPerformance, alloc);
+	// json Process List
+	json.AddMember("Process List", getJsonProcessList(alloc), alloc);
+	json.AddMember("TotalThreadCount", processListObj.getTotalThreadCount(), alloc);
 
-	jsonDisk.AddMember("ReadSec", 123, alloc);
-	jsonDisk.AddMember("WriteSec", 1234, alloc);
-	jsonDisk.AddMember("DiskCount", 1234, alloc);
-	jsonDiskList.PushBack(jsonDisk, alloc);
-	json.AddMember("Disk List", jsonDiskList, alloc);
-
-	Value jsonProcessList(kArrayType);
-	Value jsonProcess(kObjectType);
-	jsonProcess.AddMember("PID", 123, alloc);
-	jsonProcess.AddMember("CommandLine", 123, alloc);
-	jsonProcess.AddMember("Name", 123, alloc);
-	jsonProcess.AddMember("Path", 123, alloc);
-	jsonProcess.AddMember("Owner", 123, alloc);
-	jsonProcess.AddMember("CreateTime", 123, alloc);
-	jsonProcess.AddMember("HandleCount", 123, alloc);
-	jsonProcess.AddMember("ThreadCount", 123, alloc);
-	jsonProcess.AddMember("MemoryUsage", 123, alloc);
-	jsonProcess.AddMember("CpuUsage", 123, alloc);
-	jsonProcessList.PushBack(jsonProcess, alloc);
-	json.AddMember("Process List", jsonProcessList, alloc);
-	json.AddMember("TotalThreadCount", 2145, alloc);
-
+	// json Network Connection List
 	Value jsonNetworkConnectionList(kArrayType);
 	Value jsonNetworkConnection(kObjectType);
 	jsonNetworkConnection.AddMember("ProtocolType", 2, alloc);
@@ -163,7 +211,8 @@ void DataManager::jsonUpdate()
 
 	json.AddMember("AdapterCount", 2, alloc);
 
-/*	StringBuffer buffer;
+	/*
+	StringBuffer buffer;
 	Writer<StringBuffer> writer(buffer);
 	json.Accept(writer);
 
@@ -183,7 +232,7 @@ void DataManager::Update()
 	{
 		for (int i = 0; i < systemInfo->processCount; i++)
 		{
-			if (systemInfo->process[i])
+			if (systemInfo->process[i] != NULL)
 			{
 				delete systemInfo->process[i];
 				systemInfo->process[i] = nullptr;
@@ -202,19 +251,15 @@ void DataManager::Update()
 	{
 		int pid = processListObj.getPID(i);
 		systemInfo->process[i] = new Process(pid);
-		systemInfo->process[i]->getOwner();
-		systemInfo->process[i]->getName();
-		systemInfo->process[i]->getPath();
-		systemInfo->process[i]->getCommandLine();
 
-		double cpuVal;
+		/*double cpuVal;
 		DWORD memoryVal;
 		DWORD handleCount;
 		systemInfo->process[i]->getCpuUsage(cpuVal); // 1.7 Sec
 	    // systemInfo->process[i]->getMemoryUsage(memoryVal); // 0.6 Sec
 		systemInfo->process[i]->getHandleCount(handleCount);
 		processListObj.getProcessThreadCount(pid);
-		processListObj.getTotalThreadCount();
+		processListObj.getTotalThreadCount();*/
 
 		/*cout << "Owner : " << systemInfo->process[i]->getOwner() << endl;
 		cout << "Name : " << systemInfo->process[i]->getName()  << endl;
@@ -278,7 +323,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(1500); // 5Sec
+		this->tqTimer->setInterval(1000); // 5Sec
 		this->tqTimer->Start();
 	}
 }

@@ -25,7 +25,7 @@ typedef struct system_info
 	double cpuIdleVal;
 	TCHAR cpuModel[1024];
 
-	ULONG memoryLoadPercent;
+	int memoryLoadPercent;
 	ULONGLONG memoryUsedByte;
 	ULONGLONG memoryFreeByte;
 	ULONGLONG memoryTotalByte;
@@ -57,9 +57,10 @@ private:
 	SystemMemory systemMemory;
 	SystemNetwork systemNetwork;
 	SystemOS systemOS;
-
 private:
 	void Update();
+	Value getJsonDiskList(Document::AllocatorType &alloc);
+	Value getJsonProcessList(Document::AllocatorType &alloc);
 	void jsonUpdate();
 	void Start();
 	void Stop();
