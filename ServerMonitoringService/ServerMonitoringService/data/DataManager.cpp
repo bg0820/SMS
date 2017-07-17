@@ -14,32 +14,69 @@ int main()
 	system("pause");
 }
 
-int DataManager::Compress(const TCHAR *src)
+int DataManager::Compress(const TCHAR *paramRawData, int &paramSrcSize, TCHAR *&paramCompressedData, int &paramCompressSize)
 {
 	StopWatch stopWatch;
 	stopWatch.Start();
 	// 마지막 NULL 문자
 	// Last null char
-	const int src_size = (int)(strlen(src) + 1);
+	const int srcSize = (int)(strlen(paramRawData) + 1);
 	// 압축 된 출력의 최대 크기를 반환
-	const int max_dst_size = LZ4_compressBound(src_size);
+	const int maxCompressSize = LZ4_compressBound(srcSize);
 	// We will use that size for our destination boundary when allocating space.
-	TCHAR* compressed_data = new TCHAR[max_dst_size];
-	if (compressed_data == NULL)
+	TCHAR *compressedData = new TCHAR[maxCompressSize];
+
+	if (compressedData == NULL)
 		return -1; // Failed to allocate memory for *compressed_data.
 
-	const int compressed_data_size = LZ4_compress_default(src, compressed_data, src_size, max_dst_size);
+	const int compressedSize = LZ4_compress_default(paramRawData, compressedData, srcSize, maxCompressSize);
 
 	// Check return_value to determine what happened.
-	if (compressed_data_size < 0)
+	if (compressedSize < 0)
 		return -2; // A negative result from LZ4_compress_default indicates a failure trying to compress the data.  See exit code (echo $?) for value returned.
-	else if (compressed_data_size == 0)
+	else if (compressedSize == 0)
 		return -3; // A result of 0 means compression worked, but was stopped because the destination buffer couldn't hold all the information.
-	if (compressed_data_size > 0)
-		printf("We successfully compressed some data!\n");
 
-	cout << "COMPRESS DATA SIZE : " << compressed_data_size << endl;
+	paramSrcSize = srcSize;
+	paramCompressedData = compressedData;
+	paramCompressSize = compressedSize;
 
+	stopWatch.Stop();
+	stopWatch.milliPrint();
+
+	return 1;
+}
+
+int DataManager::DeCompress(const TCHAR *paramCompressedData, int paramCompressedDataSize, int paramRawSize, TCHAR *&paramRawData)
+{
+	StopWatch stopWatch;
+	stopWatch.Start();
+
+
+	TCHAR *decompressData = new TCHAR[paramRawSize];
+
+	if (decompressData == NULL)
+		return -1;
+
+	const int decompressedSize = LZ4_decompress_safe(paramCompressedData, decompressData, paramCompressedDataSize, paramRawSize);
+	
+	/*
+		no longer useful
+		이제 필요 없음
+	*/
+	if (paramCompressedData)
+	{
+		delete[] paramCompressedData;
+		paramCompressedData = nullptr;
+	}
+
+	if (decompressedSize < 0)
+		return -2; // A negative result from LZ4_decompress_safe indicates a failure trying to decompress the data.  See exit code (echo $?) for value returned.
+	else if (decompressedSize == 0)
+		return -3; // I'm not sure this function can ever return 0.  Documentation in lz4.h doesn't indicate so.
+
+
+	paramRawData = decompressData;
 	stopWatch.Stop();
 	stopWatch.milliPrint();
 
@@ -248,9 +285,17 @@ void DataManager::jsonUpdate()
 	StringBuffer buffer;
 	Writer<StringBuffer> writer(buffer);
 	json.Accept(writer);
-
 	cout << endl << "RAW DATA SIZE : " << buffer.GetSize() << endl;
-	cout << "RETURN VALUE : " <<Compress(buffer.GetString()) << endl;
+
+	int srcSize;
+	int compSize;
+	TCHAR *compressed = NULL;
+	TCHAR *decompressed = NULL;
+	cout << "RETURN VALUE : " << Compress(buffer.GetString(), srcSize,  compressed, compSize) << endl;
+	cout << "COM DATA SIZE : " << compSize << endl;
+	cout <<  "RETURN VALUE : " <<  DeCompress(compressed, compSize, srcSize, decompressed) << endl;
+	cout << "DECOM DATA SIZE : " << strlen(decompressed) << endl;
+
 	//std::cout << buffer.GetSize() << std::endl;
 }
 
@@ -354,7 +399,7 @@ void DataManager::Start()
 	if (this->tqTimer == NULL)
 	{
 		this->tqTimer = new TQTimer(std::bind(&DataManager::CallbackProc, this));
-		this->tqTimer->setInterval(100000); // 100Sec
+		this->tqTimer->setInterval(1000); // 1Sec
 		this->tqTimer->Start();
 	}
 }

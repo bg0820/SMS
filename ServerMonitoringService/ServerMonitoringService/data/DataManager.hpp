@@ -72,7 +72,8 @@ private:
 	void Start();
 	void Stop();
 	void CallbackProc();
-	int Compress(const char *src);
+	int Compress(const TCHAR *paramRawData, int &paramSrcSize, TCHAR *&paramCompressedData, int &paramCompressSize);
+	int DeCompress(const TCHAR *paramCompressedData, int paramCompressedDataSize, int paramRawSize, TCHAR *&paramRawData);
 public:
 	DataManager()
 	{
