@@ -19,6 +19,7 @@ Value DataManager::getJsonDiskList(Document::AllocatorType &alloc)
 	Value jsonDiskList(kArrayType);
 	for (int i = 0; i < systemInfo->diskCount; i++)
 	{
+		// exception
 		Disk disk = systemInfo->disk[i];
 
 		Value jsonDisk(kObjectType);
