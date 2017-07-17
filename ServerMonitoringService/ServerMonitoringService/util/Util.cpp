@@ -81,3 +81,60 @@ string Util::getTimeString(tm t)
 
 	return str;
 }
+
+int Util::Compress(const TCHAR *paramRawData, int &paramSrcSize, TCHAR *&paramCompressedData, int &paramCompressSize)
+{
+	// 마지막 NULL 문자
+	// Last null char
+	const int srcSize = (int)(strlen(paramRawData) + 1);
+	// 압축 된 출력의 최대 크기를 반환
+	const int maxCompressSize = LZ4_compressBound(srcSize);
+	// We will use that size for our destination boundary when allocating space.
+	TCHAR *compressedData = new TCHAR[maxCompressSize];
+
+	if (compressedData == NULL)
+		return -1; // Failed to allocate memory for *compressed_data.
+
+	const int compressedSize = LZ4_compress_default(paramRawData, compressedData, srcSize, maxCompressSize);
+
+	// Check return_value to determine what happened.
+	if (compressedSize < 0)
+		return -2; // A negative result from LZ4_compress_default indicates a failure trying to compress the data.  See exit code (echo $?) for value returned.
+	else if (compressedSize == 0)
+		return -3; // A result of 0 means compression worked, but was stopped because the destination buffer couldn't hold all the information.
+
+	paramSrcSize = srcSize;
+	paramCompressedData = compressedData;
+	paramCompressSize = compressedSize;
+
+	return 1;
+}
+
+int Util::DeCompress(const TCHAR *paramCompressedData, int paramCompressedDataSize, int paramRawSize, TCHAR *&paramRawData)
+{
+	TCHAR *decompressData = new TCHAR[paramRawSize];
+
+	if (decompressData == NULL)
+		return -1;
+
+	const int decompressedSize = LZ4_decompress_safe(paramCompressedData, decompressData, paramCompressedDataSize, paramRawSize);
+
+	/*
+	no longer useful
+	이제 필요 없음
+	*/
+	if (paramCompressedData)
+	{
+		delete[] paramCompressedData;
+		paramCompressedData = nullptr;
+	}
+
+	if (decompressedSize < 0)
+		return -2; // A negative result from LZ4_decompress_safe indicates a failure trying to decompress the data.  See exit code (echo $?) for value returned.
+	else if (decompressedSize == 0)
+		return -3; // I'm not sure this function can ever return 0.  Documentation in lz4.h doesn't indicate so.
+
+
+	paramRawData = decompressData;
+	return 1;
+}

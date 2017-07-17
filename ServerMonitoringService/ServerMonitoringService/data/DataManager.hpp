@@ -21,10 +21,6 @@
 #include "../lib/rapidjson/document.h"
 #include "../lib/rapidjson/stringbuffer.h"
 #include "../lib/rapidjson/writer.h"
-/*
-	LZ4 Compress Library
-*/
-#include "../lib/lz4/lz4.h"
 
 using namespace rapidjson;
 using namespace std;
@@ -77,8 +73,6 @@ private:
 	void Start();
 	void Stop();
 	void CallbackProc();
-	int Compress(const TCHAR *paramRawData, int &paramSrcSize, TCHAR *&paramCompressedData, int &paramCompressSize);
-	int DeCompress(const TCHAR *paramCompressedData, int paramCompressedDataSize, int paramRawSize, TCHAR *&paramRawData);
 public:
 	DataManager()
 	{
