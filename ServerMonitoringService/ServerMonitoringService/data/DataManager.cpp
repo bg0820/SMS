@@ -113,13 +113,13 @@ Value DataManager::getJsonDiskList(Document::AllocatorType &alloc)
 		jsonDiskPerformance.AddMember("ReadTime", diskPerformance.ReadTime.QuadPart, alloc);
 		jsonDiskPerformance.AddMember("WriteTime", diskPerformance.WriteTime.QuadPart, alloc);
 		jsonDiskPerformance.AddMember("IdleTime", diskPerformance.IdleTime.QuadPart, alloc);
-		// DWORD > UINT
-		jsonDiskPerformance.AddMember("ReadCount", (UINT)diskPerformance.ReadCount, alloc);
-		jsonDiskPerformance.AddMember("WriteCount", (UINT)diskPerformance.WriteCount, alloc);
-		jsonDiskPerformance.AddMember("QueueDepth", (UINT)diskPerformance.QueueDepth, alloc);
-		jsonDiskPerformance.AddMember("SplitCount", (UINT)diskPerformance.SplitCount, alloc);
+		// DWORD > ULONGLONG
+		jsonDiskPerformance.AddMember("ReadCount", (ULONGLONG)diskPerformance.ReadCount, alloc);
+		jsonDiskPerformance.AddMember("WriteCount", (ULONGLONG)diskPerformance.WriteCount, alloc);
+		jsonDiskPerformance.AddMember("QueueDepth", (ULONGLONG)diskPerformance.QueueDepth, alloc);
+		jsonDiskPerformance.AddMember("SplitCount", (ULONGLONG)diskPerformance.SplitCount, alloc);
 		jsonDiskPerformance.AddMember("QueryTime", diskPerformance.QueryTime.QuadPart, alloc);
-		jsonDiskPerformance.AddMember("StorageDeviceNumber", (UINT)diskPerformance.StorageDeviceNumber, alloc);
+		jsonDiskPerformance.AddMember("StorageDeviceNumber", (ULONGLONG)diskPerformance.StorageDeviceNumber, alloc);
 		/* Remove
 			wstring ws(diskPerformance.StorageManagerName);
 			cout << ws.c_str() << endl;
@@ -144,7 +144,7 @@ Value DataManager::getJsonProcessList(Document::AllocatorType &alloc)
 	{
 		Process *process = systemInfo->process[i];
 		Value jsonProcess(kObjectType);
-		jsonProcess.AddMember("PID", (UINT)process->getPid(), alloc);
+		jsonProcess.AddMember("PID", (ULONGLONG)process->getPid(), alloc);
 
 		string strCommmand = process->getCommandLine();	
 		string strName = process->getName();
@@ -168,7 +168,7 @@ Value DataManager::getJsonProcessList(Document::AllocatorType &alloc)
 		string strCreateTime = process->getCreateTime();
 		Value vCreateTime(strCreateTime.c_str(), strCreateTime.size(), alloc);
 		jsonProcess.AddMember("CreateTime", vCreateTime, alloc);
-		jsonProcess.AddMember("HandleCount", (UINT)handleCount, alloc);
+		jsonProcess.AddMember("HandleCount", (ULONGLONG)handleCount, alloc);
 		jsonProcess.AddMember("ThreadCount", threadCount, alloc);
 		//jsonProcess.AddMember("MemoryUsage", 123, alloc);
 		jsonProcess.AddMember("CpuUsage", cpuUsage, alloc);
@@ -177,6 +177,102 @@ Value DataManager::getJsonProcessList(Document::AllocatorType &alloc)
 	}
 
 	return jsonProcessList;
+}
+
+Value DataManager::getJsonNetworkConnectionList(Document::AllocatorType &alloc)
+{
+	Value jsonNetworkConnectionList(kArrayType);
+
+	for (int i = 0; i < systemInfo->networkConnectionCount; i++)
+	{
+		NetworkConnection networkConnection = systemInfo->networkConnection[i];
+		Value jsonNetworkConnection(kObjectType);
+		jsonNetworkConnection.AddMember("ProtocolType", (ULONGLONG)networkConnection.protocolType, alloc);
+
+		Value jsonLocalEndpoint(kObjectType);		
+		string strLocalIPv4 = inet_ntoa(networkConnection.localEndpoint.Address.InAddr);
+		char localBuf[40]; // temp buffer 39 + 1('\0')
+		inet_ntop(AF_INET6, &networkConnection.localEndpoint.Address.In6Addr, localBuf, sizeof(localBuf));
+		string strLocalIPv6 = localBuf;
+		Value vLocalIPv4(strLocalIPv4.c_str(), strLocalIPv4.size(), alloc);
+		Value vLocalIPv6(strLocalIPv6.c_str(), strLocalIPv6.size(), alloc);
+		jsonLocalEndpoint.AddMember("IPV4", vLocalIPv4, alloc);
+		jsonLocalEndpoint.AddMember("IPV6", vLocalIPv6, alloc);
+		jsonLocalEndpoint.AddMember("Port", (ULONGLONG)networkConnection.localEndpoint.Port, alloc);
+		jsonNetworkConnection.AddMember("LocalEndpoint", jsonLocalEndpoint, alloc);
+
+		Value jsonRemoteEndpoint(kObjectType);
+		string strRemoteIPv4 = inet_ntoa(networkConnection.localEndpoint.Address.InAddr);
+		char remoteBuf[40]; // temp buffer 39 + 1('\0')
+		inet_ntop(AF_INET6, &networkConnection.localEndpoint.Address.In6Addr, remoteBuf, sizeof(remoteBuf));
+		string strRemoteIPv6 = remoteBuf;
+		Value vRemoteIPv4(strRemoteIPv4.c_str(), strRemoteIPv4.size(), alloc);
+		Value vRemoteIPv6(strRemoteIPv6.c_str(), strRemoteIPv6.size(), alloc);
+		jsonRemoteEndpoint.AddMember("IPV4", vRemoteIPv4, alloc);
+		jsonRemoteEndpoint.AddMember("IPV6", vRemoteIPv6, alloc);
+		jsonRemoteEndpoint.AddMember("Port", (ULONGLONG)networkConnection.remoteEndpoint.Port, alloc);
+		jsonNetworkConnection.AddMember("RemoteEndpoint", jsonRemoteEndpoint, alloc);
+		
+
+		jsonNetworkConnection.AddMember("State", (ULONGLONG)networkConnection.state, alloc);
+		jsonNetworkConnection.AddMember("ProcessID", (ULONGLONG)networkConnection.processID, alloc);
+		//jsonNetworkConnection.AddMember("CreateTime", networkConnection.createTime.QuadPart, alloc);
+		//jsonNetworkConnection.AddMember("OwnerInfo", networkConnection.ownerInfo, alloc); // TODO : getProcessOwner(networkConnection.processID);
+		jsonNetworkConnectionList.PushBack(jsonNetworkConnection, alloc);
+	}
+	
+	return jsonNetworkConnectionList;
+}
+
+Value DataManager::getJsonAdapterInfoList(Document::AllocatorType &alloc)
+{
+	Value jsonAdapterInfoList(kArrayType);
+
+	for (int i = 0; i < systemInfo->adapterCount; i++)
+	{
+		IP_ADAPTER_INFO adapterInfo = systemInfo->adapterInfo[i];
+		Value jsonAdapterInfo(kObjectType);
+		jsonAdapterInfo.AddMember("ComboIndex", (ULONGLONG)adapterInfo.ComboIndex, alloc);
+
+		
+		string strAdapaterName = adapterInfo.AdapterName;
+		string strDescription = adapterInfo.Description;
+		Value vAdapterName(strAdapaterName.c_str(), strAdapaterName.size(), alloc);
+		Value vDescription(strDescription.c_str(), strDescription.size(), alloc);
+
+		jsonAdapterInfo.AddMember("AdapterName", vAdapterName, alloc);
+		jsonAdapterInfo.AddMember("Description", vDescription, alloc);
+		jsonAdapterInfo.AddMember("AddressLength", adapterInfo.AddressLength, alloc);
+		jsonAdapterInfo.AddMember("Address", 2, alloc);
+		jsonAdapterInfo.AddMember("Index", (ULONGLONG)adapterInfo.Index, alloc);
+		jsonAdapterInfo.AddMember("Type", adapterInfo.Type, alloc);
+		jsonAdapterInfo.AddMember("DhcpEnabled", 2, alloc);
+		jsonAdapterInfo.AddMember("CurrentIpAddress", 2, alloc);
+		// IP List
+		Value jsonIpAddressList(kArrayType);
+		Value jsonIpAddress(kObjectType);
+		jsonIpAddress.AddMember("IP", "123.123.123.123", alloc);
+		jsonIpAddressList.PushBack(jsonIpAddress, alloc);
+		jsonAdapterInfo.AddMember("IpAddressList", jsonIpAddressList, alloc);
+
+		// Gateway List
+		Value jsonGatewayList(kArrayType);
+		Value jsonGateway(kObjectType);
+		jsonGateway.AddMember("IP", "123.123.123.123", alloc);
+		jsonGatewayList.PushBack(jsonGateway, alloc);
+		jsonAdapterInfo.AddMember("GatewayList", jsonGatewayList, alloc);
+
+		jsonAdapterInfo.AddMember("DhcpServer", "LIST", alloc);
+		jsonAdapterInfo.AddMember("HaveWins", FALSE, alloc);
+		jsonAdapterInfo.AddMember("PrimaryWinsServer", "123.123.123.123", alloc);
+		jsonAdapterInfo.AddMember("SecondaryWinsServer", "123.123.123.123", alloc);
+		jsonAdapterInfo.AddMember("LeaseObtained", "2017-07-12 12:23:43", alloc);
+		jsonAdapterInfo.AddMember("LeaseExpires", "2017-07-12 12:23:43", alloc);
+
+		jsonAdapterInfoList.PushBack(jsonAdapterInfo, alloc);
+	}
+
+	return jsonAdapterInfoList;
 }
 
 void DataManager::jsonUpdate()
@@ -219,67 +315,12 @@ void DataManager::jsonUpdate()
 	json.AddMember("TotalThreadCount", processListObj.getTotalThreadCount(), alloc);
 
 	// json Network Connection List
-	Value jsonNetworkConnectionList(kArrayType);
-	Value jsonNetworkConnection(kObjectType);
-	jsonNetworkConnection.AddMember("ProtocolType", 2, alloc);
+	json.AddMember("Network Connection List", getJsonNetworkConnectionList(alloc), alloc);
+	json.AddMember("NetworkConnectionCount", (ULONGLONG)systemInfo->networkConnectionCount, alloc);
 
-	Value jsonLocalEndpoint(kObjectType);
-	jsonLocalEndpoint.AddMember("IPV4", 123, alloc);
-	jsonLocalEndpoint.AddMember("IPV6", 123, alloc);
-	jsonLocalEndpoint.AddMember("Port", 123, alloc);
-	jsonNetworkConnection.AddMember("LocalEndpoint", jsonLocalEndpoint, alloc);
-
-	Value jsonRemoteEndpoint(kObjectType);
-	jsonRemoteEndpoint.AddMember("IPV4", 123, alloc);
-	jsonRemoteEndpoint.AddMember("IPV6", 123, alloc);
-	jsonRemoteEndpoint.AddMember("Port", 123, alloc);
-	jsonNetworkConnection.AddMember("RemoteEndpoint", jsonRemoteEndpoint, alloc);
-
-	jsonNetworkConnection.AddMember("State", 2, alloc);
-	jsonNetworkConnection.AddMember("ProcessID", 2, alloc);
-	jsonNetworkConnection.AddMember("CreateTime", 2, alloc);
-	jsonNetworkConnection.AddMember("OwnerInfo", 2, alloc);
-	jsonNetworkConnectionList.PushBack(jsonNetworkConnection, alloc);
-	json.AddMember("NetworkConnection List", jsonNetworkConnectionList, alloc);
-	json.AddMember("NetworkConnectionCount", 2, alloc);
-
-
-	Value jsonAdapterInfoList(kArrayType);
-	Value jsonAdapterInfo(kObjectType);
-	jsonAdapterInfo.AddMember("ComboIndex", 2, alloc);
-	jsonAdapterInfo.AddMember("AdapterName", 2, alloc);
-	jsonAdapterInfo.AddMember("Description", 2, alloc);
-	jsonAdapterInfo.AddMember("AddressLength", 2, alloc);
-	jsonAdapterInfo.AddMember("Address", 2, alloc);
-	jsonAdapterInfo.AddMember("Index", 2, alloc);
-	jsonAdapterInfo.AddMember("Type", 2, alloc);
-	jsonAdapterInfo.AddMember("DhcpEnabled", 2, alloc);
-	jsonAdapterInfo.AddMember("CurrentIpAddress", 2, alloc);
-	// IP List
-	Value jsonIpAddressList(kArrayType);
-	Value jsonIpAddress(kObjectType);
-	jsonIpAddress.AddMember("IP", "123.123.123.123", alloc);
-	jsonIpAddressList.PushBack(jsonIpAddress, alloc);
-	jsonAdapterInfo.AddMember("IpAddressList", jsonIpAddressList, alloc);
-
-	// Gateway List
-	Value jsonGatewayList(kArrayType);
-	Value jsonGateway(kObjectType);
-	jsonGateway.AddMember("IP", "123.123.123.123", alloc);
-	jsonGatewayList.PushBack(jsonGateway, alloc);
-	jsonAdapterInfo.AddMember("GatewayList", jsonGatewayList, alloc);
-
-	jsonAdapterInfo.AddMember("DhcpServer", "LIST", alloc);
-	jsonAdapterInfo.AddMember("HaveWins", FALSE, alloc);
-	jsonAdapterInfo.AddMember("PrimaryWinsServer", "123.123.123.123", alloc);
-	jsonAdapterInfo.AddMember("SecondaryWinsServer", "123.123.123.123", alloc);
-	jsonAdapterInfo.AddMember("LeaseObtained", "2017-07-12 12:23:43", alloc);
-	jsonAdapterInfo.AddMember("LeaseExpires", "2017-07-12 12:23:43", alloc);
-
-	jsonAdapterInfoList.PushBack(jsonAdapterInfo, alloc);
-	json.AddMember("AdapterInfo List", jsonAdapterInfoList, alloc);
-
-	json.AddMember("AdapterCount", 2, alloc);
+	// json AdapaterInfo List
+	json.AddMember("AdapterInfo List", getJsonAdapterInfoList(alloc), alloc);
+	json.AddMember("AdapterCount", systemInfo->adapterCount, alloc);
 	
 	
 	StringBuffer buffer;
@@ -295,6 +336,9 @@ void DataManager::jsonUpdate()
 	cout << "COM DATA SIZE : " << compSize << endl;
 	cout <<  "RETURN VALUE : " <<  DeCompress(compressed, compSize, srcSize, decompressed) << endl;
 	cout << "DECOM DATA SIZE : " << strlen(decompressed) << endl;
+
+	// TODO : compressed delete
+	// TODO : decompressed delete
 
 	//std::cout << buffer.GetSize() << std::endl;
 }

@@ -2,7 +2,10 @@
 #define _DATAMANAGER_H_
 
 #include <iostream>
+#ifndef _WINDOWS_
+#include <WS2tcpip.h>
 #include <Windows.h>
+#endif
 #include "../process/ProcessList.hpp"
 #include "../process/Process.hpp"
 #include "../system/SystemCPU.hpp"
@@ -68,6 +71,8 @@ private:
 	void Update();
 	Value getJsonDiskList(Document::AllocatorType &alloc);
 	Value getJsonProcessList(Document::AllocatorType &alloc);
+	Value getJsonNetworkConnectionList(Document::AllocatorType &alloc);
+	Value getJsonAdapterInfoList(Document::AllocatorType &alloc);
 	void jsonUpdate();
 	void Start();
 	void Stop();

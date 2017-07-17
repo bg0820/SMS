@@ -73,3 +73,11 @@ void Util::microDelay(ULONG time)
 	time_point<steady_clock> start = high_resolution_clock::now();
 	while ((high_resolution_clock::now() - start).count() / 1000.0 < time);
 }
+
+string Util::getTimeString(tm t)
+{
+	string str = Util::format("%04d-%02d-%02d %02d:%02d:%02d",
+		t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
+
+	return str;
+}

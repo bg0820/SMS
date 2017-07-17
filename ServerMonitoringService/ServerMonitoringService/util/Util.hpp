@@ -20,6 +20,7 @@ public:
 	static string getStringToAddr(SOCKADDR_IN paramAddr);
 	static void stringReplace(string& subject, const string& search, const string& replace);
 	static void microDelay(ULONG time);
+	static string getTimeString(tm t);
 };
 
 #endif
