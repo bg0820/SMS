@@ -74,10 +74,11 @@
 #### (TCP) Data Server -> (WebSocket)
 #### (WebSocket) Web Server
 
-## Library
+## Used Library
 | Library Name | Link | License |
 | :---------------: | :-----------------: | :-------------------: |
 | RapidJson      | <https://github.com/miloyip/rapidjson/> | MIT |
+| LZ4 | <https://github.com/lz4/lz4> | BSD |
 
 ## Commit Message
 https://gitmoji.carloscuesta.me/
