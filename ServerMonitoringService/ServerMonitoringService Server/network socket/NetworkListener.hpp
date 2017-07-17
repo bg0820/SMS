@@ -10,6 +10,10 @@
 #include "../data/Client.hpp"
 #include "../data/ClientManager.hpp"
 #include <atlstr.h>
+/*
+	Thread Class
+*/
+#include "../util/Thread.hpp"
 
 #pragma comment(lib, "ws2_32.lib") // WinSock2 Lib
 
@@ -48,7 +52,7 @@ private:
 private:
 	int Init(SOCKET &pSocket, SOCKADDR_IN &paramAddr, int &paramRetValue, HANDLE &handle);
 	void initSocketAddr(BOOLEAN IPv6);
-	DWORD WINAPI threadProc(LPVOID hIOCP);
+	DWORD callbackProc(LPVOID hIOCP);
 public:
 	NetworkListener(TCHAR *ip, USHORT port) : serverIp(ip), serverPort(port)
 	{

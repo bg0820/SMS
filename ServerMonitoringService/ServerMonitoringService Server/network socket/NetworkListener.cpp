@@ -1,8 +1,10 @@
 #include "NetworkListener.hpp"
 
 
-DWORD WINAPI NetworkListener::threadProc(LPVOID hIOCP)
+DWORD NetworkListener::callbackProc(LPVOID hIOCP)
 {
+	NetworkListener * instance = reinterpret_cast <NetworkListener *> (hIOCP);
+
 	HANDLE threadHandler = *((HANDLE *)hIOCP);
 	DWORD receiveBytes;
 	DWORD sendBytes;
@@ -258,13 +260,12 @@ int NetworkListener::Init(SOCKET &paramSocket, SOCKADDR_IN &parmAddr, int &param
 	HANDLE hIOCP = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
 	ULONG threadId;
 
-
 	// Create Thread
 	for (int i = 0; i < this->threadCount; i++)
 	{
-		// [&]() {networkProc(serverSocket, addr);
-
-		hThread[i] = CreateThread(NULL, 0, std::bind(threadProc, this), &hIOCP, 0, &threadId);
+		// 
+		Thread *thread = new Thread(&NetworkListener::callbackProc, &hIOCP);
+		//hThread[i] = CreateThread(NULL, 0, std::bind(&NetworkListener::threadProc, this), &hIOCP, 0, &threadId);
 	}
 
 	handle = hIOCP;

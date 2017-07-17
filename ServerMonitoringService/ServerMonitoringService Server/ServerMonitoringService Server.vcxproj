@@ -118,6 +118,7 @@
     <ClCompile Include="network socket\NetworkManager.cpp" />
     <ClCompile Include="util\Log.cpp" />
     <ClCompile Include="util\StopWatch.cpp" />
+    <ClCompile Include="util\Thread.cpp" />
     <ClCompile Include="util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +128,7 @@
     <ClInclude Include="network socket\NetworkManager.hpp" />
     <ClInclude Include="util\Log.hpp" />
     <ClInclude Include="util\StopWatch.hpp" />
+    <ClInclude Include="util\Thread.hpp" />
     <ClInclude Include="util\Util.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
