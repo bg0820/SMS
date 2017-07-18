@@ -263,9 +263,9 @@ void DataManager::jsonUpdate()
 	int compSize;
 	TCHAR *compressed = NULL;
 	TCHAR *decompressed = NULL;
-	cout << "RETURN VALUE : " << Compress(buffer.GetString(), srcSize,  compressed, compSize) << endl;
+	cout << "RETURN VALUE : " << Util::Compress(buffer.GetString(), srcSize, compressed, compSize) << endl;
 	cout << "COM DATA SIZE : " << compSize << endl;
-	cout <<  "RETURN VALUE : " <<  DeCompress(compressed, compSize, srcSize, decompressed) << endl;
+	cout << "RETURN VALUE : " << Util::DeCompress(compressed, compSize, srcSize, decompressed) << endl;
 	cout << "DECOM DATA SIZE : " << strlen(decompressed) << endl;
 
 	// TODO : compressed delete
