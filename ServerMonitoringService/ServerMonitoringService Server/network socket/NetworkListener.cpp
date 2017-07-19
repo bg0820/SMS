@@ -264,7 +264,7 @@ int NetworkListener::Init(SOCKET &paramSocket, SOCKADDR_IN &parmAddr, int &param
 	for (int i = 0; i < this->threadCount; i++)
 	{
 		// 
-		Thread *thread = new Thread(&NetworkListener::callbackProc, &hIOCP);
+		ThreadWrapper *threadWrapper = new ThreadWrapper(std::bind(&NetworkListener::callbackProc, this), &hIOCP);
 		//hThread[i] = CreateThread(NULL, 0, std::bind(&NetworkListener::threadProc, this), &hIOCP, 0, &threadId);
 	}
 

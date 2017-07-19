@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class Thread
+class ThreadWrapper
 {
 private:
 	static UINT threadCount;
@@ -16,25 +16,25 @@ private:
 	UINT threadID = 0;
 	LPVOID lpParam;
 	//UINT interval = 0;
-	static DWORD WINAPI Thread::threadProc(LPVOID lpParameter);
+	static DWORD WINAPI threadProc(LPVOID lpParameter);
 public:
-	function<DWORD(LPVOID)> func = NULL;
+	function<void(LPVOID)> func = NULL;
 public:
-	Thread(function<DWORD(LPVOID)> paramFunc, LPVOID lpParam)
+	ThreadWrapper(function<void(LPVOID)> paramFunc, HANDLE lpParam)
 	{
 		this->threadCount++;
 		this->func = paramFunc;
 		this->lpParam = lpParam;
 	}
 
-	~Thread()
+	~ThreadWrapper()
 	{
 		if (threadHandle)
-			Abort();
+			abort();
 	}
 
-	void Create();
-	void Abort();
+	void run();
+	void abort();
 };
 
 #endif // !_THREAD_H_
